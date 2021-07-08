@@ -1,0 +1,73 @@
+.wallet-button{
+    font-size: 13px;
+    padding: 0px 28px;
+    height: 50px;
+}
+.network-class{
+    font-size: 13px !important;
+    height: 50px !important;
+    margin-bottom: 0px !important;
+    padding: 10px 0px 10px 5px !important;
+    color: darkgray;
+}
+option {
+    color: black !important;
+}
+.modal-content .modal-header .modal-title{
+ color: white;
+}
+.modal-content .modal-header button{
+    left: calc(100% - 285px);
+    right: 20px;
+    color: white !important;
+}
+.single-wallet-box{
+margin-bottom: 10px;
+}
+.single-wallet-img{
+    float: right;
+
+}
+.single-wallet-box img{
+    width: 20px;
+}
+.single-wallet-btn{
+    padding: 10px 15px;
+    border: 0px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    opacity: 1;
+    outline: 0px;
+    transition: background-color 0.2s ease 0s, opacity 0.2s ease 0s;
+    background-color: rgb(53, 53, 71);
+    box-shadow: none;
+    color: rgba(21, 61, 111, 0.44);
+    width: 100%;
+    margin-bottom: 8px;
+    color: white;
+}
+.modal-dialog{
+    max-width: 380px;
+    transform: translate(0, 0%) !important;
+}
+.modal-content{
+    border-radius: 25px;
+}
+.connect-info i{
+    align-self: center;
+    border: 1px solid white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 8px;
+}
+.connect-info{
+text-align: center
+}
+.connect-info p{
+    color: white !important;
+    display: inline-flex;
+}

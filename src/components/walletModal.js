@@ -1,0 +1,7 @@
+function walletModal(props){
+    return(
+        <>
+
+        </>
+    )
+}
