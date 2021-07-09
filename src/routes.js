@@ -10,22 +10,23 @@ import Typography from "views/Typography.js";
 import UserProfile from "views/UserProfile.js";
 import ExploreProject from "views/explore-projects.js";
 import CreateToken from "views/create-token.js";
+import LockToken from "./views/lock-tokens";
 
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "لوحة القيادة",
-    icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    path: "/explore-projects",
+    name: "EXPLORE PROJECTS",
+    rtlName: "خرائط",
+    icon: "tim-icons icon-pin",
+    component: ExploreProject,
     layout: "/admin",
   },
     {
     path: "/create-token",
     name: "Create Token",
     rtlName: "لوحة القيادة",
-    icon: "tim-icons icon-chart-pie-36",
+    icon: "tim-icons icon-coins",
     component: CreateToken,
     layout: "/admin",
   },
@@ -33,16 +34,24 @@ var routes = [
     path: "/launch-Project",
     name: "LAUNCH YOUR PROJECT",
     rtlName: "الرموز",
-    icon: "tim-icons icon-atom",
+    icon: "tim-icons icon-spaceship",
     component: launchProject,
     layout: "/admin",
   },
   {
-    path: "/explore-projects",
-    name: "EXPLORE PROJECTS",
-    rtlName: "خرائط",
-    icon: "tim-icons icon-pin",
-    component: ExploreProject,
+    path: "/lock-tokens",
+    name: "Lock Tokens",
+    rtlName: "الرموز",
+    icon: "tim-icons icon-lock-circle",
+    component: LockToken,
+    layout: "/admin",
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: "tim-icons icon-chart-pie-36",
+    component: Dashboard,
     layout: "/admin",
   }
 ];
