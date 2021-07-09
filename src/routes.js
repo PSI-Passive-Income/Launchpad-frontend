@@ -1,13 +1,6 @@
 
 import  Dashboard  from "views/Dashboard.js";
-import Icons from "views/Icons.js";
 import  launchProject  from "views/launch-project.js";
-import Map from "views/Map.js";
-import Notifications from "views/Notifications.js";
-import Rtl from "views/Rtl.js";
-import TableList from "views/TableList.js";
-import Typography from "views/Typography.js";
-import UserProfile from "views/UserProfile.js";
 import ExploreProject from "views/explore-projects.js";
 import CreateToken from "views/create-token.js";
 import LockToken from "./views/lock-tokens";
