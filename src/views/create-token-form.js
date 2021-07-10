@@ -2,7 +2,6 @@ import React from "react";
 
 // reactstrap components
 import {Card, CardHeader, CardBody, Row, Col, Label, Input} from "reactstrap";
-import ProjectSmallCard from "./project-small-card";
 
 function CreateTokenForm() {
     return (

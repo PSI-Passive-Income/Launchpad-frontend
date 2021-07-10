@@ -1,8 +1,31 @@
+.main-panel{
+    background-image: url(/src/assets/img/psipadbackground.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.sidebar[data="psi"], .off-canvas-sidebar[data="psi"]{
+    background: rgb(39, 38, 44);
+
+}
+.sidebar .nav p, .off-canvas-sidebar .nav p{
+    color: rgb(0, 237, 255);
+}
+.sidebar .nav i, .off-canvas-sidebar .nav i{
+    color: rgb(0, 237, 255);
+
+}
+.card{
+    background: rgb(39, 38, 44);
+}
+.form-control{
+    background-color: rgba(21, 61, 111, 0.44);
+}
 .wallet-button{
     font-size: 13px;
     padding: 0px 28px;
     height: 50px;
 }
+
 .network-class{
     font-size: 13px !important;
     height: 50px !important;

@@ -1,31 +1,39 @@
 import React from "react";
+import {Container, FormGroup, Input, Label} from "reactstrap";
 
-// reactstrap components
-import {Card, CardHeader, CardBody, Row, Col, Label, Input} from "reactstrap";
 
-function lockTokenCard() {
+
+function LockTokenCard() {
+    const [activeTab, setActiveTab] = React.useState('1');
+
+    const toggle = tab => {
+        if(activeTab !== tab) setActiveTab(tab);
+    }
     return (
         <>
-        <h5 className="title">Lock or Manage Tokens</h5>
-
-    <div className="card">
+            <div className="card">
                 <div className="card-header">
                     <h5 className="title">Lock or Manage Tokens</h5></div>
                 <div className="card-body">
-                    <div className="row">
-                        <div className="col-md-4 pr-md-1">
+                    <p className="text-center">Use the PsiLock Token Locker to lock your tokens and earn greater trust within your community!
+                    </p>
 
-                        </div>
-                        <div className="col-md-4 pr-md-1">
-
-                        </div>
-                        <div className="col-md-4 pr-md-1">
-
+                    <div className="col-lg-7 offset-lg-2">
+                    <div className="card mt-5">
+                        <div className="card-body">
+                            <FormGroup>
+                                <p for="addressInput" className="text-center">PsiLock Token Locker</p>
+                                <Input type="text" name="addressInput" id="exampleEmail" placeholder="Enter Token Address" />
+                            </FormGroup>
                         </div>
                     </div>
+                    </div>
+
                 </div>
             </div>
         </>
     )
+
 }
-export default lockTokenCard;
+
+export default LockTokenCard;
