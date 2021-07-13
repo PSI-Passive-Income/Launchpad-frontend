@@ -89,7 +89,6 @@ function CreateTokenForm() {
                         <div className="col-md-4 pr-md-1">
                             <h5 className="title">Network and Transaction</h5>
                             <select className="mb-6 mb-10 custom-select" id="__BVID__48">
-                                <option value="ethereum">Ethereum network</option>
                                 <option value="bsc">Binance Smart Chain</option>
                             </select>
                             <div className="mb-10 psi-switch custom-control custom-switch">
