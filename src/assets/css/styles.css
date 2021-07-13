@@ -94,3 +94,10 @@ text-align: center
     color: white !important;
     display: inline-flex;
 }
+.important-notes-list{
+    font-size: 12px;
+    padding-top: 7px;
+    line-height: 1.5rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.6);
+}

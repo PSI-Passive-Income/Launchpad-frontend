@@ -12,7 +12,6 @@ function CreateTokenForm() {
                 <div className="card-body">
                     <div className="row">
                         <div className="col-md-4 pr-md-1">
-                            <h5 className="title">Token details</h5>
                             <div className="form-group">
                                 <Label className="control-label"> Token Name
                                 </Label>
@@ -25,45 +24,7 @@ function CreateTokenForm() {
                                 <Input aria-describedby="addon-right addon-left" placeholder="Token Symbol"
                                        className="classNamem-control"/>
                             </div>
-                            <div className="form-group">
-                                <Label className="control-label"> Token Decimals </Label>
-                                <Input aria-describedby="addon-right addon-left" type="number"
-                                       placeholder="Token Decimals" className="classNamem-control"/>
-                            </div>
-                            <div className="form-group">
-                                <Label className="control-label"> Initial Supply </Label>
-                                <Input aria-describedby="addon-right addon-left" type="number"
-                                       placeholder="Initial Supply" className="classNamem-control"/>
-                            </div>
-                            <div className="form-group"><Label className="control-label"> Total Supply </Label>
-                                <Input aria-describedby="addon-right addon-left" type="number"
-                                       placeholder="Total Supply" className="classNamem-control"/>
-                            </div>
-                        </div>
-                        <div className="col-md-4 pr-md-1">
-                            <h5 className="title">Token features</h5>
-                            <div className="form-group">
-                                <Label className="control-label"> Supply Type </Label>
-                                <Input aria-describedby="addon-right addon-left" placeholder="Supply Type"
-                                       className="classNamem-control"/>
-                            </div>
-                            <div className="form-group">
-                                <Label className="control-label"> Access Type </Label>
-                                <Input aria-describedby="addon-right addon-left" placeholder="Access Type"
-                                       className="classNamem-control"/>
-                            </div>
-                            <div className="mb-10 psi-switch custom-control custom-switch">
-                                <Input type="checkbox" name="verifiedSourceCode" disabled="disabled"
-                                       className="custom-control-input" value="true" id="__BVID__42"/>
-                                <Label className="custom-control-label" htmlFor="__BVID__42"> Verified Source
-                                    Code </Label>
-                            </div>
-
-                            <div className="mb-10 psi-switch custom-control custom-switch">
-                                <Input type="checkbox" name="removeCopyright" className="custom-control-input"
-                                       value="true" id="__BVID__43"/>
-                                <Label className="custom-control-label" htmlFor="__BVID__43"> Remove Copyright </Label>
-                            </div>
+                            <h5 className="title mt-2">Token features</h5>
                             <div className="mb-10 psi-switch custom-control custom-switch">
                                 <Input type="checkbox" name="burnable" className="custom-control-input" value="true"
                                        id="__BVID__44"/>
@@ -74,19 +35,20 @@ function CreateTokenForm() {
                                        id="__BVID__45"/>
                                 <Label className="custom-control-label" htmlFor="__BVID__45"> Mintable </Label>
                             </div>
-                            <div className="mb-10 psi-switch custom-control custom-switch">
-                                <Input type="checkbox" name="operable" className="custom-control-input" value="true"
-                                       id="__BVID__46"/>
-                                <Label className="custom-control-label" htmlFor="__BVID__46"> Operable
-                                    (ERC1363) </Label>
-                            </div>
-                            <div className="mb-10 psi-switch custom-control custom-switch">
-                                <Input type="checkbox" name="tokenRecover" className="custom-control-input" value="true"
-                                       id="__BVID__47"/>
-                                <Label className="custom-control-label" htmlFor="__BVID__47"> Token Recover </Label>
-                            </div>
                         </div>
                         <div className="col-md-4 pr-md-1">
+                            <div className="form-group">
+                                <Label className="control-label"> Initial Supply </Label>
+                                <Input aria-describedby="addon-right addon-left" type="number"
+                                       placeholder="Initial Supply" className="classNamem-control"/>
+                            </div>
+                            <div className="form-group"><Label className="control-label"> Maximum Supply </Label>
+                                <Input aria-describedby="addon-right addon-left" type="number"
+                                       placeholder="Maximum Supply" className="classNamem-control"/>
+                            </div>
+
+                        </div>
+                        <div className="col-md-4 pr-md-3">
                             <h5 className="title">Network and Transaction</h5>
                             <select className="mb-6 mb-10 custom-select" id="__BVID__48">
                                 <option value="bsc">Binance Smart Chain</option>
@@ -100,6 +62,19 @@ function CreateTokenForm() {
                             <p> Commission Fee: Free (Promotion active) </p>
                             <p> Gas Fee: Variable </p>
                             <button type="button" className="btn btn-primary" slot="footer" fill="">Create</button>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <h5 className="red mt-5">Important Notes:</h5>
+                            <ul className="pl-4">
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                                <li className="important-notes-list">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
