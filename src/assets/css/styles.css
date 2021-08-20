@@ -3,7 +3,7 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
-.sidebar[data="psi"], .off-canvas-sidebar[data="psi"]{
+.sidebar[data-type="psi"], .off-canvas-sidebar[data-type="psi"]{
     background: rgb(39, 38, 44);
 
 }
@@ -38,6 +38,14 @@ option {
 }
 .modal-content .modal-header .modal-title{
  color: white;
+}
+.notokens-warning{
+    text-align: center;
+}
+.notoken-column{
+    position:absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
 }
 .modal-content .modal-header button{
     left: calc(100% - 285px);
@@ -100,4 +108,7 @@ text-align: center
     line-height: 1.5rem;
     letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.6);
+}
+.contribution-box{
+    border: 1px solid white;
 }

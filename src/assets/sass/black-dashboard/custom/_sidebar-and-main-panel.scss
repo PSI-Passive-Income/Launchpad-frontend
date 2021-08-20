@@ -360,7 +360,7 @@
     &[data="blue"]{
       @include linear-gradient($info-states, $info);
     }
-    &[data="psi"]{
+    &[data-type="psi"]{
       @include linear-gradient($psi-states, $psi);
     }
     &[data="green"]{
