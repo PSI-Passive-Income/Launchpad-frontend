@@ -118,7 +118,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-6 pr-md-1">
                   <Label>Hard cap</Label>
                   <Input
-                    value={campaign.hardCap.toFormat(18)}
+                    value={campaign.hardCap?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'hardCap', 'BigNumber')}
                     label="Hardcap"
                     placeholder="Hard cap"
@@ -130,7 +130,7 @@ const LaunchCampaignForm: React.FC = () => {
                   <Label>Soft cap</Label>
 
                   <Input
-                    value={campaign.softCap.toFormat(18)}
+                    value={campaign.softCap?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'softCap', 'BigNumber')}
                     label="Softcap"
                     placeholder="Soft cap"
@@ -141,7 +141,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-6 pr-md-1">
                   <Label>Minimum BNB per wallet</Label>
                   <Input
-                    value={campaign.minAllowed.toFormat(18)}
+                    value={campaign.minAllowed?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'minAllowed', 'BigNumber')}
                     label="Min BNB per wallet"
                     placeholder="Min BNB per wallet"
@@ -152,7 +152,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-6 pr-md-1">
                   <Label>Max BNB per wallet</Label>
                   <Input
-                    value={campaign.maxAllowed.toFormat(18)}
+                    value={campaign.maxAllowed?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'maxAllowed', 'BigNumber')}
                     label="Max BNB per wallet"
                     placeholder="Max BNB per wallet"
@@ -183,7 +183,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-6 pr-md-1">
                   <Label>Token per BNB</Label>
                   <Input
-                    value={campaign.rate.toFormat(18)}
+                    value={campaign.rate?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber')}
                     label="Token per BNB"
                     placeholder="Token per ETH"
@@ -194,7 +194,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-6 pr-md-1">
                   <Label>Token per BNB in liquidity pool</Label>
                   <Input
-                    value={campaign.poolRate.toFormat(18)}
+                    value={campaign.poolRate?.toFormat(18)}
                     onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber')}
                     label="Token per BNB"
                     placeholder="Token per ETH"

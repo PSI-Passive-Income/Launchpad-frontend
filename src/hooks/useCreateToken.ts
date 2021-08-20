@@ -22,7 +22,7 @@ const useCreateToken = () => {
           const receipt = await createToken(tokenFactory, account, token)
           console.info(receipt)
           if (receipt.status) {
-            history.push(`/managetokens`)
+            history.push(`/manage-tokens`)
           } else {
             dispatch(toastError('Error adding token', 'Transaction failed'))
           }

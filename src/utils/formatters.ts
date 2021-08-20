@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash'
+import { isNil, isNumber } from 'lodash'
 import { utils } from 'ethers'
 import BigNumber from 'bignumber.js'
 
@@ -19,7 +19,7 @@ export const formatDateTime = (
 }
 
 export const formatBN = (value: utils.BigNumberish | BigNumber, decimals = 18) => {
-  if (!value) return ""
-  const bn: BigNumber = new BigNumber(value.toString())
-  return bn.toFormat(decimals)
+  if (isNil(value)) return ""
+  const bn = new BigNumber(value.toString())
+  return decimals > 0 ? bn.div(10 ** decimals).toString() : bn.toString()
 }

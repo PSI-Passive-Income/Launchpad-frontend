@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import _, { isFinite, isNil, isString, toFinite } from 'lodash'
+import _, { isBoolean, isFinite, isNil, isString, toFinite } from 'lodash'
 
 export const camelCaseKeys = (obj: any | any[]) => {
   if (!_.isObject(obj)) return obj
@@ -42,5 +42,5 @@ export const toBigNumber = (value: string | number) => {
 }
 
 export const toBool = (value: string | number) => {
-  return !!value && (isString(value) && value?.toLowerCase() !== 'false')
+  return (isBoolean(value) && value) || (!!value && (isString(value) && value?.toLowerCase() !== 'false'))
 }

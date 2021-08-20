@@ -213,7 +213,7 @@ const LockToken: React.FC = () => {
                           type="number"
                           name="amount"
                           id="amount"
-                          value={lock.amount.toFormat(18)}
+                          value={lock.amount?.toFormat(18)}
                           onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber')}
                           placeholder="0"
                           invalid={!!errors.amount}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Label, Input, FormGroup, FormFeedback, FormText } from 'reactstrap'
 import { useLoading } from '@agney/react-loading'
 import 'react-toastify/dist/ReactToastify.css'
@@ -6,55 +6,53 @@ import { TokenCreationInfo } from 'state/types'
 import useCreateToken from 'hooks/useCreateToken'
 import { isEmpty, isNil } from 'lodash'
 import validate from 'utils/validate'
+import { formatBN } from 'utils/formatters'
 
 const CreateToken: React.FC = () => {
   const [token, setToken] = useState<Partial<TokenCreationInfo>>({})
-  const [valid, setValid] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
 
+  const [submitClicked, setSubmitClicked] = useState(false)
   const { createToken, creatingToken } = useCreateToken()
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [validationErrors, setErrors] = useState<{ [key: string]: string }>({})
 
-  const validateCampaign = (newToken: Partial<TokenCreationInfo>, validateMandatory = false) => {
-    if (newToken.initialSupply && newToken.maximumSupply && newToken.initialSupply > newToken.maximumSupply)
+  const mandatoryErrors = useMemo(() => {
+    const _errors: { [key: string]: string } = {}
+    console.log(isEmpty(token.name), token.name)
+    if (isEmpty(token.name)) _errors.name = 'This field is required'
+    if (isEmpty(token.symbol)) _errors.symbol = 'This field is required'
+    if (isNil(token.initialSupply)) _errors.initialSupply = 'This field is required'
+    if (!termsAccepted) _errors.termsAccepted = 'Please accept our terms to continue'
+    return _errors
+  }, [token, termsAccepted])
+
+  const errors: { [key: string]: string } = useMemo(() => {
+    const _errors = { ...(submitClicked ? mandatoryErrors : {}), ...validationErrors }
+
+    if (token.initialSupply && token.maximumSupply && token.initialSupply > token.maximumSupply)
       setErrors({ ...errors, maximumSupply: 'Maximum supply should be higher than the initial supply' })
 
-    const mandatoryErrors = valideMandatory(newToken)
-    if (validateMandatory) setErrors({ ...errors, ...mandatoryErrors })
+    return _errors
+  }, [validationErrors, submitClicked, mandatoryErrors, token])
 
-    if (isEmpty(errors) && isEmpty(mandatoryErrors)) setValid(true)
-    else setValid(false)
-
-    setToken(newToken)
-  }
-
-  const valideMandatory = (newToken: Partial<TokenCreationInfo>) => {
-    const mandatoryErrors = {}
-    if (isNil(newToken.name)) setErrors({ ...mandatoryErrors, name: 'This field is required' })
-    if (isNil(newToken.symbol)) setErrors({ ...mandatoryErrors, symbol: 'This field is required' })
-    if (isNil(newToken.initialSupply)) setErrors({ ...mandatoryErrors, initialSupply: 'This field is required' })
-    if (!termsAccepted) setErrors({ ...mandatoryErrors, termsAccepted: 'Please accept our terms to continue' })
-    return mandatoryErrors
-  }
+  const valid = useMemo(() => isEmpty(errors) && isEmpty(mandatoryErrors), [errors, mandatoryErrors])
 
   const changeTerms = (event: React.ChangeEvent<HTMLInputElement>) => {
     delete errors.termsAccepted
     setTermsAccepted(event.target.checked)
-    if (isEmpty(errors)) setValid(true)
-    else setValid(false)
   }
 
   const changeValue = (value: string | boolean, name: string, type: string, mandatory = true) => {
-    const { newValue, newErrors } = validate(token, errors, value, name, type, mandatory)
-    setErrors({ ...errors, ...newErrors })
-    validateCampaign(newValue)
+    const { newValue, newErrors } = validate(token, validationErrors, value, name, type, mandatory)
+    setErrors(newErrors)
+    setToken(newValue)
   }
 
   const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
-    validateCampaign(token, true)
-    if (isEmpty(errors)) {
+    if (!submitClicked) setSubmitClicked(true)
+    if (valid) {
       createToken(token)
     }
   }
@@ -114,7 +112,7 @@ const CreateToken: React.FC = () => {
                           type="number"
                           name="initialSupply"
                           id="initialSupply"
-                          value={token.initialSupply.toFormat(18)}
+                          value={formatBN(token.initialSupply)}
                           onChange={(e) => changeValue(e.target.value, 'initialSupply', 'BigNumber')}
                           placeholder="Initial supply"
                           invalid={!!errors.initialSupply}
@@ -124,79 +122,94 @@ const CreateToken: React.FC = () => {
                     </div>
                   </div>
 
+                  <hr />
+
                   <h5 className="title">Token features</h5>
 
                   <div className="row">
                     <div className="col-lg-6">
                       <FormGroup check>
-                        <Label check>
+                        <div className="mb-10 psi-switch custom-control custom-switch">
                           <Input
                             type="checkbox"
                             name="burnable"
                             id="burnable"
+                            className="custom-control-input"
                             checked={token.burnable}
                             onChange={(e) => changeValue(e.target.checked, 'burnable', 'boolean')}
                             invalid={!!errors.burnable}
-                          />{' '}
-                          Burnable
-                        </Label>
+                          />
+                          <Label className="custom-control-label" htmlFor="burnable">
+                            {' '}
+                            Burnable{' '}
+                          </Label>
+                        </div>
                         {errors.burnable ? <FormFeedback>{errors.burnable}</FormFeedback> : null}
                       </FormGroup>
                     </div>
                     <div className="col-lg-6">
                       <FormGroup check>
-                        <Label check>
+                        <div className="mb-10 psi-switch custom-control custom-switch">
                           <Input
                             type="checkbox"
                             name="mintable"
                             id="mintable"
+                            className="custom-control-input"
                             checked={token.mintable}
                             onChange={(e) => changeValue(e.target.checked, 'mintable', 'boolean')}
                             invalid={!!errors.mintable}
-                          />{' '}
-                          Mintable
-                        </Label>
+                          />
+                          <Label className="custom-control-label" htmlFor="mintable">
+                            {' '}
+                            Mintable{' '}
+                          </Label>
+                        </div>
                         {errors.mintable ? <FormFeedback>{errors.mintable}</FormFeedback> : null}
                       </FormGroup>
                     </div>
-                    <div className="col-lg-6">
-                      <FormGroup>
-                        <Label for="maximumSupply">Maximum supply</Label>
-                        <Input
-                          type="number"
-                          name="maximumSupply"
-                          id="maximumSupply"
-                          value={token.maximumSupply.toFormat(18)}
-                          onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
-                          placeholder="Maximum supply"
-                          invalid={!!errors.maximumSupply}
-                        />
-                        {errors.maximumSupply ? <FormFeedback>{errors.maximumSupply}</FormFeedback> : null}
-                        <FormText>
-                          When the token is mintable, a maximum supply could be set to ensure that it&apos;s impossible
-                          to mint more tokens than configureds
-                        </FormText>
-                      </FormGroup>
-                    </div>
-                    <div className="col-lg-6">
-                      <FormGroup>
-                        <Label for="minterDelay">Add minter delay</Label>
-                        <Input
-                          type="number"
-                          name="minterDelay"
-                          id="minterDelay"
-                          value={token.minterDelay}
-                          onChange={(e) => changeValue(e.target.value, 'minterDelay', 'number')}
-                          placeholder="Minter delay"
-                          invalid={!!errors.minterDelay}
-                        />
-                        {errors.minterDelay ? <FormFeedback>{errors.minterDelay}</FormFeedback> : null}
-                        <FormText>
-                          Delay in hours when a new minter is added. After the delay has ended, the owner also needs to
-                          approve the new minter. This delay is not changeable.
-                        </FormText>
-                      </FormGroup>
-                    </div>
+
+                    {token.mintable ? (
+                      <>
+                        <div className="col-lg-6">
+                          <FormGroup>
+                            <Label for="maximumSupply">Maximum supply</Label>
+                            <Input
+                              type="number"
+                              name="maximumSupply"
+                              id="maximumSupply"
+                              value={token.maximumSupply?.toFormat(18)}
+                              onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
+                              placeholder="Maximum supply"
+                              invalid={!!errors.maximumSupply}
+                            />
+                            {errors.maximumSupply ? <FormFeedback>{errors.maximumSupply}</FormFeedback> : null}
+                            <FormText>
+                              When the token is mintable, a maximum supply could be set to ensure that it&apos;s
+                              impossible to mint more tokens than configureds
+                            </FormText>
+                          </FormGroup>
+                        </div>
+                        <div className="col-lg-6">
+                          <FormGroup>
+                            <Label for="minterDelay">Add minter delay</Label>
+                            <Input
+                              type="number"
+                              name="minterDelay"
+                              id="minterDelay"
+                              value={token.minterDelay}
+                              onChange={(e) => changeValue(e.target.value, 'minterDelay', 'number')}
+                              placeholder="Minter delay"
+                              invalid={!!errors.minterDelay}
+                            />
+                            {errors.minterDelay ? <FormFeedback>{errors.minterDelay}</FormFeedback> : null}
+                            <FormText>
+                              Delay in hours when a new minter is added. After the delay has ended, the owner also needs
+                              to approve the new minter. This delay is not changeable.
+                            </FormText>
+                          </FormGroup>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
 
                   <div className="mt-5">
@@ -210,22 +223,24 @@ const CreateToken: React.FC = () => {
                 <div className="col-md-4 pr-md-1">
                   <h5 className="title">Network and Transaction: Binance Smart Chain (BSC)</h5>
 
-                  <div className="mb-10 psi-switch custom-control custom-switch">
-                    <FormGroup check>
-                      <Label check>
-                        <Input
-                          type="checkbox"
-                          name="termsAccepted"
-                          id="termsAccepted"
-                          checked={termsAccepted}
-                          onChange={changeTerms}
-                          invalid={!!errors.termsAccepted}
-                        />{' '}
-                        I have read, understood and agreed to PSI Terms of Use. Use at your own risk.
+                  <FormGroup check>
+                    <div className="mb-10 psi-switch custom-control custom-switch">
+                      <Input
+                        type="checkbox"
+                        name="termsAccepted"
+                        id="termsAccepted"
+                        className="custom-control-input"
+                        checked={termsAccepted}
+                        onChange={changeTerms}
+                        invalid={!!errors.termsAccepted}
+                      />
+                      <Label className="custom-control-label" htmlFor="termsAccepted">
+                        {' '}
+                        I have read, understood and agreed to PSI Terms of Use. Use at your own risk.{' '}
                       </Label>
-                      {errors.mintable ? <FormFeedback>{errors.mintable}</FormFeedback> : null}
-                    </FormGroup>
-                  </div>
+                    </div>
+                    {errors.termsAccepted ? <FormFeedback>{errors.termsAccepted}</FormFeedback> : null}
+                  </FormGroup>
 
                   <p> Commission Fee: Free (Promotion active) </p>
                   <p> Gas Fee: Variable </p>
