@@ -13,8 +13,8 @@ const LaunchCampaignForm: React.FC = () => {
   const [campaign, setCampaign] = useState<Partial<Campaign>>({})
 
   const tokensNeeded = useTokensNeeded(campaign)
-  const [valid, setValid] = useState(false)
 
+  const [submitClicked, setSubmitClicked] = useState(false)
   const { createCampaign, creatingCampaign } = useCreateCampaign()
 
   const { token, isLoadingToken, approve, approving, approvedAmount } = useCampaignFactoryApproval(
@@ -26,47 +26,45 @@ const LaunchCampaignForm: React.FC = () => {
     [tokensNeeded, approvedAmount],
   )
 
-  const [errors, setErrors] = useState<any>({})
+  const [validationErrors, setErrors] = useState<{ [key: string]: string }>({})
 
-  const validateCampaign = (newCampaign: Partial<Campaign>, validateMandatory = false) => {
-    if (newCampaign.maxAllowed && newCampaign.minAllowed && !newCampaign.maxAllowed.gte(newCampaign.minAllowed))
-      setErrors({ ...errors, maxAllowed: 'Maximum allowed should be higher than (or equal to) minimum allowed' })
-    if (newCampaign.maxAllowed && newCampaign.hardCap && !newCampaign.maxAllowed.lte(newCampaign.hardCap))
-      setErrors({ ...errors, maxAllowed: 'Maximum allowed should be lower than the hard cap' })
-    if (newCampaign.hardCap && newCampaign.softCap && !newCampaign.hardCap.gte(newCampaign.softCap))
-      setErrors({ ...errors, hardCap: 'Hard cap should be higher than (or equal to) soft cap' })
-    if (tokensNeeded && token.accountBalance && tokensNeeded.gt(token.accountBalance))
-      setErrors({ ...errors, rate: 'You do no not have enough tokens in your wallet' })
+  const mandatoryErrors = useMemo(() => {
+    const _errors: { [key: string]: string } = {}
+    if (isNil(campaign.softCap)) _errors.softCap = 'This field is required'
+    if (isNil(campaign.hardCap)) _errors.hardCap = 'This field is required'
+    if (isNil(campaign.startDate)) _errors.startDate = 'This field is required'
+    if (isNil(campaign.endDate)) _errors.endDate = 'This field is required'
+    if (isNil(campaign.rate)) _errors.rate = 'This field is required'
+    if (isNil(campaign.minAllowed)) _errors.minAllowed = 'This field is required'
+    if (isNil(campaign.maxAllowed)) _errors.maxAllowed = 'This field is required'
+    if (isNil(campaign.poolRate)) _errors.poolRate = 'This field is required'
+    if (isNil(campaign.lockDuration)) _errors.lockDuration = 'This field is required'
+    if (isNil(campaign.liquidityRate)) _errors.liquidityRate = 'This field is required'
+    if (isEmpty(campaign.description)) _errors.description = 'This field is required'
+    return _errors
+  }, [campaign])
 
-    const mandatoryErrors = valideMandatory(newCampaign)
-    if (validateMandatory) setErrors({ ...errors, ...mandatoryErrors })
+  const errors: { [key: string]: string } = useMemo(() => {
+    const _errors = { ...(submitClicked ? mandatoryErrors : {}), ...validationErrors }
 
-    if (isEmpty(errors) && isEmpty(mandatoryErrors)) setValid(true)
-    else setValid(false)
+    if (campaign.maxAllowed && campaign.minAllowed && !campaign.maxAllowed.gte(campaign.minAllowed))
+      _errors.maxAllowed = 'Maximum allowed should be higher than (or equal to) minimum allowed'
+    if (campaign.maxAllowed && campaign.hardCap && !campaign.maxAllowed.lte(campaign.hardCap))
+      _errors.maxAllowed = 'Maximum allowed should be lower than the hard cap'
+    if (campaign.hardCap && campaign.softCap && !campaign.hardCap.gte(campaign.softCap))
+      _errors.hardCap = 'Hard cap should be higher than (or equal to) soft cap'
+    if (tokensNeeded && token?.accountBalance && tokensNeeded.gt(token.accountBalance))
+      _errors.rate = 'You do no not have enough tokens in your wallet'
 
-    setCampaign(newCampaign)
-  }
+    return _errors
+  }, [validationErrors, submitClicked, mandatoryErrors, campaign, tokensNeeded, token?.accountBalance])
 
-  const valideMandatory = (newCampaign: Partial<Campaign>) => {
-    const mandatoryErrors = {}
-    if (isNil(newCampaign.softCap)) setErrors({ ...mandatoryErrors, softCap: 'This field is required' })
-    if (isNil(newCampaign.hardCap)) setErrors({ ...mandatoryErrors, hardCap: 'This field is required' })
-    if (isNil(newCampaign.startDate)) setErrors({ ...mandatoryErrors, startDate: 'This field is required' })
-    if (isNil(newCampaign.endDate)) setErrors({ ...mandatoryErrors, endDate: 'This field is required' })
-    if (isNil(newCampaign.rate)) setErrors({ ...mandatoryErrors, rate: 'This field is required' })
-    if (isNil(newCampaign.minAllowed)) setErrors({ ...mandatoryErrors, minAllowed: 'This field is required' })
-    if (isNil(newCampaign.maxAllowed)) setErrors({ ...mandatoryErrors, maxAllowed: 'This field is required' })
-    if (isNil(newCampaign.poolRate)) setErrors({ ...mandatoryErrors, poolRate: 'This field is required' })
-    if (isNil(newCampaign.lockDuration)) setErrors({ ...mandatoryErrors, lockDuration: 'This field is required' })
-    if (isNil(newCampaign.liquidityRate)) setErrors({ ...mandatoryErrors, liquidityRate: 'This field is required' })
-    if (isNil(newCampaign.description)) setErrors({ ...mandatoryErrors, description: 'This field is required' })
-    return mandatoryErrors
-  }
+  const valid = useMemo(() => isEmpty(errors) && isEmpty(mandatoryErrors), [errors, mandatoryErrors])
 
   const changeValue = (value: string | Moment, name: string, type: string, mandatory = true) => {
     const { newValue, newErrors } = validate(campaign, errors, value, name, type, mandatory)
     setErrors({ ...errors, ...newErrors })
-    validateCampaign(newValue)
+    setCampaign(newValue)
   }
 
   const onApprove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -76,8 +74,10 @@ const LaunchCampaignForm: React.FC = () => {
 
   const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
-    validateCampaign(campaign, true)
-    if (isEmpty(errors)) createCampaign(campaign)
+    if (!submitClicked) setSubmitClicked(true)
+    if (valid) {
+      createCampaign(campaign)
+    }
   }
 
   const { containerProps, indicatorEl } = useLoading({
@@ -114,157 +114,157 @@ const LaunchCampaignForm: React.FC = () => {
                 </div>
               </div>
 
-              <div className="row">
-                <div className="col-md-6 pr-md-1">
-                  <Label>Hard cap</Label>
-                  <Input
-                    value={campaign.hardCap?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'hardCap', 'BigNumber')}
-                    label="Hardcap"
-                    placeholder="Hard cap"
-                    invalid={!!errors.hardCap}
-                  />
-                  {errors.hardCap ? <FormFeedback>{errors.hardCap}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Soft cap</Label>
+              {!isEmpty(token) ? (
+                <>
+                  <div className="row">
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Hard cap</Label>
+                      <Input
+                        value={formatBN(campaign.hardCap, 18, true)}
+                        onChange={(e) => changeValue(e.target.value, 'hardCap', 'BigNumber')}
+                        label="Hardcap"
+                        placeholder="Hard cap"
+                        invalid={!!errors.hardCap}
+                      />
+                      {errors.hardCap ? <FormFeedback>{errors.hardCap}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Soft cap</Label>
 
-                  <Input
-                    value={campaign.softCap?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'softCap', 'BigNumber')}
-                    label="Softcap"
-                    placeholder="Soft cap"
-                    invalid={!!errors.softCap}
-                  />
-                  {errors.softCap ? <FormFeedback>{errors.softCap}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Minimum BNB per wallet</Label>
-                  <Input
-                    value={campaign.minAllowed?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'minAllowed', 'BigNumber')}
-                    label="Min BNB per wallet"
-                    placeholder="Min BNB per wallet"
-                    invalid={!!errors.minAllowed}
-                  />
-                  {errors.minAllowed ? <FormFeedback>{errors.minAllowed}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Max BNB per wallet</Label>
-                  <Input
-                    value={campaign.maxAllowed?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'maxAllowed', 'BigNumber')}
-                    label="Max BNB per wallet"
-                    placeholder="Max BNB per wallet"
-                    invalid={!!errors.maxAllowed}
-                  />
-                  {errors.maxAllowed ? <FormFeedback>{errors.maxAllowed}</FormFeedback> : null}
-                </div>
-              </div>
+                      <Input
+                        value={formatBN(campaign.softCap, 18, true)}
+                        onChange={(e) => changeValue(e.target.value, 'softCap', 'BigNumber')}
+                        label="Softcap"
+                        placeholder="Soft cap"
+                        invalid={!!errors.softCap}
+                      />
+                      {errors.softCap ? <FormFeedback>{errors.softCap}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Minimum BNB per wallet</Label>
+                      <Input
+                        value={formatBN(campaign.minAllowed, 18, true)}
+                        onChange={(e) => changeValue(e.target.value, 'minAllowed', 'BigNumber')}
+                        label="Min BNB per wallet"
+                        placeholder="Min BNB per wallet"
+                        invalid={!!errors.minAllowed}
+                      />
+                      {errors.minAllowed ? <FormFeedback>{errors.minAllowed}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Max BNB per wallet</Label>
+                      <Input
+                        value={formatBN(campaign.maxAllowed, 18, true)}
+                        onChange={(e) => changeValue(e.target.value, 'maxAllowed', 'BigNumber')}
+                        label="Max BNB per wallet"
+                        placeholder="Max BNB per wallet"
+                        invalid={!!errors.maxAllowed}
+                      />
+                      {errors.maxAllowed ? <FormFeedback>{errors.maxAllowed}</FormFeedback> : null}
+                    </div>
+                  </div>
 
-              <div className="row">
-                <div className="col-md-8 pr-md-1">
-                  <Label>Percentage allocated to PancakeSwap</Label>
-                  <Input
-                    label="Percentage allocated to PancakeSwap"
-                    type="range"
-                    value={campaign.liquidityRate ?? 0 / 100}
-                    onChange={(e) => changeValue(e.target.value, 'liquidityRate', 'number')}
-                    invalid={!!errors.liquidityRate}
-                  />
-                  {errors.liquidityRate ? <FormFeedback>{errors.liquidityRate}</FormFeedback> : null}
-                </div>
-                <div className="col-md-4 pr-md-1 text-white">
-                  <span>{campaign.liquidityRate} %</span>
-                </div>
-              </div>
-              <br />
-              <div className="row">
-                <div className="col-md-6 pr-md-1">
-                  <Label>Token per BNB</Label>
-                  <Input
-                    value={campaign.rate?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber')}
-                    label="Token per BNB"
-                    placeholder="Token per ETH"
-                    invalid={!!errors.rate}
-                  />
-                  {errors.rate ? <FormFeedback>{errors.rate}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Token per BNB in liquidity pool</Label>
-                  <Input
-                    value={campaign.poolRate?.toFormat(18)}
-                    onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber')}
-                    label="Token per BNB"
-                    placeholder="Token per ETH"
-                    invalid={!!errors.poolRate}
-                  />
-                  {errors.poolRate ? <FormFeedback>{errors.poolRate}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Liquidity lock duration (in days)</Label>
-                  <Input
-                    value={campaign.lockDuration}
-                    onChange={(e) => changeValue(e.target.value, 'lockDuration', 'number')}
-                    label="Liquidity lock duration (in days)"
-                    placeholder="Liquidity lock duration (in days)"
-                    invalid={!!errors.lockDuration}
-                  />
-                  {errors.lockDuration ? <FormFeedback>{errors.lockDuration}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>Start date</Label>
-                  <Datetime
-                    className="form-control"
-                    value={campaign.startDate}
-                    onChange={(v) => changeValue(v, 'startDate', 'date')}
-                    input={false}
-                    inputProps={{ placeholder: 'Start date' }}
-                  />
-                  {errors.startDate ? <FormFeedback>{errors.startDate}</FormFeedback> : null}
-                </div>
-                <div className="col-md-6 pr-md-1">
-                  <Label>End date</Label>
-                  <Datetime
-                    className="form-control"
-                    value={campaign.endDate}
-                    onChange={(v) => changeValue(v, 'endDate', 'date')}
-                    input={false}
-                    inputProps={{ placeholder: 'End date' }}
-                  />
-                  {errors.endDate ? <FormFeedback>{errors.endDate}</FormFeedback> : null}
-                </div>
-              </div>
+                  <div className="row">
+                    <div className="col-md-8 pr-md-1">
+                      <Label>Percentage allocated to PancakeSwap</Label>
+                      <Input
+                        label="Percentage allocated to PancakeSwap"
+                        type="range"
+                        value={campaign.liquidityRate ?? 0 / 100}
+                        onChange={(e) => changeValue(e.target.value, 'liquidityRate', 'number')}
+                        invalid={!!errors.liquidityRate}
+                      />
+                      {errors.liquidityRate ? <FormFeedback>{errors.liquidityRate}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-4 pr-md-1 text-white">
+                      <span>{campaign.liquidityRate} %</span>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="row">
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Token per BNB</Label>
+                      <Input
+                        value={formatBN(campaign.rate, token.decimals, true)}
+                        onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber')}
+                        label="Token per BNB"
+                        placeholder="Token per ETH"
+                        invalid={!!errors.rate}
+                      />
+                      {errors.rate ? <FormFeedback>{errors.rate}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Token per BNB in liquidity pool</Label>
+                      <Input
+                        value={formatBN(campaign.poolRate, token.decimals, true)}
+                        onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber')}
+                        label="Token per BNB"
+                        placeholder="Token per ETH"
+                        invalid={!!errors.poolRate}
+                      />
+                      {errors.poolRate ? <FormFeedback>{errors.poolRate}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Liquidity lock duration (in days)</Label>
+                      <Input
+                        value={campaign.lockDuration}
+                        onChange={(e) => changeValue(e.target.value, 'lockDuration', 'number')}
+                        label="Liquidity lock duration (in days)"
+                        placeholder="Liquidity lock duration (in days)"
+                        invalid={!!errors.lockDuration}
+                      />
+                      {errors.lockDuration ? <FormFeedback>{errors.lockDuration}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>Start date</Label>
+                      <Datetime
+                        value={campaign.startDate}
+                        onChange={(v) => changeValue(v, 'startDate', 'date')}
+                        inputProps={{ placeholder: 'Start date' }}
+                      />
+                      {errors.startDate ? <FormFeedback>{errors.startDate}</FormFeedback> : null}
+                    </div>
+                    <div className="col-md-6 pr-md-1">
+                      <Label>End date</Label>
+                      <Datetime
+                        value={campaign.endDate}
+                        onChange={(v) => changeValue(v, 'endDate', 'date')}
+                        inputProps={{ placeholder: 'End date' }}
+                      />
+                      {errors.endDate ? <FormFeedback>{errors.endDate}</FormFeedback> : null}
+                    </div>
+                  </div>
 
-              <div className="row">
-                <div className="col-md-8">
-                  <Label>Description</Label>
-                  <Input
-                    value={campaign.description}
-                    onChange={(e) => changeValue(e.target.value, 'description', 'text')}
-                    type="textarea"
-                    rows="4"
-                    cols="80"
-                    className="form-control"
-                    placeholder="Your project description"
-                    invalid={!!errors.description}
-                  />
-                  {errors.description ? <FormFeedback>{errors.description}</FormFeedback> : null}
-                </div>
-              </div>
-              {/* <button variant="seconday" className="btn" type="submit">
-                Save
-              </button> */}
-              {!isApproved ? (
-                <button onClick={onApprove} className="btn btn-primary" type="button" disabled={!valid}>
-                  Approve
-                </button>
-              ) : (
-                <button onClick={onCreate} className="btn btn-primary" type="button" disabled={!valid}>
-                  Launch
-                </button>
-              )}
+                  <div className="row">
+                    <div className="col-md-8">
+                      <Label>Description</Label>
+                      <Input
+                        value={campaign.description}
+                        onChange={(e) => changeValue(e.target.value, 'description', 'text')}
+                        type="textarea"
+                        rows="4"
+                        cols="80"
+                        className="form-control"
+                        placeholder="Your project description"
+                        invalid={!!errors.description}
+                      />
+                      {errors.description ? <FormFeedback>{errors.description}</FormFeedback> : null}
+                    </div>
+                  </div>
+                  {/* <button variant="seconday" className="btn" type="submit">
+                  Save
+                </button> */}
+                  {!isApproved ? (
+                    <button onClick={onApprove} className="btn btn-primary" type="button" disabled={!valid}>
+                      Approve
+                    </button>
+                  ) : (
+                    <button onClick={onCreate} className="btn btn-primary" type="button" disabled={!valid}>
+                      Launch
+                    </button>
+                  )}
+                </>
+              ) : null}
             </Form>
           </CardBody>
         </Container>
