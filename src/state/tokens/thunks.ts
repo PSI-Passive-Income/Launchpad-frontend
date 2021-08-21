@@ -39,7 +39,7 @@ export const getTokens =
   }
 
 export const getUserTokens =
-  (account?: string, spender?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (account: string, spender?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       dispatch(tokenLoadStart())
 

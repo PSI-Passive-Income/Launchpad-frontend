@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useUserTokens } from 'state/hooks'
 import { useLoading } from '@agney/react-loading'
-import { values } from 'lodash'
+import { isEmpty, values } from 'lodash'
 import TokenCard from './TokenCard'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -20,7 +20,7 @@ const ManageTokens: React.FC = () => {
     <div className="content" {...containerProps}>
       <div className="row">
         {indicatorEl}
-        {!isLoadingTokens && !allTokens ? (
+        {isEmpty(allTokens) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">
               <div className="notokens-warning">
@@ -30,6 +30,7 @@ const ManageTokens: React.FC = () => {
             </div>
           </div>
         ) : null}
+        
         {allTokens?.map((token) => (
           <TokenCard token={token} />
         ))}

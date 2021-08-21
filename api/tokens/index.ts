@@ -8,7 +8,8 @@ const httpTrigger: AzureFunction = async function httpTrigger(context: Context, 
   try {
     await initSequelize()
 
-    if (req.method === 'GET') await get(context, req)
+    if (req.method === 'OPTIONS') funcSuccess(context)
+    else if (req.method === 'GET') await get(context, req)
     else if (req.method === 'POST') await create(context, req)
   } catch (error) {
     console.error(error)

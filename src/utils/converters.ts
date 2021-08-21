@@ -32,13 +32,15 @@ export const snakeCaseKeys = (obj: any | any[]) => {
 }
 
 export const unixTSToDate = (value: string | number) => {
-  if (isNil(value) || !isFinite(value)) return null
-  return new Date(toFinite(value) * 1000)
+  const numberValue = parseFloat(value.toString())
+  if (!Number.isNaN(numberValue) || !Number.isFinite(numberValue)) return null
+  return new Date(numberValue * 1000)
 }
 
 export const toBigNumber = (value: string | number) => {
-  if (isNil(value) || (!isString(value) && !isFinite(value))) return null
-  return new BigNumber(value)
+  const stringValue = value?.toString()
+  if (isNil(stringValue) || !isString(stringValue)) return null
+  return new BigNumber(stringValue)
 }
 
 export const toBool = (value: string | number) => {

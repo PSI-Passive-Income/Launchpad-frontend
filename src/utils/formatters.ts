@@ -18,8 +18,9 @@ export const formatDateTime = (
   return new Intl.DateTimeFormat('en-GB', { dateStyle, timeStyle }).format(_date)
 }
 
-export const formatBN = (value: utils.BigNumberish | BigNumber, decimals = 18) => {
+export const formatBN = (value: utils.BigNumberish | BigNumber, decimals = 18, toString = false) => {
   if (isNil(value)) return ""
   const bn = new BigNumber(value.toString())
-  return decimals > 0 ? bn.div(10 ** decimals).toString() : bn.toString()
+  if (toString) return decimals > 0 ? bn.div(10 ** decimals).toString() : bn.toString()
+  return decimals > 0 ? bn.div(10 ** decimals).toFormat() : bn.toFormat()
 }

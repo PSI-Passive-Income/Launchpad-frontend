@@ -19,7 +19,6 @@ const CreateToken: React.FC = () => {
 
   const mandatoryErrors = useMemo(() => {
     const _errors: { [key: string]: string } = {}
-    console.log(isEmpty(token.name), token.name)
     if (isEmpty(token.name)) _errors.name = 'This field is required'
     if (isEmpty(token.symbol)) _errors.symbol = 'This field is required'
     if (isNil(token.initialSupply)) _errors.initialSupply = 'This field is required'
@@ -30,8 +29,8 @@ const CreateToken: React.FC = () => {
   const errors: { [key: string]: string } = useMemo(() => {
     const _errors = { ...(submitClicked ? mandatoryErrors : {}), ...validationErrors }
 
-    if (token.initialSupply && token.maximumSupply && token.initialSupply > token.maximumSupply)
-      setErrors({ ...errors, maximumSupply: 'Maximum supply should be higher than the initial supply' })
+    if (token.initialSupply && token.maximumSupply && token.initialSupply.gt(token.maximumSupply))
+      _errors.maximumSupply = 'Maximum supply should be higher than the initial supply'
 
     return _errors
   }, [validationErrors, submitClicked, mandatoryErrors, token])
@@ -112,7 +111,7 @@ const CreateToken: React.FC = () => {
                           type="number"
                           name="initialSupply"
                           id="initialSupply"
-                          value={formatBN(token.initialSupply)}
+                          value={formatBN(token.initialSupply, 18, true)}
                           onChange={(e) => changeValue(e.target.value, 'initialSupply', 'BigNumber')}
                           placeholder="Initial supply"
                           invalid={!!errors.initialSupply}
@@ -177,7 +176,7 @@ const CreateToken: React.FC = () => {
                               type="number"
                               name="maximumSupply"
                               id="maximumSupply"
-                              value={token.maximumSupply?.toFormat(18)}
+                              value={formatBN(token.maximumSupply, 18, true)}
                               onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
                               placeholder="Maximum supply"
                               invalid={!!errors.maximumSupply}

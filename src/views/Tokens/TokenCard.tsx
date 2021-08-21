@@ -18,16 +18,16 @@ const TokenCard: React.FC<Props> = ({ token }) => {
         </div>
         <div className="card-body text-center">
           <div className="form-group">
-            <Label>Token Symbol:</Label>
-            <p>{token.symbol}</p>
-          </div>
-          <div className="form-group">
             <Label>Chain:</Label>
             <p>BSC</p>
           </div>
           <div className="form-group">
             <Label>Total Supply:</Label>
-            <p>{formatBN(token.totalSupply, token.decimals)}</p>
+            <p>{formatBN(token.totalSupply, token.decimals)} {token.symbol}</p>
+          </div>
+          <div className="form-group">
+            <Label>You balance:</Label>
+						<p>{formatBN(token.accountBalance, token.decimals)} {token.symbol}</p>
           </div>
           <div className="form-group">
             <Label>Token address:</Label>
@@ -36,11 +36,6 @@ const TokenCard: React.FC<Props> = ({ token }) => {
                 {token.address}
               </a>
             </p>
-          </div>
-
-          <div className="form-group">
-            <Label>Balance:</Label>
-						<p>{formatBN(token.accountBalance, token.decimals)}</p>
           </div>
         </div>
       </div>
