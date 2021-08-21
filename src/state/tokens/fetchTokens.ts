@@ -38,7 +38,7 @@ export const fetchTokens = async (
       totalSupply: toBigNumber(tokenData[3]),
     }
     if (account) token.accountBalance = toBigNumber(tokenData[4])
-    if (account && spender) token.approvals[spender] = toBigNumber(tokenData[5])
+    if (account && spender) token.approvals = { ...token.approvals, [spender]: toBigNumber(tokenData[5]) }
     return [...result, token]
   }, [])
 }

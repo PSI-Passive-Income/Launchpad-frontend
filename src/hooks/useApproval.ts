@@ -9,20 +9,20 @@ import { useActiveWeb3React } from './web3'
 const useApproval = (tokenAddress: string, spender: string) => {
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
-  const tokenContact = useBEP20(tokenAddress)
+  const tokenContract = useBEP20(tokenAddress)
   const [approving, setApproving] = useState(false)
   const { token, isLoadingToken } = useTokenWithApproval(tokenAddress, spender)
 
   const handleApprove = useCallback(async () => {
     try {
       setApproving(true)
-      await approve(tokenContact, account, spender)
+      await approve(tokenContract, account, spender)
     } catch (error) {
       dispatch(toastError('Error approving tokens', error?.message))
     } finally {
       setApproving(false)
     }
-  }, [dispatch, account, spender, tokenContact])
+  }, [dispatch, account, spender, tokenContract])
 
   const approvedAmount = useMemo(
     () => token?.approvals[spender],

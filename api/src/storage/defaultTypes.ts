@@ -1,33 +1,33 @@
-import { ModelAttributeColumnOptions, INTEGER, STRING, BOOLEAN } from "sequelize";
+import { ModelAttributeColumnOptions, INTEGER, STRING, BOOLEAN } from 'sequelize'
 
-export const string = (allowNull: boolean = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
+export const string = (allowNull = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
   return {
-    allowNull: allowNull,
+    allowNull,
     type: STRING,
-    ...attributes
+    ...attributes,
   }
 }
 
-export const int = (allowNull: boolean = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
+export const int = (allowNull = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
   return {
-    allowNull: allowNull,
+    allowNull,
     type: INTEGER,
-    ...attributes
+    ...attributes,
   }
 }
 
-export const uint = (allowNull: boolean = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
+export const uint = (allowNull = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
   return {
-    allowNull: allowNull,
+    allowNull,
     type: INTEGER.UNSIGNED,
-    ...attributes
+    ...attributes,
   }
 }
 
-export const bool = (allowNull: boolean = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
+export const bool = (allowNull = false, attributes?: Partial<ModelAttributeColumnOptions<any>>) => {
   return {
-    allowNull: allowNull,
+    allowNull,
     type: BOOLEAN,
-    ...attributes
+    ...attributes,
   }
 }

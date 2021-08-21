@@ -141,7 +141,7 @@ export const useTokenWithApproval = (address: string, spender: string | Contract
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const { token, isLoadingToken } = useSelector((state: RootState) => ({
-    token: state.tokens.data[address],
+    token: state.tokens.data[address?.toLowerCase()],
     isLoadingToken: state.tokens.isLoading,
   }))
   const spenderAddress = isObject(spender) ? (spender as BaseContract).options.address : spender
@@ -151,7 +151,6 @@ export const useTokenWithApproval = (address: string, spender: string | Contract
       dispatch(getToken(address, account, spenderAddress))
     }
   }, [dispatch, address, account, spenderAddress])
-
   return { token, isLoadingToken }
 }
 

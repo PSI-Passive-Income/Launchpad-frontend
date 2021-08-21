@@ -138,7 +138,7 @@ const CampaignDetail: React.FC = () => {
                   <Label>
                     Total Supply:
                     <p>
-                      {token.totalSupply.toNumber()} {token.symbol}
+                      {formatBN(token.totalSupply)} {token.symbol}
                     </p>
                   </Label>
                 </div>

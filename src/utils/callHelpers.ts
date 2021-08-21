@@ -56,15 +56,15 @@ export const tokensNeeded = async (
   const result = await campaignFactory.methods
     .tokensNeeded(
       [
-        campaign.softCap.toString(),
+        campaign.softCap?.toString(),
         campaign.hardCap.toString(),
-        round(campaign.startDate.getTime() / 1000),
-        round(campaign.endDate.getTime() / 1000),
+        round(campaign.startDate?.getTime() / 1000),
+        round(campaign.endDate?.getTime() / 1000),
         campaign.rate.toString(),
-        campaign.minAllowed.toString(),
-        campaign.maxAllowed.toString(),
+        campaign.minAllowed?.toString(),
+        campaign.maxAllowed?.toString(),
         campaign.poolRate.toString(),
-        campaign.lockDuration.toString(),
+        campaign.lockDuration?.toString(),
         campaign.liquidityRate.toString(),
       ],
       feePercentage,

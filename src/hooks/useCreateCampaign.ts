@@ -18,8 +18,10 @@ export const useTokensNeeded = (campaign: Partial<Campaign>) => {
 
   useEffect(() => {
     const getTokensNeeded = async () => {
-      const _needed = await tokensNeeded(campaignFactory, campaign)
-      setNeeded(_needed)
+      if (campaign.hardCap && campaign.rate && campaign.poolRate && campaign.liquidityRate) {
+        const _needed = await tokensNeeded(campaignFactory, campaign)
+        setNeeded(_needed)
+      }
     }
     getTokensNeeded()
   }, [campaignFactory, campaign])

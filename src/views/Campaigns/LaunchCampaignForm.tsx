@@ -63,7 +63,7 @@ const LaunchCampaignForm: React.FC = () => {
 
   const changeValue = (value: string | Moment, name: string, type: string, mandatory = true) => {
     const { newValue, newErrors } = validate(campaign, errors, value, name, type, mandatory)
-    setErrors({ ...errors, ...newErrors })
+    setErrors({ ...validationErrors, ...newErrors })
     setCampaign(newValue)
   }
 

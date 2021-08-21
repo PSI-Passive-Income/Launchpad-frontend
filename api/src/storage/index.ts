@@ -1,9 +1,8 @@
 import { Sequelize } from 'sequelize'
 import fs from 'fs'
 import appRoot from 'app-root-path'
-import { storageSettings, initUserModel } from '@passive-income/psi-api'
+import { storageSettings } from '@passive-income/psi-api'
 import { initCampaignModel } from './campaigns.table'
-import { initTokenModel } from './tokens.table'
 import { initCommentModel } from './comments.table'
 
 let sequelize: Sequelize | null = null
@@ -34,9 +33,7 @@ export const initSequelize = async (): Promise<Sequelize> => {
     },
   })
 
-  initUserModel(sequelize)
   initCampaignModel(sequelize)
-  initTokenModel(sequelize)
   initCommentModel(sequelize)
 
   // Create new tables
