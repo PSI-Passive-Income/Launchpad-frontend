@@ -8,9 +8,9 @@ import { fetchToken, fetchTokens, fetchUserTokens } from './fetchTokens'
 // Thunks
 
 export const getToken =
-  (tokenAddress: string, account?: string, spender?: string) =>
+  (tokenAddress: string, account?: string, spender?: string, refresh = false) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
-    if (getState()?.tokens?.data[tokenAddress?.toLowerCase()]) return
+    if (getState()?.tokens?.data[tokenAddress?.toLowerCase()] && !refresh) return
 
     try {
       dispatch(tokenLoadStart())

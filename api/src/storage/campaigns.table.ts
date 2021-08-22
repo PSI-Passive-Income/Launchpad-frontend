@@ -11,7 +11,6 @@ export const initCampaignModel = (sequelize: Sequelize) => {
         primaryKey: true,
         validate: { isLowercase: true },
       }),
-      token_name: string(),
       token_address: string(true, {
         unique: true,
         validate: { isLowercase: true },

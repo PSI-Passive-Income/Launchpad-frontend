@@ -9,7 +9,7 @@ import {
 } from '@passive-income/psi-api'
 import { initSequelize } from '../src/storage'
 import Campaign from '../src/models/campaign.model'
-import { isNumber } from 'lodash'
+import { isEmpty, isNumber } from 'lodash'
 
 const httpTrigger: AzureFunction = async function httpTrigger(context: Context, req: HttpRequest): Promise<void> {
   try {
@@ -54,9 +54,9 @@ const get = async (context: Context, req: HttpRequest) => {
 
 const create = async (context: Context, req: HttpRequest) => {
   const validationResult = await validateJWTWalletSign(context, req) // check if wallet is signed in
-  if (validationResult) return validationResult
+  if (isEmpty((<any>req)?.user)) return validationResult
 
-  if (!req?.body?.id) return funcValidationError(context, 'Post parameter id not set')
+  if (req?.body?.id ?? -1 < 0) return funcValidationError(context, 'Post parameter id not set')
   if (!req?.body?.token_address || !web3.utils.isAddress(req.body.token_address))
     return funcValidationError(context, 'Post parameter token_address not set or not an valid address')
   if (!req?.body?.campaign_address || !web3.utils.isAddress(req.body.campaign_address))
@@ -66,13 +66,13 @@ const create = async (context: Context, req: HttpRequest) => {
 
   const campaign = await Campaign.create({
     id: req.body.id,
-    token_name: req.body.token_name,
     token_address: req.body.token_address.toLowerCase(),
     campaign_address: req.body.campaign_address.toLowerCase(),
-    description: req.body.desc,
+    description: req.body.description,
     owner: req.body.owner.toLowerCase(),
   })
 
+  console.log(campaign)
   return funcSuccess(context, campaign ? campaign.toJSON() : null)
 }
 

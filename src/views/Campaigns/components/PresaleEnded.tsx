@@ -42,7 +42,7 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
 
         {campaign.locked && campaign.status === CampaignStatus.Ended ? (
           <button type="button" className="btn btn-danger mb-4">
-            Trade On Pancakeswap
+            Trade On PSI Dex
           </button>
         ) : null}
 

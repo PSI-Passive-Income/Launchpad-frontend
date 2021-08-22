@@ -502,6 +502,32 @@ tspan{
     background: 50% / 50% 50% no-repeat;
 }
 
-.rdt {
-    margin-bottom: 20px;
+.content {
+    .rdt {
+        margin-bottom: 20px;
+    }
+    .rdtPicker {
+        background-color: rgba(21, 61, 111, 0.84);
+        border-color: #2b3553;
+        border-radius: 0.4285rem;
+        transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        margin-top: 5px;
+        padding: 5px 20px;
+        min-width: 300px;
+    }
+    .rdtPicker td.rdtDay:hover, .rdtPicker td.rdtHour:hover, .rdtPicker td.rdtMinute:hover, .rdtPicker td.rdtSecond:hover, .rdtPicker .rdtTimeToggle:hover {
+        background-color: #31daf3;
+    }
+    .rdtPicker thead tr:first-of-type th:hover {
+        background-color: #31daf3;
+    }
+    .rdtCounter .rdtBtn:hover {
+        background-color: #31daf3;
+    }
+    td.rdtMonth:hover, td.rdtYear:hover {
+        background-color: #31daf3
+    }
+    .was-validated .rdt:invalid ~ .invalid-feedback, .was-validated .rdt:invalid ~ .invalid-tooltip, .rdt.is-invalid ~ .invalid-feedback, .rdt.is-invalid ~ .invalid-tooltip {
+        display: block;
+    }
 }

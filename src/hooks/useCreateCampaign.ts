@@ -47,15 +47,15 @@ export const useCreateCampaign = () => {
       if (account && campaign && history) {
         try {
           setCreating(true)
-          const receipt = await createCampaign(campaignFactory, account, campaign)
-          console.info(receipt)
-          if (receipt.status) {
+          // const receipt = await createCampaign(campaignFactory, account, campaign)
+          // console.info(receipt)
+          // if (receipt.status) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
               const campaignAddress = await getCampaignAddress(campaignFactory, campaignId)
               if (isNumber(campaignId) && campaignAddress) {
-                const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, campaignAddress })
+                const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
                 dispatch(campaignsAdd(addedCampaign))
                 history.push(`/projects/${addedCampaign.campaignAddress}`)
               } else {
@@ -64,9 +64,9 @@ export const useCreateCampaign = () => {
             } else {
               dispatch(toastError('Error adding campaign', 'Campaign is not found on the contract'))
             }
-          } else {
-            dispatch(toastError('Error adding campaign', 'Transaction failed'))
-          }
+          // } else {
+          //   dispatch(toastError('Error adding campaign', 'Transaction failed'))
+          // }
         } catch (error) {
           dispatch(toastError('Error adding campaign', error?.message))
         } finally {

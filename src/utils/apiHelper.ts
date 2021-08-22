@@ -22,7 +22,14 @@ export const fetchCampaignByToken = async (address: string): Promise<Campaign> =
 
 export const addCampaign = async (accessToken: string, campaign: Partial<Campaign>): Promise<Campaign> => {
   const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns`, {
-    body: JSON.stringify(campaign),
+    body: JSON.stringify({
+      id: campaign.id,
+      token_name: campaign.tokenName,
+      token_address: campaign.tokenAddress.toLowerCase(),
+      campaign_address: campaign.campaignAddress.toLowerCase(),
+      description: campaign.description,
+      owner: campaign.owner,
+    }),
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -31,5 +38,5 @@ export const addCampaign = async (accessToken: string, campaign: Partial<Campaig
     method: 'POST',
   })
   if (!response.ok) throw new Error(await response.text())
-  return response.json()
+  return camelCaseKeys(await response.json())
 }

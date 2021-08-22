@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js'
 import { utils, constants, Contract } from 'ethers'
 import { isNil, isObject, parseInt, round } from 'lodash'
 import { Campaign, TokenCreationInfo, TokenLock } from 'state/types'
+import { toBigNumber } from './converters'
 
 export const approve = async (
   contract: IBEP20,
@@ -56,21 +57,21 @@ export const tokensNeeded = async (
   const result = await campaignFactory.methods
     .tokensNeeded(
       [
-        campaign.softCap?.toString(),
+        campaign.softCap?.toString() ?? 0,
         campaign.hardCap.toString(),
-        round(campaign.startDate?.getTime() / 1000),
-        round(campaign.endDate?.getTime() / 1000),
+        round((campaign.startDate?.getTime() ?? 0) / 1000),
+        round((campaign.endDate?.getTime() ?? 0) / 1000),
         campaign.rate.toString(),
-        campaign.minAllowed?.toString(),
-        campaign.maxAllowed?.toString(),
+        campaign.minAllowed?.toString() ?? 0,
+        campaign.maxAllowed?.toString() ?? 0,
         campaign.poolRate.toString(),
-        campaign.lockDuration?.toString(),
+        campaign.lockDuration?.toString() ?? 0,
         campaign.liquidityRate.toString(),
       ],
       feePercentage,
     )
     .call()
-  return new BigNumber(result)
+  return toBigNumber(result)
 }
 
 export const createCampaign = async (
@@ -79,20 +80,22 @@ export const createCampaign = async (
   campaign: Partial<Campaign>,
   feePercentage = 0,
 ) => {
+  const hi = [
+    campaign.softCap.toString(),
+    campaign.hardCap.toString(),
+    round(campaign.startDate.getTime() / 1000),
+    round(campaign.endDate.getTime() / 1000),
+    campaign.rate.toString(),
+    campaign.minAllowed.toString(),
+    campaign.maxAllowed.toString(),
+    campaign.poolRate.toString(),
+    campaign.lockDuration.toString(),
+    campaign.liquidityRate.toString(),
+  ]
+  console.log(hi)
   return campaignFactory.methods
     .createCampaign(
-      [
-        campaign.softCap.toString(),
-        campaign.hardCap.toString(),
-        round(campaign.startDate.getTime() / 1000),
-        round(campaign.endDate.getTime() / 1000),
-        campaign.rate.toString(),
-        campaign.minAllowed.toString(),
-        campaign.maxAllowed.toString(),
-        campaign.poolRate.toString(),
-        campaign.lockDuration.toString(),
-        campaign.liquidityRate.toString(),
-      ],
+      hi as any,
       campaign.tokenAddress,
       feePercentage,
     )
@@ -103,7 +106,11 @@ export const getUserTokens = async (tokenFactory: PSIPadTokenDeployer, account: 
   return tokenFactory.methods.getUserTokens(account).call()
 }
 
-export const createToken = async (tokenFactory: PSIPadTokenDeployer, account: string, token: Partial<TokenCreationInfo>) => {
+export const createToken = async (
+  tokenFactory: PSIPadTokenDeployer,
+  account: string,
+  token: Partial<TokenCreationInfo>,
+) => {
   return tokenFactory.methods
     .createToken([
       token.name,

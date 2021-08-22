@@ -26,9 +26,10 @@ const validate = <T>(
       const floatValue = parseFloat(value)
       if (!Number.isNaN(floatValue) && Number.isFinite(floatValue)) {
         if (floatValue < 0) {
-          newErrors[name] = 'This number shoulde be positive'
+          newErrors[name] = 'This number should be positive'
         } else {
-          newValue[name] = type === 'BigNumber' ? utils.parseUnits(value, 18) : value
+          newValue[name] = type === 'BigNumber' ? utils.parseUnits(floatValue.toString(), 18) : floatValue
+          if (floatValue === 0) newErrors[name] = 'This field is required'
         }
       } else {
         newErrors[name] = 'Please fill in a correct number'

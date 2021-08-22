@@ -42,6 +42,7 @@ export const loginWallet =
   }
 
 export const logoutWallet = () => {
+  console.log("logging out?")
   sessionStorage.removeItem('MM_TokenInfo')
   return userLogout()
 }

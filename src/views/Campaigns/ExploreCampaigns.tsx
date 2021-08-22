@@ -128,7 +128,7 @@ const ExploreCampaigns: React.FC = () => {
         ) : null}
         
         {!campaignsLoading && filteredCampaigns
-          ? filteredCampaigns.map((campaign, ind) => {
+          ? filteredCampaigns.map((campaign) => {
               return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
             })
           : null}

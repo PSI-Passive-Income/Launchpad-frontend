@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { toastError } from 'state/actions'
+import { getToken, toastError } from 'state/actions'
 import { useTokenWithApproval } from 'state/hooks'
 import { approve } from 'utils/callHelpers'
 import { useBEP20 } from './useContract'
@@ -14,15 +14,18 @@ const useApproval = (tokenAddress: string, spender: string) => {
   const { token, isLoadingToken } = useTokenWithApproval(tokenAddress, spender)
 
   const handleApprove = useCallback(async () => {
-    try {
-      setApproving(true)
-      await approve(tokenContract, account, spender)
-    } catch (error) {
-      dispatch(toastError('Error approving tokens', error?.message))
-    } finally {
-      setApproving(false)
+    if (dispatch && account && spender && tokenContract) {
+      try {
+        setApproving(true)
+        await approve(tokenContract, account, spender)
+        dispatch(getToken(tokenAddress, account, spender, true))
+      } catch (error) {
+        dispatch(toastError('Error approving tokens', error?.message))
+      } finally {
+        setApproving(false)
+      }
     }
-  }, [dispatch, account, spender, tokenContract])
+  }, [dispatch, tokenAddress, account, spender, tokenContract])
 
   const approvedAmount = useMemo(
     () => token?.approvals[spender],
