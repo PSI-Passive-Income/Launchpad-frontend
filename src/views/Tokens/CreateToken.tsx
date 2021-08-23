@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react'
 import { Label, Input, FormGroup, FormFeedback, FormText } from 'reactstrap'
-import { useLoading } from '@agney/react-loading'
 import 'react-toastify/dist/ReactToastify.css'
 import { TokenCreationInfo } from 'state/types'
 import useCreateToken from 'hooks/useCreateToken'
 import { isEmpty, isNil } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
+import Loader from 'components/Loader'
 
 const CreateToken: React.FC = () => {
   const [token, setToken] = useState<Partial<TokenCreationInfo>>({})
@@ -56,16 +56,13 @@ const CreateToken: React.FC = () => {
     }
   }
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: creatingToken,
-  })
-
   return (
     <div className="content">
+      <Loader loading={creatingToken} />
+
       <div className="row">
         <div className="col-md-12">
-          <div className="card" {...containerProps}>
-            {indicatorEl}
+          <div className="card">
             <div className="card-header">
               <h5 className="title">Create Token</h5>
             </div>

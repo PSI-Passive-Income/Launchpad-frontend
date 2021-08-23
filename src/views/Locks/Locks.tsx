@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { useLoading } from '@agney/react-loading'
 import { Label } from 'reactstrap'
 import { values } from 'lodash'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useTokens, useUserTokenLocks } from 'state/hooks'
+import Loader from 'components/Loader'
 import lockImage from '../../assets/img/lock.png'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -14,14 +14,13 @@ const Locks: React.FC = () => {
   const tokenAddresses = useMemo(() => allLocks?.map((l) => l.token), [allLocks])
   const { tokens, isLoadingTokens } = useTokens(tokenAddresses)
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: isLoadingLocks || isLoadingTokens,
-  })
+  const loading = isLoadingLocks || isLoadingTokens
 
   return (
-    <div className="content" {...containerProps}>
+    <div className="content">
+      <Loader loading={loading} />
+
       <div className="row">
-        {indicatorEl} {/* renders only while loading */}
         {!isLoadingLocks && !tokenLocks ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">

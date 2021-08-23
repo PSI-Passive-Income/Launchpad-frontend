@@ -4,7 +4,7 @@ import { Campaign, CampaignStatus } from 'state/types'
 import { toBigNumber, toBool, unixTSToDate } from 'utils/converters'
 import { nestedMulticall, Call, multicall } from 'utils/multicall'
 
-export const fetchCampaignsStatus = async (campaigns: Campaign[]) => {
+export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWallet?: string) => {
   if (!campaigns) return
 
   const calls: Call[][] = campaigns.map((campaign) => {
@@ -15,6 +15,7 @@ export const fetchCampaignsStatus = async (campaigns: Campaign[]) => {
     campaignCalls.push({ address: campaign.campaignAddress, name: 'isLive' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'finalized' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'failed' })
+    if (connectedWallet) campaignCalls.push({ address: campaign.campaignAddress, name: 'getGivenAmount', params: [connectedWallet] })
     return campaignCalls
   })
 
@@ -29,22 +30,7 @@ export const fetchCampaignsStatus = async (campaigns: Campaign[]) => {
     else if (callData[5]) campaign.status = CampaignStatus.Ended
     else if (callData[6]) campaign.status = CampaignStatus.Failed
     else campaign.status = CampaignStatus.NotStarted
-  })
-}
-
-export const fetchCampaignsUserData = async (campaigns: Campaign[], connectedWallet: string) => {
-  if (!campaigns || !connectedWallet) return
-
-  const calls: Call[] = campaigns.map((campaign) => ({
-    address: campaign.campaignAddress,
-    name: 'getGivenAmount',
-    params: [connectedWallet],
-  }))
-  const userData = await multicall(PSIPadCampaignAbi, calls)
-
-  userData.forEach((callData, idx) => {
-    const campaign = campaigns[idx]
-    campaign.userContributed = toBigNumber(callData)
+    if (connectedWallet) campaign.userContributed = toBigNumber(callData[7])
   })
 }
 

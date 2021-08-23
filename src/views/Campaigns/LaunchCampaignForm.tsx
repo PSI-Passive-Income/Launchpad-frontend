@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { useLoading } from '@agney/react-loading'
 import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText } from 'reactstrap'
 import Datetime from 'react-datetime'
 import { Moment } from 'moment'
@@ -8,6 +7,7 @@ import { Campaign } from 'state/types'
 import { isEmpty, isNil } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
+import Loader from 'components/Loader'
 
 const LaunchCampaignForm: React.FC = () => {
   const [campaign, setCampaign] = useState<Partial<Campaign>>({})
@@ -71,8 +71,6 @@ const LaunchCampaignForm: React.FC = () => {
     if (campaign.endDate && campaign.endDate.getTime() <= Date.now())
       _errors.endDate = 'End date should be later than the current date and time'
 
-    console.log(campaign.endDate, campaign.startDate, _errors)
-
     return _errors
   }, [validationErrors, submitClicked, mandatoryErrors, campaign, tokensNeeded, token?.accountBalance, token?.decimals])
 
@@ -95,13 +93,12 @@ const LaunchCampaignForm: React.FC = () => {
     }
   }
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: isLoadingToken || approving || creatingCampaign,
-  })
+  const loading = isLoadingToken || approving || creatingCampaign
 
   return (
-    <div className="content" {...containerProps}>
-      {indicatorEl}
+    <div className="content">
+      <Loader loading={loading} />
+
       <Card>
         <Container>
           <CardBody>

@@ -96,6 +96,7 @@ export interface UserState {
 
 export interface CampaignsState {
   data: { [key: string]: Campaign }
+  dataByAddress: { [key: string]: Campaign }
   isLoading: boolean
   isLoadingCampaign: boolean
   loadingError?: string

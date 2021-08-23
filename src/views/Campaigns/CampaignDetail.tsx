@@ -1,11 +1,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { isFinite, toFinite } from 'lodash'
+import { isFinite } from 'lodash'
 import { Label } from 'reactstrap'
-import { useLoading } from '@agney/react-loading'
 import { useCampaign, useToken } from 'state/hooks'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
+import Loader from 'components/Loader'
 import Timer from '../../components/Timer'
 import Comments from '../../components/UserComments'
 import Contribute from './components/Contribute'
@@ -17,20 +17,18 @@ interface Params {
 
 const CampaignDetail: React.FC = () => {
   const { campaignId: tmpCampaignId } = useParams<Params>()
-  const campaignId = isFinite(tmpCampaignId) ? toFinite(tmpCampaignId) : tmpCampaignId
+  const campaignId = isFinite(parseInt(tmpCampaignId)) ? parseInt(tmpCampaignId) : tmpCampaignId
 
   const { campaign, isLoadingCampaign } = useCampaign(campaignId)
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: !campaign || !token || isLoadingCampaign || isLoadingToken,
-  })
+  const loading = !campaign || !token || isLoadingCampaign || isLoadingToken
 
   return (
-    <div className="content" {...containerProps}>
+    <div className="content">
       <div className="row">
         <div className="col-lg-12">
-          {indicatorEl}
+          <Loader loading={loading} />
 
           <div className="card">
             <div className="card-header">

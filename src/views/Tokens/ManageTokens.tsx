@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useUserTokens } from 'state/hooks'
-import { useLoading } from '@agney/react-loading'
 import { isEmpty, values } from 'lodash'
+import Loader from 'components/Loader'
 import TokenCard from './TokenCard'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -11,15 +11,12 @@ const ManageTokens: React.FC = () => {
   const { tokens, isLoadingTokens } = useUserTokens()
   const allTokens = useMemo(() => values(tokens), [tokens])
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: isLoadingTokens,
-  })
-
   if (!account) return <p>Connect to Metamask</p>
   return (
-    <div className="content" {...containerProps}>
+    <div className="content">
+      <Loader loading={isLoadingTokens} />
+
       <div className="row">
-        {indicatorEl}
         {isEmpty(allTokens) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">

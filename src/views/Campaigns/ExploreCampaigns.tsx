@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react'
 import classNames from 'classnames'
 import { ButtonGroup, Button } from 'reactstrap'
-import { useLoading } from '@agney/react-loading'
 import { isEmpty } from 'lodash'
 import { useCampaigns } from 'state/hooks'
 import { CampaignStatus } from 'state/types'
+import Loader from 'components/Loader'
 import ProjectCardSmall from './CampaignSmallCard'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -22,7 +22,7 @@ const ExploreCampaigns: React.FC = () => {
 
   const filteredCampaigns = useMemo(
     () =>
-      campaigns?.filter(
+      Object.values(campaigns)?.filter(
         (c) =>
           (filter === CampaignStatus.All || c.status === filter) &&
           (contributed === ContributedFilter.All ||
@@ -32,14 +32,10 @@ const ExploreCampaigns: React.FC = () => {
     [campaigns, filter, contributed],
   )
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: campaignsLoading,
-  })
-
   return (
-    <div className="content" {...containerProps}>
+    <div className="content">
       <div className="row">
-        {indicatorEl}
+        <Loader loading={campaignsLoading} />
 
         <div className="col-sm-12 mb-10">
           <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
@@ -116,7 +112,7 @@ const ExploreCampaigns: React.FC = () => {
           </ButtonGroup>
         </div>
 
-        {isEmpty(filteredCampaigns) ? (
+        {!campaignsLoading && isEmpty(filteredCampaigns) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">
               <div className="notokens-warning">
@@ -126,8 +122,8 @@ const ExploreCampaigns: React.FC = () => {
             </div>
           </div>
         ) : null}
-        
-        {!campaignsLoading && filteredCampaigns
+
+        {!campaignsLoading && !isEmpty(filteredCampaigns)
           ? filteredCampaigns.map((campaign) => {
               return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
             })

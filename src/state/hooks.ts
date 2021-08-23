@@ -12,7 +12,7 @@ import { push as pushToast, remove as removeToast, clear as clearToast } from '.
 import { loginWallet, logoutWallet, updateUser } from './user/thunks'
 import { User, UserState } from './types'
 import { toastError, toastInfo, toastSuccess, toastWarning } from './toasts'
-import { getCampaigns, getCampaign, getCampaignsUserData } from './campaigns/thunks'
+import { getCampaigns, getCampaign } from './campaigns/thunks'
 import { getToken, getTokens, getUserTokens } from './tokens/thunks'
 import { getTokenLock, getUserTokenLocks } from './tokenLocks/thunks'
 
@@ -85,18 +85,11 @@ export const useCampaigns = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(getCampaigns())
-  }, [dispatch])
+    dispatch(getCampaigns(account))
+  }, [dispatch, account])
 
   const { data, isLoading } = useSelector((state: RootState) => state.campaigns)
-
-  useEffect(() => {
-    if (isEmpty(data) && !isLoading) {
-      dispatch(getCampaignsUserData(account))
-    }
-  }, [dispatch, data, isLoading, account])
-
-  return { campaigns: Object.values(data), campaignsLoading: isLoading }
+  return { campaigns: data, campaignsLoading: isLoading }
 }
 
 export const useCampaign = (campaignId: string | number) => {
@@ -105,7 +98,7 @@ export const useCampaign = (campaignId: string | number) => {
 
   const finalId = isString(campaignId) ? campaignId.toLowerCase() : campaignId
   const { campaign, isLoadingCampaign } = useSelector((state: RootState) => ({
-    campaign: state.campaigns.data[finalId],
+    campaign: isFinite(finalId) ? state.campaigns.data[finalId] : state.campaigns.dataByAddress[finalId],
     isLoadingCampaign: state.campaigns.isLoadingCampaign,
   }))
 

@@ -2,12 +2,12 @@ import React, { useState, useMemo } from 'react'
 import { Moment } from 'moment'
 import { FormFeedback, FormGroup, FormText, Input, Label } from 'reactstrap'
 import Datetime from 'react-datetime'
-import { useLoading } from '@agney/react-loading'
 import { useCreateTokenLock, useTokenLockFactoryApproval } from 'hooks/useTokenLock'
 import { TokenLock } from 'state/types'
 import { isEmpty, isNil, round, toFinite } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
+import Loader from 'components/Loader'
 import Releases from './components/Releases'
 
 const LockToken: React.FC = () => {
@@ -85,16 +85,15 @@ const LockToken: React.FC = () => {
     }
   }
 
-  const { containerProps, indicatorEl } = useLoading({
-    loading: isLoadingToken || approving || creatingLock,
-  })
+  const loading = isLoadingToken || approving || creatingLock
 
   return (
     <div className="content">
+      <Loader loading={loading} />
+
       <div className="row">
         <div className="col-md-12">
-          <div className="card" {...containerProps}>
-            {indicatorEl}
+          <div className="card">
 
             <div className="card-header">
               <h5 className="title">Lock or Manage Tokens</h5>

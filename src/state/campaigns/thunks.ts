@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash'
 import { toastError } from 'state/toasts'
 import { fetchCampaignsData, fetchCampaignData } from 'utils/apiHelper'
 import { AppDispatch, RootState } from '../store'
@@ -11,17 +10,14 @@ import {
   campaignLoadSucceeded,
   campaignLoadFailed,
 } from '.'
-import { fetchCampaignsStatus, fetchCampaignsUserData, fetchDetailedData } from './fetchCampaignsLiveData'
+import { fetchCampaignsLiveData, fetchDetailedData } from './fetchCampaignsLiveData'
 
 // Thunks
-export const getCampaigns = () => async (dispatch: AppDispatch) => {
+export const getCampaigns = (account?: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(campaignsLoadStart())
-
     const campaigns: Campaign[] = await fetchCampaignsData()
-    dispatch(campaignsLoadSucceeded(campaigns))
-
-    await fetchCampaignsStatus(campaigns)
+    await fetchCampaignsLiveData(campaigns, account)
     dispatch(campaignsLoadSucceeded(campaigns))
   } catch (error) {
     dispatch(toastError('Error retrieving campaigns', error?.message))
@@ -36,10 +32,7 @@ export const getCampaign =
       dispatch(campaignLoadStart())
 
       let campaign = getState()?.campaigns?.data[campaignId]
-      if (!campaign) {
-        campaign = await fetchCampaignData(campaignId)
-        dispatch(campaignLoadSucceeded(campaign))
-      }
+      if (!campaign) campaign = await fetchCampaignData(campaignId)
 
       await fetchDetailedData(campaign, connectedWallet)
       dispatch(campaignLoadSucceeded(campaign))
@@ -48,15 +41,3 @@ export const getCampaign =
       dispatch(campaignLoadFailed(error?.message))
     }
   }
-
-export const getCampaignsUserData = (address: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
-  const campaigns = getState().campaigns.data
-  if (isEmpty(campaigns)) return
-
-  try {
-    await fetchCampaignsUserData(Object.values(campaigns), address)
-    dispatch(campaignsLoadSucceeded(Object.values(campaigns)))
-  } catch (error) {
-    dispatch(toastError('Error retrieving live campaigns data', error?.message))
-  }
-}

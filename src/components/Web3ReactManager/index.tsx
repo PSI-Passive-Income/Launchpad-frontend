@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { network } from '../../utils/web3React'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
 import { NetworkContextName } from '../../config/constants/misc'
-import Loader from '../Loader'
+import Loader from '../LoaderCircle'
 
 const MessageWrapper = styled.div`
   display: flex;

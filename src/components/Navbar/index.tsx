@@ -68,47 +68,7 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <Authenticate />
-              {/* {authedUser.authedUser ? (
-                <>
-                  <p className="align-self-center">{authedUser.authedUser}</p>
-                  <Button
-                    color="info"
-                    id="1"
-                    size="sm"
-                    className="btn-simple active wallet-button"
-                    onClick={LogoutMetamaskWallet}
-                  >
-                    LOCK
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button color="info" id="1" size="sm" className="btn-simple active wallet-button" onClick={toggle}>
-                    + CONNECT
-                  </Button>
-                  <Modal isOpen={modal} toggle={toggle} className={className}>
-                    <ModalHeader toggle={toggle}>Connect To A Wallet</ModalHeader>
-                    <ModalBody>
-                      <div className="single-wallet-box" onClick={metamask_wallet}>
-                        <div className="single-wallet-btn">
-                          Metamask
-                          <div className="single-wallet-img">
-                            <img src={metamaskicon} alt="" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="connect-info">
-                        <p>
-                          <i className="fa fa-info"></i>
-                          Learn how to Connect?
-                        </p>
-                      </div>
-                    </ModalBody>
-                  </Modal>
-                </>
-              )}
-              <FormGroup>
+              {/* <FormGroup>
                 <Input type="select" name="select" id="exampleSelect" className="network-class">
                   <option>Binance Smart Chain</option>
                   <option>Ethereum Network</option>

@@ -1,11 +1,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useLoading } from '@agney/react-loading'
 import { Button, Label } from 'reactstrap'
 import { isFinite, toFinite } from 'lodash'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useToken, useTokenLock } from 'state/hooks'
 import { useUnlockToken } from 'hooks/useTokenLock'
+import Loader from 'components/Loader'
 import lockImage from '../../assets/img/lock.png'
 import emptyBox from '../../assets/img/empty-white-box.png'
 import Releases from './components/Releases'
@@ -23,7 +23,6 @@ const LockDetail: React.FC = () => {
   const { unlock, unlocking } = useUnlockToken()
 
   const isLoading = isLoadingLock || isLoadingToken || unlocking
-  const { containerProps, indicatorEl } = useLoading({ loading: isLoading })
 
   const onUnlock = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -31,9 +30,10 @@ const LockDetail: React.FC = () => {
   }
 
   return (
-    <div className="content" {...containerProps}>
+    <div className="content">
       <div className="row">
-        {indicatorEl} {/* renders only while loading */}
+        <Loader loading={isLoading} />
+
         {!isLoadingLock && !lock ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">
