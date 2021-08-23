@@ -33,9 +33,9 @@ export const fetchLocks = async (account: string): Promise<TokenLock[]> => {
     name: 'tokensLocked',
     params: [id],
   }))
-  const tokenData = await multicall(PSIPadTokenLockFactoryAbi, calls)
+  const tokenData = await multicall(PSIPadTokenLockFactoryAbi, calls, false)
 
-  return tokenData.map((lock: any[], idx: number) => convertLockData(userLocks[idx], lock)).filter((l) => !isNil(l))
+  return tokenData.map((lock: any[], idx: number) => convertLockData(userLocks[idx], lock?.flat())).filter((l) => !isNil(l))
 }
 
 export const fetchLock = async (lockId: number): Promise<TokenLock> => {
@@ -43,6 +43,5 @@ export const fetchLock = async (lockId: number): Promise<TokenLock> => {
 
   const lockFactory = getTokenLockFactoryContract()
   const lockData = await getTokenLock(lockFactory, lockId)
-
   return convertLockData(lockId, lockData)
 }
