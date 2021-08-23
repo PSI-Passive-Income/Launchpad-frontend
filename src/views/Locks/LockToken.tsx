@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react'
-import { Moment } from 'moment'
+import moment from 'moment'
 import { FormFeedback, FormGroup, FormText, Input, Label } from 'reactstrap'
 import Datetime from 'react-datetime'
 import { useCreateTokenLock, useTokenLockFactoryApproval } from 'hooks/useTokenLock'
 import { TokenLock } from 'state/types'
-import { isEmpty, isNil, round, toFinite } from 'lodash'
+import { isEmpty, isNil, round } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
 import Loader from 'components/Loader'
@@ -12,8 +12,8 @@ import Releases from './components/Releases'
 
 const LockToken: React.FC = () => {
   const [lock, setLock] = useState<Partial<TokenLock>>({})
-  const [valid, setValid] = useState(false)
 
+  const [submitClicked, setSubmitClicked] = useState(false)
   const { createLock, creatingLock } = useCreateTokenLock()
 
   const { token, isLoadingToken, approve, approving, approvedAmount } = useTokenLockFactoryApproval(lock.token)
@@ -24,51 +24,49 @@ const LockToken: React.FC = () => {
   )
 
   const amountRange = useMemo(
-    () => (token.accountBalance && lock.amount ? round(token.accountBalance.div(lock.amount).toNumber(), 1) : 0),
-    [token.accountBalance, lock.amount],
+    () => (token?.accountBalance && lock.amount ? round(lock.amount.div(token.accountBalance).toNumber() * 100, 1) : 0),
+    [token, lock.amount],
   )
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-
-  const validateCampaign = (newLock: Partial<TokenLock>, validateMandatory = false) => {
-    if (newLock.startTime && newLock.unlockTime && newLock.startTime >= newLock.unlockTime)
-      setErrors({ ...errors, unlockTime: 'Unlock should be later than the start' })
-    if (newLock.unlockTime && newLock.unlockTime.getTime() > Date.now())
-      setErrors({ ...errors, unlockTime: 'Unlock should be later than the current time' })
-    if (newLock.amount && token?.totalSupply && newLock.amount.gt(token?.totalSupply))
-      setErrors({ ...errors, amount: 'The amount to lock is more than the total supply' })
-    if (newLock.releases && newLock.releases < 1) setErrors({ ...errors, rate: 'A minimum of 1 release is mandatory' })
-
-    const mandatoryErrors = valideMandatory(newLock)
-    if (validateMandatory) setErrors({ ...errors, ...mandatoryErrors })
-
-    if (isEmpty(errors) && isEmpty(mandatoryErrors)) setValid(true)
-    else setValid(false)
-
-    setLock(newLock)
-  }
-
-  const valideMandatory = (newLock: Partial<TokenLock>) => {
-    const mandatoryErrors = {}
-    if (isNil(newLock.token)) setErrors({ ...mandatoryErrors, token: 'This field is required' })
-    if (isNil(newLock.amount)) setErrors({ ...mandatoryErrors, amount: 'This field is required' })
-    if (isNil(newLock.startTime)) setErrors({ ...mandatoryErrors, startTime: 'This field is required' })
-    if (isNil(newLock.unlockTime)) setErrors({ ...mandatoryErrors, unlockTime: 'This field is required' })
-    if (isNil(newLock.releases)) setErrors({ ...mandatoryErrors, releases: 'This field is required' })
-    return mandatoryErrors
-  }
-
-  const changeValue = (value: string | Moment, name: string, type: string, mandatory = true) => {
-    const { newValue, newErrors } = validate(lock, errors, value, name, type, mandatory)
-    setErrors({ ...errors, ...newErrors })
-    validateCampaign(newValue)
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
+  const changeValue = (value: string | moment.Moment, name: string, type: string, mandatory = true) => {
+    const { newValue, newErrors } = validate(lock, validationErrors, value, name, type, mandatory)
+    setValidationErrors(newErrors)
+    setLock(newValue)
   }
 
   const changeRange = (value: string, name: string, type: string, mandatory = true) => {
-    const range = toFinite(value)
-    const amount = token.accountBalance.multipliedBy(range)
+    const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
+    const amount = token.accountBalance.multipliedBy(rangeValue).div(10 ** token.decimals)
     changeValue(amount.toString(), name, type, mandatory)
   }
+
+  const mandatoryErrors = useMemo(() => {
+    const _errors: { [key: string]: string } = {}
+    if (isEmpty(lock.token)) _errors.token = 'This field is required'
+    if (isNil(lock.amount) || lock.amount.lte(0)) _errors.amount = 'This field is required'
+    if (isNil(lock.startTime)) _errors.startTime = 'This field is required'
+    if (isNil(lock.unlockTime)) _errors.unlockTime = 'This field is required'
+    if (isNil(lock.releases) || lock.releases <= 0) _errors.releases = 'This field is required'
+    return _errors
+  }, [lock])
+
+  const errors: { [key: string]: string } = useMemo(() => {
+    const _errors = { ...(submitClicked ? mandatoryErrors : {}), ...validationErrors }
+
+    if (lock.startTime && lock.unlockTime && lock.startTime >= lock.unlockTime)
+      _errors.unlockTime = 'Unlock should be later than the start'
+    if (lock.unlockTime && lock.unlockTime.getTime() <= Date.now())
+      _errors.unlockTime = 'Unlock should be later than the current time'
+    if (lock.amount && token?.totalSupply && lock.amount.gt(token?.totalSupply))
+      _errors.amount = 'The amount to lock is more than the total supply'
+    if (lock.releases && lock.releases < 1) _errors.rate = 'A minimum of 1 release is mandatory'
+
+    return _errors
+  }, [validationErrors, submitClicked, mandatoryErrors, lock, token?.totalSupply])
+
+  console.log(errors, mandatoryErrors)
+  const valid = useMemo(() => isEmpty(errors) && isEmpty(mandatoryErrors), [errors, mandatoryErrors])
 
   const onApprove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
@@ -77,8 +75,8 @@ const LockToken: React.FC = () => {
 
   const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
-    validateCampaign(lock, true)
-    if (isEmpty(errors)) {
+    if (!submitClicked) setSubmitClicked(true)
+    if (valid) {
       if (isNil(lock.releases)) lock.releases = 1
       lock.duration = lock.unlockTime.getTime() - lock.startTime.getTime()
       createLock(lock)
@@ -94,7 +92,6 @@ const LockToken: React.FC = () => {
       <div className="row">
         <div className="col-md-12">
           <div className="card">
-
             <div className="card-header">
               <h5 className="title">Lock or Manage Tokens</h5>
             </div>
@@ -111,7 +108,7 @@ const LockToken: React.FC = () => {
                         <Label htmlFor="tokenaddress">Token address:</Label>
                         <Input
                           type="text"
-                          value={lock.token}
+                          defaultValue={lock.token}
                           onChange={(e) => changeValue(e.target.value, 'token', 'address')}
                           label="Token Address"
                           placeholder="Enter token address"
@@ -160,22 +157,20 @@ const LockToken: React.FC = () => {
                       <FormGroup>
                         <Label>Start time</Label>
                         <Datetime
-                          className="form-control"
+                          className={errors.startTime ? 'is-invalid' : ''}
                           value={lock.startTime}
                           onChange={(v) => changeValue(v, 'startTime', 'date')}
-                          input={false}
                           inputProps={{ placeholder: 'Start time' }}
                         />
-                        {errors.startDate ? <FormFeedback>{errors.startDate}</FormFeedback> : null}
+                        {errors.startTime ? <FormFeedback>{errors.startTime}</FormFeedback> : null}
                       </FormGroup>
 
                       <FormGroup>
                         <Label>Unlock time</Label>
                         <Datetime
-                          className="form-control"
+                          className={errors.unlockTime ? 'is-invalid' : ''}
                           value={lock.unlockTime}
                           onChange={(v) => changeValue(v, 'unlockTime', 'date')}
-                          input={false}
                           inputProps={{ placeholder: 'Unlock time' }}
                         />
                         {errors.unlockTime ? <FormFeedback>{errors.unlockTime}</FormFeedback> : null}
@@ -187,8 +182,8 @@ const LockToken: React.FC = () => {
                           type="number"
                           name="releases"
                           id="releases"
-                          value={lock.releases}
-                          onChange={(e) => changeValue(e.target.value, 'releases', 'BigNumber')}
+                          defaultValue={lock.releases}
+                          onChange={(e) => changeValue(e.target.value, 'releases', 'number')}
                           placeholder="1"
                           invalid={!!errors.releases}
                         />
@@ -208,11 +203,12 @@ const LockToken: React.FC = () => {
                           max={100}
                           step={0.1}
                         />
+                        <br />
                         <Input
                           type="number"
                           name="amount"
                           id="amount"
-                          value={lock.amount?.toFormat(18)}
+                          value={lock.amount?.div(10 ** token.decimals).toNumber()}
                           onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber')}
                           placeholder="0"
                           invalid={!!errors.amount}

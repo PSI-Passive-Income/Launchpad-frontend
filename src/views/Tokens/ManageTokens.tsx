@@ -17,7 +17,7 @@ const ManageTokens: React.FC = () => {
       <Loader loading={isLoadingTokens} />
 
       <div className="row">
-        {isEmpty(allTokens) ? (
+        {!isLoadingTokens && isEmpty(allTokens) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">
               <div className="notokens-warning">

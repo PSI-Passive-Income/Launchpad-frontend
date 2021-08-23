@@ -26,14 +26,14 @@ const Releases: React.FC<Props> = ({ lock }) => {
       return results
     }
     return null
-  }, [lock.startTime, lock.unlockTime, lock.releases, lock.amount, lock.amountUnlocked])
+  }, [lock])
 
   if (!releases) return null
   return (
     <div className="form-group mt-4">
       {releases.map((release) => (
         <div>
-          {release}: {formatDate(release.time)} - {formatBN(release.amountUnlocked)}
+          {release.release}: {formatDate(release.time)} - {formatBN(release.amountUnlocked)}
           {release.unlocked ? ' - UNLOCKED' : null}
         </div>
       ))}
