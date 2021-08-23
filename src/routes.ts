@@ -32,7 +32,7 @@ export const routes: IRoute[] = [
     component: ExploreCampaigns,
   },
   {
-    path: '/projects/:campaignId',
+    path: '/project/:campaignId',
     component: CampaignDetail,
   },
   {

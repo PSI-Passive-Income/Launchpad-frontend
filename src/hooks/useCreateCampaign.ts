@@ -57,7 +57,7 @@ export const useCreateCampaign = () => {
               if (isNumber(campaignId) && campaignAddress) {
                 const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
                 dispatch(campaignsAdd(addedCampaign))
-                history.push(`/projects/${addedCampaign.campaignAddress}`)
+                history.push(`/project/${addedCampaign.campaignAddress}`)
               } else {
                 dispatch(toastError('Error adding campaign', 'Campaign not added correctly'))
               }

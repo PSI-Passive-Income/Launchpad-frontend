@@ -17,7 +17,7 @@ interface Props {
 const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
   return (
     <div className="col-md-4">
-      <a href={`/projects/${campaign.campaignAddress}`}>
+      <a href={`/project/${campaign.campaignAddress}`}>
         <div className="card card-user">
           <div className="card-body">
             {campaign.status === CampaignStatus.Live ? (
