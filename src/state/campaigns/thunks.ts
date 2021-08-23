@@ -34,7 +34,7 @@ export const getCampaign =
       let campaign = getState()?.campaigns?.data[campaignId]
       if (!campaign) campaign = await fetchCampaignData(campaignId)
 
-      await fetchDetailedData(campaign, connectedWallet)
+      campaign = await fetchDetailedData(campaign, connectedWallet)
       dispatch(campaignLoadSucceeded(campaign))
     } catch (error) {
       dispatch(toastError('Error retrieving campaign', error?.message))

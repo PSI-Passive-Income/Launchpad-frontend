@@ -15,13 +15,18 @@ const CreateToken: React.FC = () => {
   const [submitClicked, setSubmitClicked] = useState(false)
   const { createToken, creatingToken } = useCreateToken()
 
-  const [validationErrors, setErrors] = useState<{ [key: string]: string }>({})
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
+  const changeValue = (value: string | boolean, name: string, type: string, mandatory = true) => {
+    const { newValue, newErrors } = validate(token, validationErrors, value, name, type, mandatory)
+    setValidationErrors(newErrors)
+    setToken(newValue)
+  }
 
   const mandatoryErrors = useMemo(() => {
     const _errors: { [key: string]: string } = {}
     if (isEmpty(token.name)) _errors.name = 'This field is required'
     if (isEmpty(token.symbol)) _errors.symbol = 'This field is required'
-    if (isNil(token.initialSupply)) _errors.initialSupply = 'This field is required'
+    if (isNil(token.initialSupply) || token.initialSupply.lte(0)) _errors.initialSupply = 'This field is required'
     if (!termsAccepted) _errors.termsAccepted = 'Please accept our terms to continue'
     return _errors
   }, [token, termsAccepted])
@@ -40,12 +45,6 @@ const CreateToken: React.FC = () => {
   const changeTerms = (event: React.ChangeEvent<HTMLInputElement>) => {
     delete errors.termsAccepted
     setTermsAccepted(event.target.checked)
-  }
-
-  const changeValue = (value: string | boolean, name: string, type: string, mandatory = true) => {
-    const { newValue, newErrors } = validate(token, validationErrors, value, name, type, mandatory)
-    setErrors(newErrors)
-    setToken(newValue)
   }
 
   const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

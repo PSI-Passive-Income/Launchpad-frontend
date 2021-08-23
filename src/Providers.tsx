@@ -9,7 +9,7 @@ import { ModalProvider } from 'components/Modal'
 import store from 'state/store'
 import { Bars, LoaderProvider } from '@agney/react-loading'
 
-// const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = true
@@ -20,20 +20,20 @@ const loadingProps: SVGProps<SVGSVGElement> = {
   fill: '#2fcbeb'
 }
 
-const ErrorBoundaryWeb3ProviderNetwork: React.FC = ({ children }) => {
-  try {
-    const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
-    return <Web3ProviderNetwork getLibrary={getLibrary}>{children}</Web3ProviderNetwork>
-  } catch (e) {
-    return <>{children}</>
-  }
-}
+// const ErrorBoundaryWeb3ProviderNetwork: React.FC = ({ children }) => {
+//   try {
+//     const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+//     return <Web3ProviderNetwork getLibrary={getLibrary}>{children}</Web3ProviderNetwork>
+//   } catch (e) {
+//     return <>{children}</>
+//   }
+// }
  
 
 const Providers: React.FC = ({ children }) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <ErrorBoundaryWeb3ProviderNetwork>
+      <Web3ProviderNetwork getLibrary={getLibrary}>
         <Provider store={store}>
           <ThemeContextProvider>
             <RefreshContextProvider>
@@ -43,7 +43,7 @@ const Providers: React.FC = ({ children }) => {
             </RefreshContextProvider>
           </ThemeContextProvider>
         </Provider>
-      </ErrorBoundaryWeb3ProviderNetwork>
+      </Web3ProviderNetwork>
     </Web3ReactProvider>
   )
 }

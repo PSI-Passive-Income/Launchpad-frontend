@@ -92,6 +92,5 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   else if (tokenData[14]) liveCampaign.status = CampaignStatus.Ended
   else if (tokenData[15]) liveCampaign.status = CampaignStatus.Failed
   else liveCampaign.status = CampaignStatus.NotStarted
-
   return liveCampaign
 }

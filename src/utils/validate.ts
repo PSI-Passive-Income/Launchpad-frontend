@@ -1,8 +1,17 @@
 import { isEmpty } from 'lodash'
-import { utils } from 'ethers'
+import BigNumber from 'bignumber.js'
 import { isMoment } from 'moment'
 import Web3 from 'web3'
 import { toBool } from './converters'
+
+export const validateSingle = <T>(
+  value: any,
+  type: string,
+  mandatory = true,
+) => {
+  const { newValue, newErrors } = validate<{ value?: T }>({}, {}, value, "value", type, mandatory)
+  return { value: newValue?.value, error: newErrors?.value }
+}
 
 const validate = <T>(
   initial: T,
@@ -16,9 +25,7 @@ const validate = <T>(
   delete newErrors[name]
 
   const newValue: Partial<T> = { ...initial }
-  // newValue[name] = value
 
-  console.log(newValue, name, value, type)
   if (type === 'boolean') {
     newValue[name] = toBool(value)
   } else if (!isEmpty(value)) {
@@ -28,7 +35,7 @@ const validate = <T>(
         if (floatValue < 0) {
           newErrors[name] = 'This number should be positive'
         } else {
-          newValue[name] = type === 'BigNumber' ? utils.parseUnits(floatValue.toString(), 18) : floatValue
+          newValue[name] = type === 'BigNumber' ? new BigNumber(floatValue).multipliedBy(10 ** 18) : floatValue
           if (floatValue === 0) newErrors[name] = 'This field is required'
         }
       } else {

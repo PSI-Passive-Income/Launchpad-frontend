@@ -108,6 +108,7 @@ export const useCampaign = (campaignId: string | number) => {
     }
   }, [dispatch, finalId, account])
 
+  console.log(campaign, isLoadingCampaign)
   return { campaign, isLoadingCampaign }
 }
 

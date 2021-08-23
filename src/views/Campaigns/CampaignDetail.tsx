@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, isFinite, startsWith } from 'lodash'
+import { isEmpty } from 'lodash'
 import { Label } from 'reactstrap'
 import { useCampaign, useToken } from 'state/hooks'
-import { formatBN, formatDateTime } from 'utils/formatters'
+import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
 import Loader from 'components/Loader'
 import Timer from '../../components/Timer'
@@ -17,7 +17,7 @@ interface Params {
 
 const CampaignDetail: React.FC = () => {
   const { campaignId: tmpCampaignId } = useParams<Params>()
-  const campaignId = tmpCampaignId.startsWith("0x") ? tmpCampaignId : parseInt(tmpCampaignId)
+  const campaignId = tmpCampaignId.startsWith('0x') ? tmpCampaignId : parseInt(tmpCampaignId)
 
   const { campaign, isLoadingCampaign } = useCampaign(campaignId)
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
@@ -31,7 +31,7 @@ const CampaignDetail: React.FC = () => {
       {!isEmpty(token) && !isEmpty(campaign) ? (
         <>
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-lg-7">
               <div className="card">
                 <div className="card-header">
                   <h5 className="text-center">
@@ -106,7 +106,7 @@ const CampaignDetail: React.FC = () => {
                           <div className="contribution-box">
                             <Label>Your tokens:</Label>
                             <h5>
-                              {formatBN(campaign.userContributed.multipliedBy(campaign.rate))} {token.symbol}
+                              {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** 18))} {token.symbol}
                             </h5>
                           </div>
                         </div>
@@ -115,10 +115,14 @@ const CampaignDetail: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="row">
+              <div className="row">
+                <div className="col-lg-12">
+                  <Comments topicId={campaign.tokenAddress} />
+                </div>
+              </div>
+            </div>
+
             <div className="col-lg-5 col-md-5">
               <div className="card">
                 <div className="card-header">
@@ -163,7 +167,7 @@ const CampaignDetail: React.FC = () => {
                     <div className="information-bars">
                       <Label>
                         Liquidity lock duration:
-                        <p>{campaign.lockDuration} seconds</p>
+                        <p>{formatDuration(campaign.lockDuration, true)}</p>
                       </Label>
                     </div>
                   </div>
@@ -186,6 +190,16 @@ const CampaignDetail: React.FC = () => {
                   <div className="col-lg-12">
                     <div className="information-bars">
                       <Label>
+                        Tokens rate:
+                        <p>
+                          {formatBN(campaign.rate)} {token.symbol} per BNB
+                        </p>
+                      </Label>
+                    </div>
+                  </div>
+                  <div className="col-lg-12">
+                    <div className="information-bars">
+                      <Label>
                         Campaign Start Time:
                         <p>{formatDateTime(campaign.startDate)}</p>
                       </Label>
@@ -202,7 +216,7 @@ const CampaignDetail: React.FC = () => {
                   <div className="col-lg-12">
                     <div className="information-bars">
                       <Label>
-                        PancakeSwap Liquidity %:
+                        PSI Dex Liquidity %:
                         <p>{campaign.liquidityRate / 100} %</p>
                       </Label>
                     </div>
@@ -210,19 +224,15 @@ const CampaignDetail: React.FC = () => {
                   <div className="col-lg-12">
                     <div className="information-bars">
                       <Label>
-                        PancakeSwap Listing Rate:
+                        PSI Dex Listing Rate:
                         <p>
-                          {formatBN(campaign.rate)} {token.symbol} per BNB
+                          {formatBN(campaign.poolRate)} {token.symbol} per BNB
                         </p>
                       </Label>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="col-lg-7 col-md-7">
-              <Comments topicId={campaign.tokenAddress} />
             </div>
           </div>
         </>

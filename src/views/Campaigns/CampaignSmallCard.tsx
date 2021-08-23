@@ -1,14 +1,10 @@
 import React from 'react'
-import moment from 'moment'
-import momentDurationFormatSetup from 'moment-duration-format'
 import { Campaign, CampaignStatus } from 'state/types'
-import { formatBN, formatDateTime } from 'utils/formatters'
+import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import Timer from '../../components/Timer'
 import project from '../../assets/img/icons/project-default.jpg'
 import bannerGreen from '../../assets/img/icons/Banner KYC No Green.svg'
 import bannerNo from '../../assets/img/icons/Banner KYC Yes Green.svg'
-
-momentDurationFormatSetup(moment as any)
 
 interface Props {
   campaign: Campaign
@@ -102,7 +98,7 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-12">Liquidity Lock: {moment.duration(campaign.lockDuration * 1000).format()}</div>
+                <div className="col-md-12">Liquidity Lock: {formatDuration(campaign.lockDuration, true)}</div>
               </div>
               <br />
               {campaign.status === CampaignStatus.NotStarted && (

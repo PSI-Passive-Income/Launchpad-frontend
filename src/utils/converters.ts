@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import _, { isBoolean, isFinite, isNil, isString, toFinite } from 'lodash'
+import _, { isBoolean, isNil, isString } from 'lodash'
 
 export const camelCaseKeys = (obj: any | any[]) => {
   if (!_.isObject(obj)) return obj
@@ -33,7 +33,6 @@ export const snakeCaseKeys = (obj: any | any[]) => {
 
 export const unixTSToDate = (value: string | number) => {
   const numberValue = parseFloat(value.toString())
-  console.log(value.toString(), numberValue)
   if (Number.isNaN(numberValue) || !Number.isFinite(numberValue)) return null
   return new Date(numberValue * 1000)
 }
