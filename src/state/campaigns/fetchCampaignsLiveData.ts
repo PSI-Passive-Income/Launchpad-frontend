@@ -6,11 +6,14 @@ import { nestedMulticall, Call, multicall } from 'utils/multicall'
 
 export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWallet?: string) => {
   if (!campaigns) return
-
+  
   const calls: Call[][] = campaigns.map((campaign) => {
     const campaignCalls: Call[] = []
+    campaignCalls.push({ address: campaign.campaignAddress, name: 'softCap' })
+    campaignCalls.push({ address: campaign.campaignAddress, name: 'hardCap' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'start_date' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'end_date' })
+    campaignCalls.push({ address: campaign.campaignAddress, name: 'lock_duration' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'getRemaining' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'isLive' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'finalized' })
@@ -23,14 +26,17 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
 
   liveData.forEach((callData, idx) => {
     const campaign = campaigns[idx]
-    campaign.startDate = unixTSToDate(callData[1])
-    campaign.endDate = unixTSToDate(callData[2])
-    campaign.remaining = toBigNumber(callData[3])
-    if (callData[4]) campaign.status = CampaignStatus.Live
-    else if (callData[5]) campaign.status = CampaignStatus.Ended
-    else if (callData[6]) campaign.status = CampaignStatus.Failed
+    campaign.softCap = toBigNumber(callData[0])
+    campaign.hardCap = toBigNumber(callData[1])
+    campaign.startDate = unixTSToDate(callData[2])
+    campaign.endDate = unixTSToDate(callData[3])
+    campaign.lockDuration = toFinite(callData[4])
+    campaign.remaining = toBigNumber(callData[5])
+    if (callData[6]) campaign.status = CampaignStatus.Live
+    else if (callData[7]) campaign.status = CampaignStatus.Ended
+    else if (callData[8]) campaign.status = CampaignStatus.Failed
     else campaign.status = CampaignStatus.NotStarted
-    if (connectedWallet) campaign.userContributed = toBigNumber(callData[7])
+    if (connectedWallet) campaign.userContributed = toBigNumber(callData[9])
   })
 }
 

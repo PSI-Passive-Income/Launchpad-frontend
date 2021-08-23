@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import { isEmpty } from 'lodash'
+import React, { useState, useEffect, useMemo } from 'react'
 
 interface Props {
   date: Date
@@ -32,19 +33,16 @@ const Timer: React.FC<Props> = ({ date }) => {
     }, 1000)
   })
 
-  const timerComponents = []
+  const timerComponents = useMemo(() => {
+    return Object.keys(timeLeft).map((interval, index) => {
+      if (index === 0) {
+        return <span>{timeLeft[interval]}</span>
+      }
+      return <span>:{timeLeft[interval]}</span>
+    })
+  }, [timeLeft])
 
-  Object.keys(timeLeft).forEach((interval, index) => {
-    // if (!timeLeft[interval]) {
-    //   return;
-    // }
-    if (index === 0) {
-      timerComponents.push(<span>{timeLeft[interval]}</span>)
-    } else {
-      timerComponents.push(<span>:{timeLeft[interval]}</span>)
-    }
-  })
-  return <p>{timerComponents.length ? timerComponents : <span>Time&apos;s up!</span>}</p>
+  return <p>{!isEmpty(timerComponents) ? timerComponents : <span>Time&apos;s up!</span>}</p>
 }
 
 export default Timer

@@ -33,7 +33,8 @@ export const snakeCaseKeys = (obj: any | any[]) => {
 
 export const unixTSToDate = (value: string | number) => {
   const numberValue = parseFloat(value.toString())
-  if (!Number.isNaN(numberValue) || !Number.isFinite(numberValue)) return null
+  console.log(value.toString(), numberValue)
+  if (Number.isNaN(numberValue) || !Number.isFinite(numberValue)) return null
   return new Date(numberValue * 1000)
 }
 
