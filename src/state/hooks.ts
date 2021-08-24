@@ -47,7 +47,7 @@ export const useCheckLoginLogout = () => {
 
   useEffect(() => {
     if (active && account && web3) {
-      dispatch(loginWallet(web3, account))
+      dispatch(loginWallet(web3, account, true))
     } else if (active && web3) {
       dispatch(logoutWallet())
     }

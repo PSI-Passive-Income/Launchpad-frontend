@@ -18,21 +18,21 @@ import getUserNonce from './getUserNonce'
 
 // Thunks
 export const loginWallet =
-  (web3: Web3, address: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (web3: Web3, address: string, onlySilent = false) => async (dispatch: AppDispatch, getState: () => RootState) => {
     if (getState().user.isLoggingIn) return
+
+    const tokenInfo = sessionStorage.getItem('MM_TokenInfo')
+    let { username, accessToken } = tokenInfo ? JSON.parse(tokenInfo) : { username: null, accessToken: null }
+    if (accessToken) dispatch(userLoginSucceeded({ username, accessToken }))
+    if (accessToken || onlySilent) return
 
     try {
       dispatch(userLoginStart())
 
-      const tokenInfo = sessionStorage.getItem('MM_TokenInfo')
-      let { username, accessToken } = tokenInfo ? JSON.parse(tokenInfo) : { username: null, accessToken: null }
-
-      if (!accessToken) {
-        const nonce = await getUserNonce(address)
-        const signature = await userSignMessage(web3, address, nonce)
-        ;({ username, accessToken } = await userAuthenticate(address, signature))
-        sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
-      }
+      const nonce = await getUserNonce(address)
+      const signature = await userSignMessage(web3, address, nonce)
+      ;({ username, accessToken } = await userAuthenticate(address, signature))
+      sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
 
       dispatch(userLoginSucceeded({ username, accessToken }))
     } catch (error) {
@@ -42,7 +42,6 @@ export const loginWallet =
   }
 
 export const logoutWallet = () => {
-  console.log("logging out?")
   sessionStorage.removeItem('MM_TokenInfo')
   return userLogout()
 }
