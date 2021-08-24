@@ -38,7 +38,6 @@ jobs:
           REACT_APP_NODE_2: "https://data-seed-prebsc-2-s1.binance.org:8545"
           REACT_APP_NODE_3: "https://data-seed-prebsc-1-s2.binance.org:8545"
           REACT_APP_PSI_API_URL: "https://psi-api-test.azurewebsites.net/api"
-          REACT_APP_LAUNCHPAD_API_URL: "https://witty-glacier-09268b603.azurestaticapps.net/api/"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
