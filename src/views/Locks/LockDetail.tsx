@@ -75,23 +75,19 @@ const LockDetail: React.FC = () => {
                   <p>{lock.owner}</p>
                 </div>
                 <div className="form-group">
-                  <Label>Total locked tokens:</Label>
-                  <p>{formatBN(lock.amount)}</p>
-                </div>
-                <div className="form-group">
-                  <Label>Unlocked tokens:</Label>
-                  <p>{formatBN(lock.amountUnlocked)}</p>
+                  <Label>Locked token amount:</Label>
+                  <p>{formatBN(lock.amount)} ({formatBN(lock.amountUnlocked)} unlocked)</p>
                 </div>
                 <div className="form-group">
                   <Label>Available for unlock:</Label>
-                  <p>{formatBN(lock.unlockedAmount)}</p>
+                  <p>{formatBN(lock.amountToUnlock)}</p>
                 </div>
 
                 <Releases lock={lock} />
 
                 {isOwner ? (
-                  <Button onClick={onUnlock} disabled={lock.unlockedAmount.lte(0)}>
-                    {lock.unlockedAmount.gt(0) ? 'Unlock available tokens' : 'No tokens available for unlock'}
+                  <Button onClick={onUnlock} disabled={lock.amountToUnlock.lte(0)}>
+                    {lock.amountToUnlock.gt(0) ? 'Unlock available tokens' : 'No tokens available for unlock'}
                   </Button>
                 ) : null}
               </div>
