@@ -35,22 +35,28 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
     withdrawFunds()
   }
 
+  const isOwner = account && campaign.owner && campaign.owner.toLowerCase() === account.toLowerCase()
+
   return (
     <>
       <div className="presale-ended-timer mt-2">
-        <h5>Presale has ended. Kindly find others on our dashboard</h5>
+        {campaign.status === CampaignStatus.Ended ? (
+          <>
+            <h5>Presale has ended. Check out our other projects!</h5>
 
-        {campaign.locked && campaign.status === CampaignStatus.Ended ? (
-          <button type="button" className="btn btn-danger mb-4">
-            Trade On PSI Dex
-          </button>
+            {campaign.locked ? (
+              <button type="button" className="btn btn-danger mb-4">
+                Trade On PSI Dex
+              </button>
+            ) : null}
+          </>
         ) : null}
+
+        {campaign.status === CampaignStatus.Failed ? <h5>Too bad, this presale has failed.</h5> : null}
 
         {campaign.userContributed.gt(0) && campaign.locked && campaign.status === CampaignStatus.Ended ? (
           <>
-            <p>
-              Congratulations! Please click the claim button below to claim your tokens!
-            </p>
+            <p>Congratulations! Please click the claim button below to claim your tokens!</p>
             <button type="button" onClick={withdrawTokensClick} className="btn btn-primary">
               Claim Tokens
             </button>
@@ -59,25 +65,32 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
 
         {campaign.userContributed.gt(0) && campaign.status === CampaignStatus.Failed ? (
           <>
-            <p>
-              Too bad, this presale has failed. Please click the claim button below to withdraw you contribution.
-            </p>
+            <p>Please click the button below to withdraw you contribution.</p>
             <button type="button" onClick={withdrawFundsClick} className="btn btn-primary">
               Withdraw contribution
             </button>
           </>
         ) : null}
+
+        {isOwner && campaign.status === CampaignStatus.Failed ? (
+          <>
+            <p>Please click the button below to withdraw the token sale tokens.</p>
+            <button type="button" onClick={withdrawFundsClick} className="btn btn-primary">
+              Withdraw sale tokens
+            </button>
+          </>
+        ) : null}
       </div>
 
-      {account && campaign.owner === account && !campaign.locked && campaign.status === CampaignStatus.Ended ? (
+      {isOwner && !campaign.locked && campaign.status === CampaignStatus.Ended ? (
         <div>
           <button type="button" onClick={lockClick} className="btn btn-primary">
-          Finish presale and lock liquidity tokens
+            Finish presale and lock liquidity tokens
           </button>
         </div>
       ) : null}
 
-      {account && campaign.owner === account && campaign.locked && Date.now() >= campaign.unlockDate.getTime() ? (
+      {isOwner && campaign.locked && Date.now() >= campaign.unlockDate.getTime() ? (
         <div>
           <button type="button" onClick={unlockClick} className="btn btn-primary">
             Unlock liquidity tokens

@@ -53,7 +53,7 @@ const CampaignDetail: React.FC = () => {
 
                   <hr />
 
-                  {campaign.status === CampaignStatus.Live ? (
+                  {campaign.status === CampaignStatus.Live || campaign.status === CampaignStatus.Failed ? (
                     <>
                       <div className="text-center">
                         <span>
@@ -89,7 +89,10 @@ const CampaignDetail: React.FC = () => {
                     ) : null}
 
                     {campaign.status === CampaignStatus.Ended || campaign.status === CampaignStatus.Failed ? (
-                      <PresaleEnded campaign={campaign} />
+                      <>
+                        <hr />
+                        <PresaleEnded campaign={campaign} />
+                      </>
                     ) : null}
 
                     {campaign.status === CampaignStatus.Live ||
@@ -103,12 +106,15 @@ const CampaignDetail: React.FC = () => {
                             <Label>Your contributed amount</Label>
                             <h5>{formatBN(campaign.userContributed)} BNB</h5>
                           </div>
-                          <div className="contribution-box">
-                            <Label>Your tokens:</Label>
-                            <h5>
-                              {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** 18))} {token.symbol}
-                            </h5>
-                          </div>
+                          {campaign.status !== CampaignStatus.Failed ? (
+                            <div className="contribution-box">
+                              <Label>Your tokens:</Label>
+                              <h5>
+                                {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** 18))}{' '}
+                                {token.symbol}
+                              </h5>
+                            </div>
+                          ) : null}
                         </div>
                       </>
                     ) : null}
