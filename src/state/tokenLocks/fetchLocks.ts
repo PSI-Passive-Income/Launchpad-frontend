@@ -1,7 +1,8 @@
 import PSIPadTokenLockFactoryAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadTokenLockFactory.sol/PSIPadTokenLockFactory.json'
 import { isEmpty, isNil, toFinite } from 'lodash'
 import { TokenLock } from 'state/types'
-import { getUserLocks, getTokenLock } from 'utils/callHelpers'
+import { getTokenLockFactoryAddress } from 'utils/addressHelpers'
+import { getUserLocks } from 'utils/callHelpers'
 import { getTokenLockFactoryContract } from 'utils/contractHelpers'
 import { toBigNumber, unixTSToDate } from 'utils/converters'
 import { Call, multicall } from 'utils/multicall'
@@ -41,7 +42,15 @@ export const fetchLocks = async (account: string): Promise<TokenLock[]> => {
 export const fetchLock = async (lockId: number): Promise<TokenLock> => {
   if (isNil(lockId)) return null
 
-  const lockFactory = getTokenLockFactoryContract()
-  const lockData = await getTokenLock(lockFactory, lockId)
-  return convertLockData(lockId, lockData)
+  const address = getTokenLockFactoryAddress()
+  const calls: Call[] = [
+    { address, name: 'tokensLocked', params: [lockId] }, 
+    { address, name: 'amountToUnlock', params: [lockId] },
+    { address, name: 'unlockedAmount', params: [lockId] },
+  ]
+  const lockData = await multicall(PSIPadTokenLockFactoryAbi, calls, false)
+  const lock = convertLockData(lockId, lockData[0].flat())
+  lock.amountToUnlock = toBigNumber(lockData[1])
+  lock.unlockedAmount = toBigNumber(lockData[2])
+  return lock
 }

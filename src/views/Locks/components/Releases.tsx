@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 import { TokenLock } from 'state/types'
-import { formatBN, formatDate } from 'utils/formatters'
+import { formatBN, formatDateTime } from 'utils/formatters'
 
 interface Props {
   lock: Partial<TokenLock>
@@ -33,7 +33,7 @@ const Releases: React.FC<Props> = ({ lock }) => {
     <div className="form-group mt-4">
       {releases.map((release) => (
         <div>
-          {release.release}: {formatDate(release.time)} - {formatBN(release.amountUnlocked)}
+          {release.release}: {formatDateTime(release.time)} - {formatBN(release.amountUnlocked)}
           {release.unlocked ? ' - UNLOCKED' : null}
         </div>
       ))}

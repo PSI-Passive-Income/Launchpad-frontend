@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, Label } from 'reactstrap'
-import { isFinite, toFinite } from 'lodash'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useToken, useTokenLock } from 'state/hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useUnlockToken } from 'hooks/useTokenLock'
 import Loader from 'components/Loader'
 import lockImage from '../../assets/img/lock.png'
@@ -15,14 +15,18 @@ interface Params {
 }
 
 const LockDetail: React.FC = () => {
+  const { account } = useActiveWeb3React()
   const { lockId: tmpLockId } = useParams<Params>()
-  const lockId = isFinite(tmpLockId) ? toFinite(tmpLockId) : null
+  const lockId = !Number.isNaN(parseInt(tmpLockId)) ? parseInt(tmpLockId) : null
 
   const { lock, isLoadingLock } = useTokenLock(lockId)
   const { token, isLoadingToken } = useToken(lock?.token)
   const { unlock, unlocking } = useUnlockToken()
 
+  const isOwner = lock?.owner?.toLowerCase() === account?.toLowerCase()
+
   const isLoading = isLoadingLock || isLoadingToken || unlocking
+  // const availableForUnlock =
 
   const onUnlock = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -78,10 +82,18 @@ const LockDetail: React.FC = () => {
                   <Label>Unlocked tokens:</Label>
                   <p>{formatBN(lock.amountUnlocked)}</p>
                 </div>
+                <div className="form-group">
+                  <Label>Available for unlock:</Label>
+                  <p>{formatBN(lock.unlockedAmount)}</p>
+                </div>
 
                 <Releases lock={lock} />
 
-                <Button onClick={onUnlock}>Unlock available tokens</Button>
+                {isOwner ? (
+                  <Button onClick={onUnlock} disabled={lock.unlockedAmount.lte(0)}>
+                    {lock.unlockedAmount.gt(0) ? 'Unlock available tokens' : 'No tokens available for unlock'}
+                  </Button>
+                ) : null}
               </div>
             </div>
           </div>

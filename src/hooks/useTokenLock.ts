@@ -65,7 +65,7 @@ export const useCreateTokenLock = () => {
           if (receipt.status) {
             const lockIds = await getUserLocks(lockFactory, account)
             if (!isEmpty(lockIds)) {
-              history.push(`/locks/${lockIds[lockIds.length - 1]}`)
+              history.push(`/lock/${lockIds[lockIds.length - 1]}`)
             } else {
               dispatch(toastError('Error creating lock', 'Lock is not found on the contract'))
             }

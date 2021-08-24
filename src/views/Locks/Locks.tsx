@@ -68,7 +68,7 @@ const Locks: React.FC = () => {
                       <Label>Unlocked tokens:</Label>
                       <p>{formatBN(lock.amountUnlocked)}</p>
                     </div>
-                    <Link to={`/locks/${lock.id}}`}>Details</Link>
+                    <Link to={`/lock/${lock.id}`}>Details</Link>
                   </div>
                 </div>
               </div>

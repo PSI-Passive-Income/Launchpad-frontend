@@ -62,7 +62,7 @@ export const routes: IRoute[] = [
     component: Locks,
   },
   {
-    path: '/locks/:lockId',
+    path: '/lock/:lockId',
     component: LockDetail,
   },
   {

@@ -74,7 +74,9 @@ export interface TokenLock {
   unlockTime?: Date
   duration: number
   releases: number
-  amountUnlocked: BigNumber
+  amountUnlocked?: BigNumber
+  amountToUnlock?: BigNumber
+  unlockedAmount?: BigNumber
 }
 
 // Slices states
