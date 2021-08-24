@@ -9,9 +9,7 @@ import { fetchLocks, fetchLock } from './fetchLocks'
 export const getUserTokenLocks = (account: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(locksLoadStart())
-    console.log("hi")
     const locks: TokenLock[] = await fetchLocks(account)
-    console.log(locks)
     dispatch(locksLoadSucceeded(locks))
   } catch (error) {
     dispatch(toastError('Error retrieving token locks', error?.message))

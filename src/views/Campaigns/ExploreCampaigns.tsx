@@ -32,8 +32,6 @@ const ExploreCampaigns: React.FC = () => {
     [campaigns, filter, contributed],
   )
 
-  console.log(filteredCampaigns)
-
   return (
     <div className="content">
       <div className="row">

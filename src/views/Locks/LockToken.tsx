@@ -65,7 +65,6 @@ const LockToken: React.FC = () => {
     return _errors
   }, [validationErrors, submitClicked, mandatoryErrors, lock, token?.totalSupply])
 
-  console.log(errors, mandatoryErrors)
   const valid = useMemo(() => isEmpty(errors) && isEmpty(mandatoryErrors), [errors, mandatoryErrors])
 
   const onApprove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -25,7 +25,6 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
   const liveData = await nestedMulticall(PSIPadCampaignAbi, calls)
 
   liveData.forEach((callData, idx) => {
-    console.log(callData)
     const campaign = campaigns[idx]
     campaign.softCap = toBigNumber(callData[0])
     campaign.hardCap = toBigNumber(callData[1])

@@ -16,8 +16,6 @@ const Locks: React.FC = () => {
 
   const loading = isLoadingLocks || isLoadingTokens
 
-  console.log("hi")
-
   return (
     <div className="content">
       <Loader loading={loading} />

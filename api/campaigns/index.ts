@@ -72,7 +72,6 @@ const create = async (context: Context, req: HttpRequest) => {
     owner: req.body.owner.toLowerCase(),
   })
 
-  console.log(campaign)
   return funcSuccess(context, campaign ? campaign.toJSON() : null)
 }
 

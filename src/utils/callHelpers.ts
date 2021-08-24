@@ -92,7 +92,6 @@ export const createCampaign = async (
     campaign.lockDuration.toString(),
     campaign.liquidityRate.toString(),
   ]
-  console.log(hi)
   return campaignFactory.methods
     .createCampaign(
       hi as any,
