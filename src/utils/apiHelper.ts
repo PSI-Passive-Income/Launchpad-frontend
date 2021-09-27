@@ -1,5 +1,5 @@
 import { LAUNCHPAD_API_URL } from "config/constants/misc"
-import { Campaign } from "state/types"
+import { Campaign,KYCuser } from "state/types"
 import { camelCaseKeys } from "./converters"
 
 export const fetchCampaignsData = async (): Promise<Campaign[]> => {
@@ -39,4 +39,34 @@ export const addCampaign = async (accessToken: string, campaign: Partial<Campaig
   })
   if (!response.ok) throw new Error(await response.text())
   return camelCaseKeys(await response.json())
+}
+
+// KYC Verification
+export const setkycUserVerification = async (address: string, key: string): Promise<KYCuser> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/KYC`, {
+    method: 'POST',
+    body: JSON.stringify({
+      user_address: address.toLowerCase(),
+      user_key: key,
+    }),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  
+  })
+  console.log(await response.json());
+  
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json())
+}
+export const getKYCuserVerifcation = async (address: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${LAUNCHPAD_API_URL}/KYC/${address}`)
+    if (!response.ok) throw new Error(await response.text())
+    const result = await response.json();
+  } catch (e) {
+    return false
+  }
+  return true
 }

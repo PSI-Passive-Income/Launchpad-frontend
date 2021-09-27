@@ -19,7 +19,7 @@ const httpTrigger: AzureFunction = async function httpTrigger(context: Context, 
     else if (req.method === 'GET') await get(context, req)
     else if (req.method === 'POST') await create(context, req)
   } catch (error) {
-    console.error(error)
+    console.error('abc',error)
     func500Error(context, error)
   }
 }

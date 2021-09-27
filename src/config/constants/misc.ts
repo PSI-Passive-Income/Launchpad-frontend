@@ -5,3 +5,5 @@ export const ApplicationName = "PSI Launchpad"
 export const NetworkContextName = 'NETWORK'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const PASSBASE_API_KEY = "PjUcXCyYm6ZA4X3kzzZQkCEeSOIu6xEYQwx7KhWG0bcIFymqFhwLk59jqGEzv2yz"

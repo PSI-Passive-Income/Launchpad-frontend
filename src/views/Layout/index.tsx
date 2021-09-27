@@ -37,7 +37,7 @@ const Layout: React.FC = () => {
         toggleSidebar={toggleSidebar}
       />
       <div className="main-panel" ref={mainPanelRef}>
-        <Navbar brandText="" toggleSidebar={toggleSidebar} sidebarOpened={sidebarOpened} />
+        <Navbar brandText="BETA" toggleSidebar={toggleSidebar} sidebarOpened={sidebarOpened} />
         <Switch>
           {allRoutes}
           {/* <Redirect from="*" to="/admin/explore-projects" /> */}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardBody } from 'reactstrap'
-import logo from '../../assets/img/icons/anon.svg'
+import logo from '../../assets/img/icons/project-default1.jpeg'
 
 const CampaignCard: React.FC = () => (
   <>

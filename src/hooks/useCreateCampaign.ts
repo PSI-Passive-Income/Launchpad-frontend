@@ -51,9 +51,11 @@ export const useCreateCampaign = () => {
           // console.info(receipt)
           // if (receipt.status) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
+            
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
-              const campaignAddress = await getCampaignAddress(campaignFactory, campaignId)
+              const campaignAddress = await getCampaignAddress(campaignFactory, campaignId);
+              
               if (isNumber(campaignId) && campaignAddress) {
                 const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
                 dispatch(campaignsAdd(addedCampaign))

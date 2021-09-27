@@ -112,3 +112,15 @@ text-align: center
 .contribution-box{
     border: 1px solid white;
 }
+
+.KYC-box{
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.KYC-text{
+    font-size: calc(20px + 5vmin)
+}

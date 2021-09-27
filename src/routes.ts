@@ -8,7 +8,10 @@ const ManageTokens = lazy(() => import('./views/Tokens/ManageTokens'))
 const Locks = lazy(() => import('./views/Locks/Locks'))
 const LockDetail = lazy(() => import('./views/Locks/LockDetail'))
 const LockToken = lazy(() => import('./views/Locks/LockToken'))
-const Dashboard = lazy(() => import('./views/Dashboard'))
+// const Dashboard = lazy(() => import('./views/Dashboard'))
+const KYC = lazy(() => import('./views/KYC'))
+const PolicyPage = lazy(()=>import ('./components/Footer/privacy_Policy'))
+const DisclaimerPage = lazy(()=>import ('./components/Footer/disclaimer'))
 
 export interface IRoute {
   path: string
@@ -45,7 +48,7 @@ export const routes: IRoute[] = [
   {
     path: '/manage-tokens',
     name: 'Manage tokens',
-    icon: 'tim-icons icon-coins',
+    icon: 'tim-icons icon-money-coins',
     component: ManageTokens,
   },
   {
@@ -58,7 +61,7 @@ export const routes: IRoute[] = [
   {
     path: '/locks',
     name: 'Manage locks',
-    icon: 'tim-icons icon-lock-circle',
+    icon: 'tim-icons icon-laptop',
     component: Locks,
   },
   {
@@ -72,10 +75,24 @@ export const routes: IRoute[] = [
     component: LockToken,
   },
 
+  // {
+  //   path: '/dashboard',
+  //   name: 'Dashboard',
+  //   icon: 'tim-icons icon-chart-bar-32',
+  //   component: Dashboard,
+  // },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
+    path: '/KYC',
+    name: 'KYC',
     icon: 'tim-icons icon-chart-bar-32',
-    component: Dashboard,
+    component: KYC,
+  },
+  {
+    path: '/Policy',
+    component: PolicyPage,
+  },
+  {
+    path: '/Disclaimer',
+    component: DisclaimerPage,
   },
 ]

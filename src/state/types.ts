@@ -164,3 +164,11 @@ export interface BlockState {
   currentBlock: number
   initialBlock: number
 }
+
+// userVerification
+
+export interface KYCuser{
+  address : string,
+  key : string
+}
+

@@ -118,7 +118,7 @@ const ExploreCampaigns: React.FC = () => {
               <div className="notokens-warning">
                 <img src={emptyBox} alt="no-images" height="200px" width="200px" />
               </div>
-              <h3>Looks like there are no locks here</h3>
+              <h3>Looks like there are no campaign here</h3>
             </div>
           </div>
         ) : null}

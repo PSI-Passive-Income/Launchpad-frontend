@@ -1,16 +1,21 @@
 import React from 'react'
 import { Campaign, CampaignStatus } from 'state/types'
 import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
+import useUserVerification from 'hooks/useUserKYC'
 import Timer from '../../components/Timer'
-import project from '../../assets/img/icons/project-default.jpg'
-import bannerGreen from '../../assets/img/icons/Banner KYC No Green.svg'
-import bannerNo from '../../assets/img/icons/Banner KYC Yes Green.svg'
+import project from '../../assets/img/icons/project-default1.jpeg'
+import bannerGreen from '../../assets/img/icons/Banner_KYC_Yes_Green.svg'
+import bannerRed from '../../assets/img/icons/Banner_KYC_No_Red.svg'
 
 interface Props {
   campaign: Campaign
 }
 
 const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
+
+  const { KYCaddress, verified } = useUserVerification();
+  KYCaddress(campaign.owner)
+
   return (
     <div className="col-md-4">
       <a href={`/project/${campaign.campaignAddress}`}>
@@ -36,9 +41,9 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
                 <b>Coming soon</b>
               </span>
             ) : null}
-
-            <img src={bannerGreen} alt="..." className="banner-kyc z-index-999" />
-            <img src={bannerNo} alt="..." className="banner-audit z-index-999" />
+            {verified ? (<img src={bannerGreen} alt="..." className="banner-kyc z-index-999" />)
+              : (<img src={bannerRed} alt="..." className="banner-kyc z-index-999" />)
+            }
 
             <p className="card-text" />
 
