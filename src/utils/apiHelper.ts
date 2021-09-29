@@ -62,7 +62,7 @@ export const setkycUserVerification = async (address: string, key: string): Prom
 }
 export const getKYCuserVerifcation = async (address: string): Promise<boolean> => {
   try {
-    const response = await fetch(`${LAUNCHPAD_API_URL}/KYC/${address}`)
+    const response = await fetch(`${LAUNCHPAD_API_URL}/kyc/${address}`)
     if (!response.ok) throw new Error(await response.text())
     const result = await response.json();
   } catch (e) {
