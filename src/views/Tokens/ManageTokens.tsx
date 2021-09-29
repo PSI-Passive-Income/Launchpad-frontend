@@ -11,7 +11,15 @@ const ManageTokens: React.FC = () => {
   const { tokens, isLoadingTokens } = useUserTokens()
   const allTokens = useMemo(() => values(tokens), [tokens])
 
-  if (!account) return <p>Connect to Metamask</p>
+  if (!account) return(
+    <div className="content">
+      <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
+            <div className="text-center">
+              <h3>Looks like there is no Connection with wallet</h3>
+            </div>
+          </div>
+      </div>
+  ) 
   return (
     <div className="content">
       <Loader loading={isLoadingTokens} />
