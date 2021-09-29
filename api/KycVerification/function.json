@@ -18,5 +18,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/kycVerification/index.js"
+  "scriptFile": "../dist/KycVerification/index.js"
 }
