@@ -42,6 +42,7 @@ export const useCreateCampaign = () => {
   const history = useHistory()
   const [creating, setCreating] = useState(false)
 
+
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
       if (account && campaign && history) {
@@ -51,11 +52,11 @@ export const useCreateCampaign = () => {
           console.info(receipt)
           if (receipt.status) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
-            
+            console.log("userCampaigns", userCampaigns)
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
               const campaignAddress = await getCampaignAddress(campaignFactory, campaignId);
-              
+              console.log("campaignAddress", campaignAddress)
               if (isNumber(campaignId) && campaignAddress) {
                 const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
                 dispatch(campaignsAdd(addedCampaign))
@@ -69,7 +70,8 @@ export const useCreateCampaign = () => {
           } else {
             dispatch(toastError('Error adding campaign', 'Transaction failed'))
           }
-        } catch (error:any) {
+        } catch (error: any) {
+          console.log("error", error)
           dispatch(toastError('Error adding campaign', error?.message))
         } finally {
           setCreating(false)

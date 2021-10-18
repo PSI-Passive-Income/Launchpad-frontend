@@ -53,10 +53,10 @@ const get = async (context: Context, req: HttpRequest) => {
 }
 
 const create = async (context: Context, req: HttpRequest) => {
-  const validationResult = await validateJWTWalletSign(context, req) // check if wallet is signed in
-  if (isEmpty((<any>req)?.user)) return validationResult
+  // const validationResult = await validateJWTWalletSign(context, req) // check if wallet is signed in
+  // if (isEmpty((<any>req)?.user)) return validationResult
 
-  if (req?.body?.id ?? -1 < 0) return funcValidationError(context, 'Post parameter id not set')
+  // if (req?.body?.id ?? -1 < 0) return funcValidationError(context, 'Post parameter id not set')
   if (!req?.body?.token_address || !web3.utils.isAddress(req.body.token_address))
     return funcValidationError(context, 'Post parameter token_address not set or not an valid address')
   if (!req?.body?.campaign_address || !web3.utils.isAddress(req.body.campaign_address))
