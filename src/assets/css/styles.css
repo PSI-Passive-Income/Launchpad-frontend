@@ -120,3 +120,10 @@ text-align: center
     align-items: center;
     justify-content: center;
 }
+
+.login_button{
+    cursor: pointer;
+    margin: 5px;
+    max-height: 35px;
+    max-width: 60px;
+}
