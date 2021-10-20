@@ -1,9 +1,8 @@
 import React from 'react'
-import { useCampaigns } from 'state/hooks'
+import { useCampaigns, useLoggedInUser } from 'state/hooks'
 import Loader from 'components/Loader'
 import { isEmpty } from 'lodash'
 import { Label, Table } from 'reactstrap'
-import { useActiveWeb3React } from 'hooks/web3'
 import DetailContribution from './contributionDetail'
 
 
@@ -12,13 +11,14 @@ import DetailContribution from './contributionDetail'
 const ContributionDetail: React.FC = () => {
 
     const { campaigns, campaignsLoading } = useCampaigns()
-    const { account } = useActiveWeb3React()
+    const { isLoggedIn, accessToken } = useLoggedInUser()
+    console.log(accessToken, isLoggedIn)
 
     return (
         <div className="content">
             <div className="card">
                 <Loader loading={campaignsLoading} />
-                {account ?
+                {isLoggedIn && accessToken ?
                     <Table dark>
                         {!campaignsLoading ?
                             <thead>
