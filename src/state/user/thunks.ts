@@ -35,7 +35,7 @@ export const loginWallet =
       sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
 
       dispatch(userLoginSucceeded({ username, accessToken }))
-    } catch (error) {
+    } catch (error:any) {
       dispatch(toastError('Error logging in', error?.message))
       dispatch(userLoginFailed(error?.message))
     }
@@ -60,7 +60,7 @@ export const updateUser = (user: Partial<User>) => async (dispatch: AppDispatch,
     )
 
     dispatch(userUpdateSucceeded(userReturned))
-  } catch (error) {
+  } catch (error:any) {
     dispatch(toastError('Error updating user', error?.message))
     dispatch(userUpdateFailed(error?.message))
   }
