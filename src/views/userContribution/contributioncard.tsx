@@ -11,14 +11,14 @@ import DetailContribution from './contributionDetail'
 const ContributionDetail: React.FC = () => {
 
     const { campaigns, campaignsLoading } = useCampaigns()
-    const { isLoggedIn, accessToken } = useLoggedInUser()
+    const { isLoggedIn, accessToken,account } = useLoggedInUser()
     console.log(accessToken, isLoggedIn)
 
     return (
         <div className="content">
             <div className="card">
                 <Loader loading={campaignsLoading} />
-                {isLoggedIn && accessToken ?
+                {account && accessToken ?
                     <Table dark>
                         {!campaignsLoading ?
                             <thead>
