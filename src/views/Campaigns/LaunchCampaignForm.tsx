@@ -12,6 +12,7 @@ import Loader from 'components/Loader'
 const LaunchCampaignForm: React.FC = () => {
   const [campaign, setCampaign] = useState<Partial<Campaign>>({})
 
+
   const tokensNeeded = useTokensNeeded(campaign)
 
   const [submitClicked, setSubmitClicked] = useState(false)
@@ -33,6 +34,10 @@ const LaunchCampaignForm: React.FC = () => {
     setCampaign(newValue)
   }
 
+  // changeValue(token.name, "tokenName", "string")
+  // changeValue(token.symbol, "tokenSymbol", "string")
+
+
   const mandatoryErrors = useMemo(() => {
     const _errors: { [key: string]: string } = {}
     if (isNil(campaign.softCap) || campaign.softCap.lte(0)) _errors.softCap = 'This field is required'
@@ -44,7 +49,7 @@ const LaunchCampaignForm: React.FC = () => {
     if (isNil(campaign.maxAllowed) || campaign.maxAllowed.lte(0)) _errors.maxAllowed = 'This field is required'
     if (isNil(campaign.poolRate) || campaign.poolRate.lte(0)) _errors.poolRate = 'This field is required'
     if (isNil(campaign.lockDuration) || campaign.lockDuration <= 0) _errors.lockDuration = 'This field is required'
-    if (isNil(campaign.liquidityRate)  || campaign.liquidityRate <= 0) _errors.liquidityRate = 'This field is required'
+    if (isNil(campaign.liquidityRate) || campaign.liquidityRate <= 0) _errors.liquidityRate = 'This field is required'
     if (isEmpty(campaign.description)) _errors.description = 'This field is required'
     return _errors
   }, [campaign])
@@ -176,7 +181,7 @@ const LaunchCampaignForm: React.FC = () => {
                       <Input
                         type="range"
                         defaultValue={campaign.liquidityRate ?? 0 / 100}
-                        onChange={(e) => changeValue(e.target.value, 'liquidityRate', 'number')}
+                        onChange={(e) => { changeValue(e.target.value, 'liquidityRate', 'number') }}
                         invalid={!!errors.liquidityRate}
                       />
                       {errors.liquidityRate ? <FormFeedback>{errors.liquidityRate}</FormFeedback> : null}
@@ -223,7 +228,7 @@ const LaunchCampaignForm: React.FC = () => {
                         className={errors.startDate ? "is-invalid" : ""}
                         value={campaign.startDate}
                         onChange={(v) => changeValue(v, 'startDate', 'date')}
-                        inputProps={{ placeholder: 'Start date'  }}
+                        inputProps={{ placeholder: 'Start date' }}
                       />
                       {errors.startDate ? <FormFeedback>{errors.startDate}</FormFeedback> : null}
                     </div>

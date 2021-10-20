@@ -65,7 +65,6 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   if (connectedWallet) {
     calls.push({ address: campaign.campaignAddress, name: 'getGivenAmount', params: [connectedWallet] })
   }
-
   const tokenData = await multicall(PSIPadCampaignAbi, calls)
   const liveCampaign = {
     ...campaign,

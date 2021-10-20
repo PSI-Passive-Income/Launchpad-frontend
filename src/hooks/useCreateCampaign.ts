@@ -45,18 +45,16 @@ export const useCreateCampaign = () => {
 
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
+      console.log("campaign",campaign)
       if (account && campaign && history) {
         try {
           setCreating(true)
           const receipt = await createCampaign(campaignFactory, account, campaign)
-          console.info(receipt)
           if (receipt.status) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
-            console.log("userCampaigns", userCampaigns)
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
               const campaignAddress = await getCampaignAddress(campaignFactory, campaignId);
-              console.log("campaignAddress", campaignAddress)
               if (isNumber(campaignId) && campaignAddress) {
                 const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
                 dispatch(campaignsAdd(addedCampaign))

@@ -36,7 +36,6 @@ const ExploreCampaigns: React.FC = () => {
     <div className="content">
       <div className="row">
         <Loader loading={campaignsLoading} />
-
         <div className="col-sm-12 mb-10">
           <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
             <Button
@@ -111,7 +110,6 @@ const ExploreCampaigns: React.FC = () => {
             </Button>
           </ButtonGroup>
         </div>
-
         {!campaignsLoading && isEmpty(filteredCampaigns) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
             <div className="card text-center">
@@ -122,11 +120,10 @@ const ExploreCampaigns: React.FC = () => {
             </div>
           </div>
         ) : null}
-
         {!campaignsLoading && !isEmpty(filteredCampaigns)
           ? filteredCampaigns.map((campaign) => {
-              return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
-            })
+            return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
+          })
           : null}
       </div>
     </div>

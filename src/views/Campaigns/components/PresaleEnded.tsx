@@ -45,7 +45,7 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
             <h5>Presale has ended. Check out our other projects!</h5>
 
             {campaign.locked ? (
-              <button type="button" className="btn btn-danger mb-4">
+              <button type="button" className="btn btn-danger mb-10">
                 Trade On PSI Dex
               </button>
             ) : null}
