@@ -13,7 +13,6 @@ const ContributionDetail: React.FC<Prop> = ({ campaign }) => {
 
     const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
 
-
     return (
         <>
             {!isLoadingToken && !isEmpty(token) ?

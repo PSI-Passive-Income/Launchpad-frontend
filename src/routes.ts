@@ -82,12 +82,12 @@ export const routes: IRoute[] = [
   //   icon: 'tim-icons icon-chart-bar-32',
   //   component: Dashboard,
   // },
-  {
-    path: '/contributionDetail',
-    name: 'History',
-    icon: 'tim-icons icon-calendar-60',
-    component: userContribution,
-  },
+  // {
+  //   path: '/contributionDetail',
+  //   name: 'History',
+  //   icon: 'tim-icons icon-calendar-60',
+  //   component: userContribution,
+  // },
   {
     path: '/KYC',
     name: 'KYC',

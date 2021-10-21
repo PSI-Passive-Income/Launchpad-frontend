@@ -6,13 +6,10 @@ import { Label, Table } from 'reactstrap'
 import DetailContribution from './contributionDetail'
 
 
-
-
 const ContributionDetail: React.FC = () => {
 
     const { campaigns, campaignsLoading } = useCampaigns()
-    const { isLoggedIn, accessToken,account } = useLoggedInUser()
-    console.log(accessToken, isLoggedIn)
+    const { accessToken, account } = useLoggedInUser()
 
     return (
         <div className="content">
@@ -35,8 +32,7 @@ const ContributionDetail: React.FC = () => {
                             ? Object.values(campaigns).map((campaign: any) => {
                                 return <DetailContribution campaign={campaign} />
                             })
-                            : null
-                        }
+                            : null}
                     </Table>
                     : <h3 className="KYC-box text-center">Please connect wallet</h3>
                 }
