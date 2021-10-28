@@ -80,14 +80,6 @@ const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
   return (
     <div className="sidebar" data-type="psi">
       <div className="sidebar-wrapper" ref={sidebarRef}>
-        {logoImg !== null || logoText !== null ? (
-          <div className="logo">
-            <NavLink to='/'>
-            <img className="sidebar-logo" src="https://s2.coinmarketcap.com/static/img/coins/64x64/8243.png" alt="" />
-            </NavLink>
-            Passive Income
-          </div>
-        ) : null}
         <Nav>
           {routes.map((prop) => {
             if (prop.redirect || !prop.name) return null

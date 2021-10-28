@@ -1,7 +1,30 @@
+
+.content{
+    margin-top: 25px;
+    height: 100vh;
+    overflow-y: auto;
+}
+.content::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 10px;
+  }
+  .content::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px #000000  ;
+  }
+   
+  .content::-webkit-scrollbar-thumb {
+    background-color: #00edff;
+    outline: 1px solid #00edff;
+  }
+body{
+    overflow-y: hidden;
+}
+
 .main-panel{
     background-image: url(/src/assets/img/psipadbackground.svg);
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
 }
 .sidebar[data-type="psi"], .off-canvas-sidebar[data-type="psi"]{
     background: rgb(39, 38, 44);
@@ -21,9 +44,11 @@
     background-color: rgba(21, 61, 111, 0.44);
 }
 .wallet-button{
-    font-size: 13px;
+    font-size: 14px !important;
     padding: 0px 28px;
-    height: 50px;
+    font-weight: 900 !important;
+    height: 29px !important;
+    color: white !important;
 }
 
 .network-class{
@@ -126,4 +151,87 @@ text-align: center
     margin: 5px;
     max-height: 35px;
     max-width: 60px;
+}
+.navbar.navbar-transparent{
+    background: rgb(39, 38, 44) !important;
+    height: 64px;
+    border-bottom: 2px solid rgba(133, 133, 133, 0.1);
+
+}
+.wallet-button{
+    background-color: rgba(21, 61, 111, 0.44) !important;
+    font-size: 16px;
+    font-weight: 600;
+}
+.header-logo-main{
+    width: 40px;
+}
+.logo-box-area{
+    display: flex;
+}
+.logo-box-area p{
+    align-self: center;
+    margin-bottom: 0px;
+    color: white;
+    padding-left: 13px;
+    font-weight: 900;
+    font-size: 20px;
+}
+.header-right-side{
+    display: flex;
+}
+.header-right-side p{
+    padding-right: 18px;
+    margin-bottom: 0px;
+    color: rgb(135, 161, 206);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+.sidebar{
+    margin-top: 62px;
+    margin-left: 0px;
+    border-radius: 0px;
+    border-right: 2px solid rgba(133, 133, 133, 0.1);
+    position: absolute;
+    height: 100vh;
+
+}
+.navbar .navbar-brand{
+    position: relative;
+}
+.btn-primary.active{
+    background-color: #00edff  !important;
+    background-image: linear-gradient(to bottom left, #00edff , #00edff , #00edff ) !important;
+}
+.btn-group label.btn.active{
+    border-radius: 16px;
+    padding: 3px 16px;
+    align-self: center;
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+}
+.btn-group{
+    background-color: rgba(21, 61, 111, 0.44);
+    border-radius: 16px;
+    padding: 0px 10px;
+}
+.btn-group label.btn{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-right: 12px;
+}
+.btn-group .btn-simple{
+    border: none;
+    margin-top: 0px;
+}
+.btn-primary.btn-simple{
+    color: rgb(0, 237, 255);
+}
+.tabsbtns{
+margin-bottom: 50px;
+}
+.sidebar .nav li.active > a:not([data-toggle="collapse"]):before, .off-canvas-sidebar .nav li.active > a:not([data-toggle="collapse"]):before{
+background: transparent;
 }

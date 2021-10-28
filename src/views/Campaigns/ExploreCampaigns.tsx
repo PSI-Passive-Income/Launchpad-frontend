@@ -36,7 +36,7 @@ const ExploreCampaigns: React.FC = () => {
     <div className="content">
       <div className="row">
         <Loader loading={campaignsLoading} />
-        <div className="col-sm-12 mb-10">
+        <div className="col-sm-12 mb-20 text-center tabsbtns">
           <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
             <Button
               tag="label"

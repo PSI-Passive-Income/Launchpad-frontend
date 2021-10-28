@@ -20,7 +20,8 @@ const Authenticate: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="header-right-side">
+      <p>[BETA]</p>
       {isLoggingIn ? (
         <Loader />
       ) : (

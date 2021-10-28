@@ -57,7 +57,11 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
               </NavbarToggler>
             </div>
             <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
-              {brandText}
+        
+            <div className='logo-box-area'>
+              <img className="header-logo-main" src="https://s2.coinmarketcap.com/static/img/coins/64x64/8243.png" alt="" />
+              <p>PSI PAD</p>
+              </div>
             </NavbarBrand>
           </div>
           <NavbarToggler onClick={toggleCollapse}>
