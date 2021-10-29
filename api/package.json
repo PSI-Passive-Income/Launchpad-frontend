@@ -21,6 +21,7 @@
     "@ethersproject/address": "^5.1.0",
     "@passive-income/psi-api": "1.0.7",
     "@types/express-jwt": "^6.0.2",
+    "@types/parse-multipart": "^1.0.0",
     "app-root-path": "^3.0.0",
     "azure-storage": "^2.10.4",
     "azure-table-promise": "^1.2.0",
@@ -42,6 +43,7 @@
     "mongoose": "^5.13.3",
     "morgan": "~1.9.1",
     "mysql2": "^2.2.5",
+    "parse-multipart": "^1.0.4",
     "sequelize": "^6.6.5",
     "web3": "^1.5.1"
   },

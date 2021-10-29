@@ -1,5 +1,5 @@
 import { toastError } from 'state/toasts'
-import { fetchCampaignsData, fetchCampaignData } from 'utils/apiHelper'
+import { fetchCampaignsData, fetchCampaignData, getKYCuserVerifcation } from 'utils/apiHelper'
 import { AppDispatch, RootState } from '../store'
 import { Campaign } from '../types'
 import {
@@ -17,16 +17,16 @@ export const getCampaigns = (account?: string) => async (dispatch: AppDispatch) 
   try {
     dispatch(campaignsLoadStart())
     const campaigns: Campaign[] = await fetchCampaignsData()
+    console.log(campaigns)
     await fetchCampaignsLiveData(campaigns, account)
     dispatch(campaignsLoadSucceeded(campaigns))
-  } catch (error:any) {
+  } catch (error: any) {
     dispatch(toastError('Error retrieving campaigns', error?.message))
     dispatch(campaignsLoadFailed(error?.message))
   }
 }
 
-export const getCampaign =
-  (campaignId: string | number, connectedWallet: string) =>
+export const getCampaign = (campaignId: string | number, connectedWallet: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       dispatch(campaignLoadStart())
@@ -34,7 +34,7 @@ export const getCampaign =
       if (!campaign) campaign = await fetchCampaignData(campaignId)
       campaign = await fetchDetailedData(campaign, connectedWallet)
       dispatch(campaignLoadSucceeded(campaign))
-    } catch (error:any) {
+    } catch (error: any) {
       dispatch(toastError('Error retrieving campaign', error?.message))
       dispatch(campaignLoadFailed(error?.message))
     }

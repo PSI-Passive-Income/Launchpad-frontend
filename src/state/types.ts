@@ -23,6 +23,7 @@ export interface Campaign {
   tokenAddress: string
   tokenName: string
   owner: string
+  socialMediaLink:string
 
   softCap?: BigNumber
   hardCap?: BigNumber
@@ -167,8 +168,32 @@ export interface BlockState {
 
 // userVerification
 
-export interface KYCuser{
-  address : string,
-  key : string
+export interface KYCuser {
+  address: string,
+  key: string
 }
 
+// user Login
+
+export interface signUpDataInfo {
+  name: string,
+  email: string,
+  password: string,
+  provider: string,
+  provider_id: string,
+  provider_pic: string
+}
+
+export interface loginDataInfo {
+  email: string,
+  password: string
+}
+
+export interface commentData {
+  id: number,
+  userName:string,
+  message: string,
+  campaignAddress: string,
+  respondTo: number,
+  userId: number
+}

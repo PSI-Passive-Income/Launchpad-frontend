@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { Label } from 'reactstrap'
+import { Button, Collapse, Label } from 'reactstrap'
 import { useCampaign, useToken } from 'state/hooks'
 import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
@@ -10,6 +10,7 @@ import Timer from '../../components/Timer'
 import Comments from '../../components/UserComments'
 import Contribute from './components/Contribute'
 import PresaleEnded from './components/PresaleEnded'
+import UploadFile from './components/uploadFile'
 
 interface Params {
   campaignId: string
@@ -22,12 +23,11 @@ const CampaignDetail: React.FC = () => {
   const { campaign, isLoadingCampaign } = useCampaign(campaignId)
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
 
-  const loading = !campaign || !token || isLoadingCampaign || isLoadingToken
+  const loading = !campaign || !token || isLoadingCampaign || isLoadingToken  
 
   return (
     <div className="content">
       <Loader loading={loading} />
-
       {!isEmpty(token) && !isEmpty(campaign) ? (
         <>
           <div className="row">
@@ -40,7 +40,6 @@ const CampaignDetail: React.FC = () => {
                 </div>
                 <div className="card-body">
                   <hr />
-
                   <div className="text-center">
                     <Label>Presale Address:</Label>
                     <h5>{campaign.campaignAddress}</h5>
@@ -50,9 +49,7 @@ const CampaignDetail: React.FC = () => {
                     <Label>Token Address:</Label>
                     <h5>{campaign.tokenAddress}</h5>
                   </div>
-
                   <hr />
-
                   {campaign.status === CampaignStatus.Live || campaign.status === CampaignStatus.Failed ? (
                     <>
                       <div className="text-center">
@@ -67,7 +64,6 @@ const CampaignDetail: React.FC = () => {
                       </div>
                     </>
                   ) : null}
-
                   <div className="col-lg-6 offset-lg-3 text-center">
                     {campaign.status === CampaignStatus.NotStarted ? (
                       <div className="presale-end-timer mt-5">
@@ -80,27 +76,23 @@ const CampaignDetail: React.FC = () => {
                     {campaign.status === CampaignStatus.Live ? (
                       <>
                         <Contribute campaign={campaign} />
-
                         <div className="presale-end-timer mt-5">
                           <Label>Presale ends in:</Label>
                           <Timer date={campaign.endDate} />
                         </div>
                       </>
                     ) : null}
-
                     {campaign.status === CampaignStatus.Ended || campaign.status === CampaignStatus.Failed ? (
                       <>
                         <hr />
                         <PresaleEnded campaign={campaign} />
                       </>
                     ) : null}
-
                     {campaign.status === CampaignStatus.Live ||
-                    campaign.status === CampaignStatus.Ended ||
-                    campaign.status === CampaignStatus.Failed ? (
+                      campaign.status === CampaignStatus.Ended ||
+                      campaign.status === CampaignStatus.Failed ? (
                       <>
                         <hr />
-
                         <div>
                           <div className="contribution-box">
                             <Label>Your contributed amount</Label>
@@ -121,15 +113,14 @@ const CampaignDetail: React.FC = () => {
                   </div>
                 </div>
               </div>
-
               <div className="row">
                 <div className="col-lg-12">
-                  <Comments topicId={campaign.tokenAddress} />
+                  {/* <Comments topicId={campaign.tokenAddress} /> */}
                 </div>
               </div>
             </div>
-
             <div className="col-lg-5 col-md-5">
+              {/* <UploadFile campaign={campaign}/> */}
               <div className="card">
                 <div className="card-header">
                   <h5>Useful Information</h5>

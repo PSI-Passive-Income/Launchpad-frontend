@@ -5,6 +5,7 @@ import campaignReducer from './campaigns'
 import tokensReducer from './tokens'
 import tokenLocksReducer from './tokenLocks'
 import blockReducer from './block'
+import commentReducer from './comment'
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
@@ -15,6 +16,7 @@ const store = configureStore({
     tokens: tokensReducer,
     tokenLocks: tokenLocksReducer,
     block: blockReducer,
+    comment: commentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
