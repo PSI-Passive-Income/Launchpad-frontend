@@ -18,7 +18,7 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
 
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
   const { KYCaddress, verified } = useUserVerification();
-  KYCaddress(campaign.owner)
+  // KYCaddress(campaign.owner)
 
   const scoreCount = (isVerified: any) => {
     let count: number;
@@ -28,7 +28,7 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
       }
     }
 
-    return count
+    return count    
   }
 
   const count = scoreCount(verified)

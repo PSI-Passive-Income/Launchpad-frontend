@@ -1,10 +1,11 @@
 import { LAUNCHPAD_API_URL } from "config/constants/misc"
-import { Campaign,KYCuser } from "state/types"
+import { Campaign, commentData, KYCuser, loginDataInfo, signUpDataInfo } from "state/types"
 import { camelCaseKeys } from "./converters"
 
 export const fetchCampaignsData = async (): Promise<Campaign[]> => {
   const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns`)
   if (!response.ok) throw new Error(await response.text())
+  // console.log(await response.json())
   return camelCaseKeys(await response.json())
 }
 
@@ -41,6 +42,22 @@ export const addCampaign = async (accessToken: string, campaign: Partial<Campaig
   return camelCaseKeys(await response.json())
 }
 
+export const uploadCampaignFile = async (campaignAddress: any, file: FormData): Promise<void> => {
+
+  console.log("file", file)
+  const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns/`, {
+    
+    method: 'PUT',
+    body: file,
+    headers: {
+      Accept: 'application/json',
+      "Content-Type": "multipart/form-data",
+    },
+  })
+  if (!response.ok) throw new Error(await response.text())
+  // return camelCaseKeys(await response.json())
+}
+
 // KYC Verification
 export const setkycUserVerification = async (address: string, key: string): Promise<KYCuser> => {
   const response = await fetch(`${LAUNCHPAD_API_URL}/KYC`, {
@@ -53,20 +70,111 @@ export const setkycUserVerification = async (address: string, key: string): Prom
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-  
   })
-  console.log(await response.json());
-  
   if (!response.ok) throw new Error(await response.text())
   return camelCaseKeys(await response.json())
 }
-export const getKYCuserVerifcation = async (address: string): Promise<boolean> => {
+
+export const fileUpload = async (data: { campaignAddress: any; userAddress?: string; file?: FormData }): Promise<KYCuser> => {
+
+  const response = await fetch(`${LAUNCHPAD_API_URL}/KYC`, {
+    method: 'POST',
+    body: JSON.stringify({
+      user_address: data.userAddress.toLowerCase(),
+      campaign_address: data.campaignAddress.toLowerCase(),
+      file_name: data.file,
+    }),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json())
+
+}
+
+export const getKYCuserVerifcation = async (address: string): Promise<any> => {
+
   try {
     const response = await fetch(`${LAUNCHPAD_API_URL}/kyc/${address}`)
     if (!response.ok) throw new Error(await response.text())
-    const result = await response.json();
-  } catch (e) {
-    return false
+    return camelCaseKeys(await response.json())
+  } catch (err) {
+    return null
   }
-  return true
+}
+
+// Email
+export const apiSignUp = async (data: Partial<signUpDataInfo>): Promise<signUpDataInfo> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/userEmail`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json());
+}
+export const apiIsExist = async (data: Partial<signUpDataInfo>): Promise<signUpDataInfo> => {
+  try {
+    const response = await fetch(`${LAUNCHPAD_API_URL}/userEmail/isUser`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+    });
+    if (!response.ok) throw new Error(await response.text())
+    return camelCaseKeys(await response.json());
+  } catch (err) {
+    return null
+  }
+}
+
+export const apiLogIn = async (data: Partial<loginDataInfo>): Promise<loginDataInfo> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/userEmail/logIn`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+  });
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json());
+}
+
+// Comment
+export const createComment = async (data: Partial<commentData>): Promise<commentData> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/comment`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+  });
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json())
+}
+
+export const fetchComments = async (CampaignAddress: string): Promise<Partial<commentData[]>> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/comment/${CampaignAddress}`);
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json())
+}
+
+export const updateComment = async (object: { id: number; comment: string }, campaignId: string): Promise<commentData> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/comment/${campaignId}`, {
+    method: 'PUT',
+    body: JSON.stringify(object),
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+  });
+  if (!response.ok) throw new Error(await response.text())
+  return camelCaseKeys(await response.json())
+}
+
+export const deleteCommentApi = async (campaignId: string, id: number): Promise<boolean> => {
+  const response = await fetch(`${LAUNCHPAD_API_URL}/comment/${campaignId}`, {
+    method: 'DELETE',
+    body: JSON.stringify(id),
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+  });
+  if (response.ok) return true;
+  return false
 }
