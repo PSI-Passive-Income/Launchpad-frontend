@@ -6,18 +6,44 @@ import { Contract } from 'ethers'
 import { BaseContract } from '@passive-income/launchpad-contracts/typechain-web3/types'
 import { useActiveWeb3React } from 'hooks/web3'
 import useActiveWeb3 from 'hooks/useActiveWeb3'
+import useUserVerification from 'hooks/useUserKYC'
 import { AppDispatch, RootState } from './store'
 import { Toast } from '../components/Toast'
 import { push as pushToast, remove as removeToast, clear as clearToast } from './actions'
 import { loginWallet, logoutWallet, updateUser } from './user/thunks'
-import { User, UserState } from './types'
+import { User, UserState, commentData } from './types'
 import { toastError, toastInfo, toastSuccess, toastWarning } from './toasts'
 import { getCampaigns, getCampaign } from './campaigns/thunks'
 import { getToken, getTokens, getUserTokens } from './tokens/thunks'
 import { getTokenLock, getUserTokenLocks } from './tokenLocks/thunks'
+import { userSignUpEmail, logInEmail, logOutEmail, getComments, getUpdateComment, removeComment } from './comment/thunks';
+import { addedComment } from './comment/index';
+import { createComment, getKYCuserVerifcation } from '../utils/apiHelper'
+
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+
+
+// Trust Score
+
+export const useTrustScore = async (address: string) => {
+
+  const { KYCaddress, verified } = useUserVerification()
+
+  const [count , setCount] = useState(0)
+
+  useEffect(() => {
+    KYCaddress(address)
+  }, [address, KYCaddress])
+
+  const totalCount = 10;
+  if (verified) {
+    setCount(7)
+  }
+  return count
+}
+
 
 // Toasts
 
@@ -67,8 +93,9 @@ export const useLoginWallet = () => {
 }
 
 export const useLoggedInUser = () => {
+  const { account } = useActiveWeb3React()
   const { isLoggedIn, isLoggingIn, username, accessToken }: UserState = useAppSelector((state) => state.user)
-  return { isLoggedIn, isLoggingIn, username, accessToken }
+  return { isLoggedIn, isLoggingIn, username, accessToken, account }
 }
 
 export const useUpdateUser = () => {
@@ -233,3 +260,88 @@ export const useGetPriceDataFromCoingecko = (id: string) => {
 
   return data
 }
+
+// Email
+
+export const useEmailLoginLogout = async () => {
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(logInEmail())
+  }, [dispatch])
+}
+
+export const useUserEmail = () => {
+
+  const dispatch = useAppDispatch()
+
+  const userSignUp = useCallback(
+    async (signUp) => {
+      dispatch(userSignUpEmail(signUp))
+    }, [dispatch]);
+
+  const responseUser = useCallback(
+    async (login) => {
+
+      dispatch(logInEmail(login))
+    }, [dispatch])
+
+  const logOut = useCallback(
+    () => {
+      dispatch(logOutEmail())
+    }, [dispatch])
+
+  return { signUp: userSignUp, userLogin: responseUser, logOut }
+}
+
+export const useUserEmailInfo = () => {
+  const { isLogIn, user, isSignUp } = useAppSelector((state) => state.comment)
+  return { isLogIn, user, isSignUp }
+}
+
+// Comments
+
+export const useUserComments = () => {
+
+  const { user } = useUserEmailInfo();
+  const dispatch = useAppDispatch()
+
+  const addComment = useCallback(
+    async (message, campaignAddress, userId, userName) => {
+      if (user) {
+        const data: Partial<commentData> = { message, campaignAddress, userId, userName };
+        const abc = await createComment(data);
+        dispatch(addedComment(abc));
+      }
+    }, [dispatch, user])
+
+  const ShowComment = (campaignId: string) => {
+    useEffect(() => {
+      dispatch(getComments(campaignId))
+    }, [campaignId])
+    const { comments } = useAppSelector((state) => state.comment)
+    return comments
+  }
+
+  const handleUpdateComment = useCallback(
+    async (id, comment, campaignAddress) => {
+      dispatch(getUpdateComment({ id, comment }, campaignAddress))
+    }, [dispatch])
+
+  const deleteComment = useCallback(
+    async (campaignAddress: string, id: number) => {
+      dispatch(removeComment(campaignAddress, id))
+    }, [dispatch])
+
+  const handleReply = useCallback(
+    async (responseTo, comment, campaignAddress, userId, userName) => {
+      const data = { responseTo, comment, campaignAddress, userId, userName }
+      console.log('reply', data);
+      const abc = await createComment(data);
+      dispatch(addedComment(abc));
+    }, [dispatch])
+
+  return { createComment: addComment, updateComment: handleUpdateComment, ShowComment, deleteComment, reply: handleReply }
+}
+
