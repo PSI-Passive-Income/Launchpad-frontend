@@ -235,3 +235,13 @@ margin-bottom: 50px;
 .sidebar .nav li.active > a:not([data-toggle="collapse"]):before, .off-canvas-sidebar .nav li.active > a:not([data-toggle="collapse"]):before{
 background: transparent;
 }
+@media (max-width:991px){
+    .mobile-collapse-show{
+    position: absolute;
+        right: 15px;
+        z-index: 99999999;
+    }
+    .mobile-collapse-show:not(.show){
+        display: block !important;
+    }
+    }

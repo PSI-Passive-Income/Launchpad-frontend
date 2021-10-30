@@ -5,8 +5,7 @@ import useUserVerification from 'hooks/useUserKYC';
 
 const Verification: React.FC = () => {
 
-    const { submit, start, error, KYCaddress, account, accessToken, verified } = useUserVerification();
-    KYCaddress(account);
+    const { submit, start, error, account, accessToken, verified } = useUserVerification();
 
     return (
         <div className="content KYC-box">

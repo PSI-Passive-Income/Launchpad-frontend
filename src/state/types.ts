@@ -23,6 +23,7 @@ export interface Campaign {
   tokenAddress: string
   tokenName: string
   owner: string
+  kycVerified:boolean
   socialMediaLink:string
 
   softCap?: BigNumber

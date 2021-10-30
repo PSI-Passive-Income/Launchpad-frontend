@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useLoggedInUser } from 'state/hooks'
 import { toastError } from 'state/actions'
 import { useDispatch } from 'react-redux'
 import { useActiveWeb3React } from 'hooks/web3'
-import { setkycUserVerification, getKYCuserVerifcation } from '../utils/apiHelper';
+import { setkycUserVerification, getKYCuserVerifcation, updateCampaignKyc } from '../utils/apiHelper';
 
 
 const useUserVerification = () => {
@@ -12,7 +12,7 @@ const useUserVerification = () => {
     const { account } = useActiveWeb3React()
     const { accessToken } = useLoggedInUser()
 
-    const [verified, setVerified] = useState({});
+    const [verified, setVerified] = useState(false);
 
     const onStart = useCallback(() => {
         if (!account) {
@@ -21,20 +21,21 @@ const useUserVerification = () => {
     }, [dispatch, account])
 
     const onSumit = useCallback(async (key) => {
-        const abc = await setkycUserVerification(account, key);
-        console.log('referenceUserWithKey', abc)
-    }, [account])
+        const kyc = await setkycUserVerification(account, key);
+        console.log('kyc',kyc);
+        await updateCampaignKyc(accessToken, kyc, account)
+    }, [account, accessToken])
 
     const onError = useCallback(async (errorCode) => {
         dispatch(toastError('Error Verification', errorCode))
     }, [dispatch])
 
-    const getUserVerified = useCallback(async (address:string) => {
-        const user = await getKYCuserVerifcation(address);
+    const getUserVerified = async () => {
+        const user = await getKYCuserVerifcation(account);
         setVerified(user);
-    }, [])
-
-    return { submit: onSumit, start: onStart, error: onError, KYCaddress: getUserVerified, account, accessToken, verified }
+    }
+    getUserVerified()
+    return { submit: onSumit, start: onStart, error: onError, account, accessToken, verified }
 }
 
 export default useUserVerification;

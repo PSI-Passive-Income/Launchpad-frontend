@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { DataTypes, Sequelize } from 'sequelize'
 import fs from 'fs'
 import appRoot from 'app-root-path'
 import { storageSettings } from '@passive-income/psi-api'
@@ -37,6 +37,15 @@ export const initSequelize = async (): Promise<Sequelize> => {
   initCampaignModel(sequelize)
   initCommentModel(sequelize)
   initKycModel(sequelize)
+
+
+  // const table = await sequelize.query('SHOW Tables')
+  // console.log('table', table)
+
+
+//   const queryInterface = await sequelize.getQueryInterface().addColumn('campaigns','kycVerified', {
+//     type: DataTypes.BOOLEAN // after option is only supported by MySQL
+//  })
 
   // Create new tables
   await sequelize.sync()

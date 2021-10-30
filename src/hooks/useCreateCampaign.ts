@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { campaignsAdd, toastError } from 'state/actions'
 import { useLoggedInUser } from 'state/hooks'
 import { Campaign } from 'state/types'
-import { addCampaign } from 'utils/apiHelper'
+import { addCampaign, getKYCuserVerifcation } from 'utils/apiHelper'
 import { tokensNeeded, createCampaign, getUserCampaigns, getCampaignAddress } from 'utils/callHelpers'
 import useApproval from './useApproval'
 import { useCampaignFactory } from './useContract'
@@ -45,7 +45,7 @@ export const useCreateCampaign = () => {
 
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
-      console.log("campaign",campaign)
+      console.log("campaign", campaign)
       if (account && campaign && history) {
         try {
           setCreating(true)
@@ -55,8 +55,9 @@ export const useCreateCampaign = () => {
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
               const campaignAddress = await getCampaignAddress(campaignFactory, campaignId);
+              const kycVerified = await getKYCuserVerifcation(account);
               if (isNumber(campaignId) && campaignAddress) {
-                const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress })
+                const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress, kycVerified })
                 dispatch(campaignsAdd(addedCampaign))
                 history.push(`/project/${addedCampaign.campaignAddress}`)
               } else {

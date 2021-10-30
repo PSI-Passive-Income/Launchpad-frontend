@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { Sequelize } from 'sequelize'
+import { QueryInterface, Sequelize } from 'sequelize'
 import Campaign from '../models/campaign.model'
-import { string, uint } from './defaultTypes'
+import { bool, string, uint } from './defaultTypes'
 
 export const initCampaignModel = (sequelize: Sequelize) => {
   Campaign.init(
@@ -19,6 +19,7 @@ export const initCampaignModel = (sequelize: Sequelize) => {
         unique: true,
         validate: { isLowercase: true },
       }),
+      kycVerified:bool(true),
       description: string(),
     },
     {
@@ -26,5 +27,5 @@ export const initCampaignModel = (sequelize: Sequelize) => {
       sequelize,
       timestamps: true,
     },
-  )
+  ) 
 }

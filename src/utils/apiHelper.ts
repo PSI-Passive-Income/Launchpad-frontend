@@ -1,11 +1,11 @@
 import { LAUNCHPAD_API_URL } from "config/constants/misc"
+import { method, StringIterator } from "lodash"
 import { Campaign, commentData, KYCuser, loginDataInfo, signUpDataInfo } from "state/types"
 import { camelCaseKeys } from "./converters"
 
 export const fetchCampaignsData = async (): Promise<Campaign[]> => {
   const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns`)
   if (!response.ok) throw new Error(await response.text())
-  // console.log(await response.json())
   return camelCaseKeys(await response.json())
 }
 
@@ -30,6 +30,7 @@ export const addCampaign = async (accessToken: string, campaign: Partial<Campaig
       campaign_address: campaign.campaignAddress.toLowerCase(),
       description: campaign.description,
       owner: campaign.owner,
+      kyc_Verified: campaign.kycVerified
     }),
     headers: {
       Accept: 'application/json',
@@ -42,37 +43,60 @@ export const addCampaign = async (accessToken: string, campaign: Partial<Campaig
   return camelCaseKeys(await response.json())
 }
 
-export const uploadCampaignFile = async (campaignAddress: any, file: FormData): Promise<void> => {
-
-  console.log("file", file)
-  const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns/`, {
-    
-    method: 'PUT',
-    body: file,
-    headers: {
-      Accept: 'application/json',
-      "Content-Type": "multipart/form-data",
-    },
-  })
-  if (!response.ok) throw new Error(await response.text())
-  // return camelCaseKeys(await response.json())
+export const updateCampaignKyc = async (accessToken: string, kyc: boolean, account: string): Promise<void> => {
+  try {
+    const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns/kyc`, {
+      method: "PUT",
+      body: JSON.stringify({
+        user_address: account,
+        kyc_verified: kyc
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Func-Authorization': `Bearer ${accessToken}`,
+      },
+    })
+    if (!response.ok) throw new Error(await response.text())
+  } catch (err) {
+    console.log(err)
+  }
 }
 
+// export const uploadCampaignFile = async (campaignAddress: any, file: FormData): Promise<void> => {
+
+//   console.log("file", file)
+//   const response = await fetch(`${LAUNCHPAD_API_URL}/campaigns/`, {
+//     method: 'PUT',
+//     body: file,
+//     headers: {
+//       Accept: 'application/json',
+//       "Content-Type": "multipart/form-data",
+//     },
+//   })
+//   if (!response.ok) throw new Error(await response.text())
+//   // return camelCaseKeys(await response.json())
+// }
 // KYC Verification
-export const setkycUserVerification = async (address: string, key: string): Promise<KYCuser> => {
-  const response = await fetch(`${LAUNCHPAD_API_URL}/KYC`, {
-    method: 'POST',
-    body: JSON.stringify({
-      user_address: address.toLowerCase(),
-      user_key: key,
-    }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-  if (!response.ok) throw new Error(await response.text())
-  return camelCaseKeys(await response.json())
+export const setkycUserVerification = async (address: string, key: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${LAUNCHPAD_API_URL}/KYC`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_address: address.toLowerCase(),
+        user_key: key,
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) throw new Error(await response.text())
+    await response.json()
+  } catch (err) {
+    return false
+  }
+  return true
 }
 
 export const fileUpload = async (data: { campaignAddress: any; userAddress?: string; file?: FormData }): Promise<KYCuser> => {
@@ -94,15 +118,15 @@ export const fileUpload = async (data: { campaignAddress: any; userAddress?: str
 
 }
 
-export const getKYCuserVerifcation = async (address: string): Promise<any> => {
-
+export const getKYCuserVerifcation = async (address: string): Promise<boolean> => {
   try {
     const response = await fetch(`${LAUNCHPAD_API_URL}/kyc/${address}`)
     if (!response.ok) throw new Error(await response.text())
-    return camelCaseKeys(await response.json())
+    await response.json()
   } catch (err) {
-    return null
+    return false
   }
+  return true
 }
 
 // Email

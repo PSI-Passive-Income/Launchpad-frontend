@@ -18,8 +18,8 @@ const httpTrigger: AzureFunction = async function httpTrigger(context: Context, 
     if (req.method === 'OPTIONS') funcSuccess(context)
     else if (req.method === 'GET') await get(context, req)
     else if (req.method === 'POST') await create(context, req)
+    else if (req.method === 'PUT') await update(context, req)
   } catch (error) {
-    console.error('abc',error)
     func500Error(context, error)
   }
 }
@@ -47,7 +47,6 @@ const get = async (context: Context, req: HttpRequest) => {
     if (!campaign) return func404NotFound(context)
     return funcSuccess(context, campaign ? campaign.toJSON() : null)
   }
-
   const campaigns = await Campaign.findAll()
   return funcSuccess(context, campaigns ? campaigns.map((c) => c.toJSON()) : [])
 }
@@ -69,10 +68,20 @@ const create = async (context: Context, req: HttpRequest) => {
     token_address: req.body.token_address.toLowerCase(),
     campaign_address: req.body.campaign_address.toLowerCase(),
     description: req.body.description,
+    kycVerified: req.body.kyc_Verified,
     owner: req.body.owner.toLowerCase(),
   })
-
   return funcSuccess(context, campaign ? campaign.toJSON() : null)
+}
+
+const update = async (context: Context, req: HttpRequest) => {
+  if (context.bindingData.campaignId === 'kyc') {
+    console.log(req.body);
+    if (!req.body.user_address || !web3.utils.isAddress(req.body.user_address)) return funcValidationError(context, 'Post parameter user address not set or not an valid address')
+    const campaigns = await Campaign.update({ kycVerified: req.body.kyc_verified }, { where: { owner: req.body.user_address } })
+    console.log('campaign',campaigns)
+    return funcSuccess(context, campaigns ? campaigns : null)
+  }
 }
 
 export default httpTrigger

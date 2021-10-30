@@ -18,31 +18,11 @@ import { getToken, getTokens, getUserTokens } from './tokens/thunks'
 import { getTokenLock, getUserTokenLocks } from './tokenLocks/thunks'
 import { userSignUpEmail, logInEmail, logOutEmail, getComments, getUpdateComment, removeComment } from './comment/thunks';
 import { addedComment } from './comment/index';
-import { createComment, getKYCuserVerifcation } from '../utils/apiHelper'
+import { createComment } from '../utils/apiHelper'
 
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-
-
-// Trust Score
-
-export const useTrustScore = async (address: string) => {
-
-  const { KYCaddress, verified } = useUserVerification()
-
-  const [count , setCount] = useState(0)
-
-  useEffect(() => {
-    KYCaddress(address)
-  }, [address, KYCaddress])
-
-  const totalCount = 10;
-  if (verified) {
-    setCount(7)
-  }
-  return count
-}
 
 
 // Toasts

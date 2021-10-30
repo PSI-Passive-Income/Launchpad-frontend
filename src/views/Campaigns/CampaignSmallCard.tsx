@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Campaign, CampaignStatus } from 'state/types'
 import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
-import useUserVerification from 'hooks/useUserKYC'
 import { useToken } from 'state/hooks'
 import { isEmpty } from 'lodash'
 import { Progress } from 'reactstrap'
@@ -17,21 +16,6 @@ interface Props {
 const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
 
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
-  const { KYCaddress, verified } = useUserVerification();
-  // KYCaddress(campaign.owner)
-
-  const scoreCount = (isVerified: any) => {
-    let count: number;
-    if (isVerified) {
-      if (isVerified.kycKey) {
-        count = 40
-      }
-    }
-
-    return count    
-  }
-
-  const count = scoreCount(verified)
 
   return (
 
@@ -61,7 +45,7 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
                     <b>Coming soon</b>
                   </span>
                 ) : null}
-                {verified ? (<img src={bannerGreen} alt="..." className="banner-kyc " />)
+                {campaign.kycVerified ? (<img src={bannerGreen} alt="..." className="banner-kyc " />)
                   : (<img src={bannerRed} alt="..." className="banner-kyc " />)
                 }
                 <p className="card-text" />
@@ -92,7 +76,7 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
                     <div className="col-md-12">
                       <h6>Token Address:</h6>
                       <a
-                        href={`https://testnet.bscscan.com/token/${campaign.campaignAddress}`}
+                        href={`https://testnet.bscscan.com/token/${campaign.tokenAddress}`}
                         target="_blank"
                         rel="noreferrer"
                         className="small"

@@ -17,7 +17,6 @@ export const getCampaigns = (account?: string) => async (dispatch: AppDispatch) 
   try {
     dispatch(campaignsLoadStart())
     const campaigns: Campaign[] = await fetchCampaignsData()
-    console.log(campaigns)
     await fetchCampaignsLiveData(campaigns, account)
     dispatch(campaignsLoadSucceeded(campaigns))
   } catch (error: any) {

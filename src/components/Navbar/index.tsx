@@ -56,20 +56,19 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
                 <span className="navbar-toggler-bar bar3" />
               </NavbarToggler>
             </div>
-            <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
-        
-            <div className='logo-box-area'>
-              <img className="header-logo-main" src="https://s2.coinmarketcap.com/static/img/coins/64x64/8243.png" alt="" />
-              <p>PSI PAD</p>
-              </div>
+            <NavbarBrand href="/projects" >
+                <div className='logo-box-area'>
+                  <img className="header-logo-main" src="https://s2.coinmarketcap.com/static/img/coins/64x64/8243.png" alt="" />
+                  <p>PSI PAD</p>
+                </div>
             </NavbarBrand>
           </div>
-          <NavbarToggler onClick={toggleCollapse}>
+          {/* <NavbarToggler onClick={toggleCollapse}>
             <span className="navbar-toggler-bar navbar-kebab" />
             <span className="navbar-toggler-bar navbar-kebab" />
             <span className="navbar-toggler-bar navbar-kebab" />
-          </NavbarToggler>
-          <Collapse navbar isOpen={collapseOpen}>
+          </NavbarToggler> */}
+          <Collapse navbar className="mobile-collapse-show">
             <Nav className="ml-auto" navbar>
               <Authenticate />
               {/* <FormGroup>

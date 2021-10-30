@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Collapse } from 'reactstrap';
 import { Campaign } from 'state/types';
-import { uploadCampaignFile } from 'utils/apiHelper';
+// import { uploadCampaignFile } from 'utils/apiHelper';
 
 interface Props {
     campaign: Campaign
@@ -24,7 +24,7 @@ const UploadOption: React.FC<Props> = ({ campaign }) => {
         const formData = new FormData()
         console.log('selectedFile', selectedFile, selectedFile.name)
         formData.append('file', selectedFile, selectedFile.name)
-        const abc = await uploadCampaignFile(campaign.campaignAddress, formData)
+        // const abc = await uploadCampaignFile(campaign.campaignAddress, formData)
     }
 
     return (
