@@ -120,7 +120,7 @@ const CampaignDetail: React.FC = () => {
               </div>
             </div>
             <div className="col-lg-5 col-md-5">
-              <UploadFile campaign={campaign}/>
+              {/* <UploadFile campaign={campaign}/> */}
               <div className="card">
                 <div className="card-header">
                   <h5>Useful Information</h5>
