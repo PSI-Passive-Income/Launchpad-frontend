@@ -45,7 +45,6 @@ export const useCreateCampaign = () => {
 
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
-      console.log("campaign", campaign)
       if (account && campaign && history) {
         try {
           setCreating(true)

@@ -12,7 +12,6 @@ import Loader from 'components/Loader'
 const LaunchCampaignForm: React.FC = () => {
   const [campaign, setCampaign] = useState<Partial<Campaign>>({})
 
-
   const tokensNeeded = useTokensNeeded(campaign)
 
   const [submitClicked, setSubmitClicked] = useState(false)
@@ -28,8 +27,8 @@ const LaunchCampaignForm: React.FC = () => {
   )
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
-  const changeValue = (value: string | Moment, name: string, type: string, mandatory = true) => {
-    const { newValue, newErrors } = validate(campaign, validationErrors, value, name, type, mandatory)
+  const changeValue = (value: string | Moment, name: string, type: string, mandatory = true, extra?: any) => {
+    const { newValue, newErrors } = validate(campaign, validationErrors, value, name, type, mandatory, extra)
     setValidationErrors(newErrors)
     setCampaign(newValue)
   }
@@ -124,7 +123,7 @@ const LaunchCampaignForm: React.FC = () => {
                   {errors.tokenAddress ? <FormFeedback>{errors.tokenAddress}</FormFeedback> : null}
                   {!isEmpty(token) ? (
                     <FormText>
-                      {token.name} - {formatBN(token.totalSupply)} {token.symbol}
+                      {token.name} - {formatBN(token.totalSupply, token.decimals)} {token.symbol}
                     </FormText>
                   ) : null}
                 </div>
@@ -196,7 +195,7 @@ const LaunchCampaignForm: React.FC = () => {
                       <Label>Tokens per BNB</Label>
                       <Input
                         defaultValue={formatBN(campaign.rate, token.decimals, true)}
-                        onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber')}
+                        onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
                         invalid={!!errors.rate}
                       />
@@ -206,7 +205,7 @@ const LaunchCampaignForm: React.FC = () => {
                       <Label>Tokens per BNB in liquidity pool</Label>
                       <Input
                         defaultValue={formatBN(campaign.poolRate, token.decimals, true)}
-                        onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber')}
+                        onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
                         invalid={!!errors.poolRate}
                       />

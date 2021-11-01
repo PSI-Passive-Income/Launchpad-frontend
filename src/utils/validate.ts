@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, isInteger } from 'lodash'
 import BigNumber from 'bignumber.js'
 import { isMoment } from 'moment'
 import Web3 from 'web3'
@@ -20,6 +20,7 @@ const validate = <T>(
   name: string,
   type: string,
   mandatory = true,
+  extra?: any,
 ) => {
   const newErrors = { ...errors }
   delete newErrors[name]
@@ -35,7 +36,7 @@ const validate = <T>(
         if (floatValue < 0) {
           newErrors[name] = 'This number should be positive'
         } else {
-          newValue[name] = type === 'BigNumber' ? new BigNumber(floatValue).multipliedBy(10 ** 18) : floatValue
+          newValue[name] = type === 'BigNumber' ? new BigNumber(floatValue).multipliedBy(10 ** (Number.isInteger(extra) ? extra : 18)) : floatValue
           if (floatValue === 0) newErrors[name] = 'This field is required'
         }
       } else {
