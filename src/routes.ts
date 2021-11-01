@@ -12,7 +12,7 @@ const LockToken = lazy(() => import('./views/Locks/LockToken'))
 // const userContribution = lazy(() => import('./views/userContribution/contributioncard'))
 const KYC = lazy(() => import('./views/KYC'))
 const PolicyPage = lazy(() => import('./components/Footer/privacy_Policy'))
-const DisclaimerPage = lazy(() => import('./components/Footer/disclaimer'))
+const DisclaimerPage = lazy(() => import('./components/Footer/DisclaimerPage'))
 
 export interface IRoute {
   path: string
@@ -100,6 +100,8 @@ export const routes: IRoute[] = [
   },
   {
     path: '/Disclaimer',
+    name: 'Disclaimer',
+    icon: 'tim-icons icon-alert-circle-exc',
     component: DisclaimerPage,
   },
 ]
