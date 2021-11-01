@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback} from 'react'
 import { Input, FormFeedback } from 'reactstrap'
 import { isEmpty, isNil, isNumber } from 'lodash'
-import { Campaign } from 'state/types'
+import { Campaign, Token } from 'state/types'
 import BigNumber from 'bignumber.js'
 import { useBuyTokens } from 'hooks/useContributions'
 import { formatBN } from 'utils/formatters'
@@ -12,9 +12,10 @@ import useAuth from 'hooks/useAuth'
 
 interface Props {
   campaign: Campaign
+  token: Token
 }
 
-const Contribute: React.FC<Props> = ({ campaign }) => {
+const Contribute: React.FC<Props> = ({ campaign, token }) => {
   const { account } = useActiveWeb3React()
   const { login, logout } = useAuth()
   const { onPresentConnectModal } = useWalletModal(login, logout, account)
@@ -42,8 +43,8 @@ const Contribute: React.FC<Props> = ({ campaign }) => {
   const tokenAmount = useCallback((bnb: number | BigNumber) => {
     const bnbBN = isNumber(bnb) ? new BigNumber(bnb).multipliedBy(10 ** 18) : bnb
     if (isNil(campaign) || !bnbBN || bnbBN.lte(0)) return '0'
-    return formatBN(campaign.rate.multipliedBy(bnbBN).div(10 ** 18))
-  }, [campaign])
+    return formatBN(campaign.rate.multipliedBy(bnbBN).div(10 ** 18), token.decimals)
+  }, [campaign, token])
 
   const contributionTokens = useMemo(() => tokenAmount(contribution), [tokenAmount, contribution])
 

@@ -36,7 +36,7 @@ const validate = <T>(
         if (floatValue < 0) {
           newErrors[name] = 'This number should be positive'
         } else {
-          newValue[name] = type === 'BigNumber' ? new BigNumber(floatValue).multipliedBy(10 ** (Number.isInteger(extra) ? extra : 18)) : floatValue
+          newValue[name] = type === 'BigNumber' ? new BigNumber(floatValue).multipliedBy(10 ** (extra && Number.isInteger(extra) ? extra : 18)) : floatValue
           if (floatValue === 0) newErrors[name] = 'This field is required'
         }
       } else {

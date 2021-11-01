@@ -75,7 +75,7 @@ const CampaignDetail: React.FC = () => {
 
                     {campaign.status === CampaignStatus.Live ? (
                       <>
-                        <Contribute campaign={campaign} />
+                        <Contribute campaign={campaign} token={token} />
                         <div className="presale-end-timer mt-5">
                           <Label>Presale ends in:</Label>
                           <Timer date={campaign.endDate} />
@@ -102,7 +102,7 @@ const CampaignDetail: React.FC = () => {
                             <div className="contribution-box">
                               <Label>Your tokens:</Label>
                               <h5>
-                                {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** 18))}{' '}
+                                {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** token.decimals))}{' '}
                                 {token.symbol}
                               </h5>
                             </div>
@@ -139,7 +139,7 @@ const CampaignDetail: React.FC = () => {
                       <Label>
                         Total Supply:
                         <p>
-                          {formatBN(token.totalSupply)} {token.symbol}
+                          {formatBN(token.totalSupply, token.decimals)} {token.symbol}
                         </p>
                       </Label>
                     </div>
@@ -189,7 +189,7 @@ const CampaignDetail: React.FC = () => {
                       <Label>
                         Tokens rate:
                         <p>
-                          {formatBN(campaign.rate)} {token.symbol} per BNB
+                          {formatBN(campaign.rate, token.decimals)} {token.symbol} per BNB
                         </p>
                       </Label>
                     </div>
@@ -223,7 +223,7 @@ const CampaignDetail: React.FC = () => {
                       <Label>
                         PSI Dex Listing Rate:
                         <p>
-                          {formatBN(campaign.poolRate)} {token.symbol} per BNB
+                          {formatBN(campaign.poolRate, token.decimals)} {token.symbol} per BNB
                         </p>
                       </Label>
                     </div>
