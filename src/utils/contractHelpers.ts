@@ -11,18 +11,18 @@ import {
 } from 'utils/addressHelpers'
 
 // Contract types
-import { IBEP20 } from "@passive-income/launchpad-contracts/typechain-web3/IBEP20"
-import { PSIPadCampaign } from "@passive-income/launchpad-contracts/typechain-web3/PSIPadCampaign"
-import { PSIPadCampaignFactory } from "@passive-income/launchpad-contracts/typechain-web3/PSIPadCampaignFactory"
-import { PSIPadTokenDeployer } from "@passive-income/launchpad-contracts/typechain-web3/PSIPadTokenDeployer"
-import { PSIPadTokenLockFactory } from "@passive-income/launchpad-contracts/typechain-web3/PSIPadTokenLockFactory"
+import { IBEP20 } from "config/types/IBEP20"
+import { PSIPadCampaign } from "config/types/PSIPadCampaign"
+import { PSIPadCampaignFactory } from "config/types/PSIPadCampaignFactory"
+import { PSIPadTokenDeployer } from "config/types/PSIPadTokenDeployer"
+import { PSIPadTokenLockFactory } from "config/types/PSIPadTokenLockFactory"
 
 // ABI
-import bep20Abi from '@passive-income/launchpad-contracts/abi/contracts/token/interfaces/IBEP20.sol/IBEP20.json'
-import campaignAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadCampaign.sol/PSIPadCampaign.json'
-import campaignFactoryAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadCampaignFactory.sol/PSIPadCampaignFactory.json'
-import tokenFactoryAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadTokenDeployer.sol/PSIPadTokenDeployer.json'
-import tokenLockFactoryAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadTokenLockFactory.sol/PSIPadTokenLockFactory.json'
+import bep20Abi from 'config/abi/IBEP20.json'
+import campaignAbi from 'config/abi/PSIPadCampaign.json'
+import campaignFactoryAbi from 'config/abi/PSIPadCampaignFactory.json'
+import tokenFactoryAbi from 'config/abi/PSIPadTokenDeployer.json'
+import tokenLockFactoryAbi from 'config/abi/PSIPadTokenLockFactory.json'
 
 const getContract = (abi: any, address: string, web3?: Web3) => {
   const _web3 = web3 ?? web3NoAccount

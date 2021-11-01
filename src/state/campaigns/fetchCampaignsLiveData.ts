@@ -1,4 +1,4 @@
-import PSIPadCampaignAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadCampaign.sol/PSIPadCampaign.json'
+import PSIPadCampaignAbi from 'config/abi/PSIPadCampaign.json'
 import { toFinite } from 'lodash'
 import { Campaign, CampaignStatus } from 'state/types'
 import { toBigNumber, toBool, unixTSToDate } from 'utils/converters'

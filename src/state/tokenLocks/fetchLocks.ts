@@ -1,4 +1,4 @@
-import PSIPadTokenLockFactoryAbi from '@passive-income/launchpad-contracts/abi/contracts/PSIPadTokenLockFactory.sol/PSIPadTokenLockFactory.json'
+import PSIPadTokenLockFactoryAbi from 'config/abi/PSIPadTokenLockFactory.json'
 import { first, isEmpty, isNil, toFinite } from 'lodash'
 import { TokenLock } from 'state/types'
 import { getTokenLockFactoryAddress } from 'utils/addressHelpers'

@@ -1,13 +1,13 @@
-import { IBEP20 } from '@passive-income/launchpad-contracts/typechain-web3/IBEP20'
-import { PSIPadCampaign } from '@passive-income/launchpad-contracts/typechain-web3/PSIPadCampaign'
-import { PSIPadCampaignFactory } from '@passive-income/launchpad-contracts/typechain-web3/PSIPadCampaignFactory'
-import { PSIPadTokenDeployer } from '@passive-income/launchpad-contracts/typechain-web3/PSIPadTokenDeployer'
-import { PSIPadTokenLockFactory } from '@passive-income/launchpad-contracts/typechain-web3/PSIPadTokenLockFactory'
-import { BaseContract } from '@passive-income/launchpad-contracts/typechain-web3/types'
-import BigNumber from 'bignumber.js'
+import { IBEP20 } from 'config/types/IBEP20'
+import { PSIPadCampaign } from 'config/types/PSIPadCampaign'
+import { PSIPadCampaignFactory } from 'config/types/PSIPadCampaignFactory'
+import { PSIPadTokenDeployer } from 'config/types/PSIPadTokenDeployer'
+import { PSIPadTokenLockFactory } from 'config/types/PSIPadTokenLockFactory'
+import { BaseContract } from 'config/types/types'
 import { utils, constants, Contract } from 'ethers'
 import { isNil, isObject, parseInt, round } from 'lodash'
 import { Campaign, TokenCreationInfo, TokenLock } from 'state/types'
+import { getPSFactoryAddress, getPSRouterAddress } from './addressHelpers'
 import { toBigNumber } from './converters'
 
 export const approve = async (
@@ -97,6 +97,8 @@ export const createCampaign = async (
       hi as any,
       campaign.tokenAddress,
       feePercentage,
+      getPSFactoryAddress(),
+      getPSRouterAddress()
     )
     .send({ from: account })
 }

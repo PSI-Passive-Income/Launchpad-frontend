@@ -21,5 +21,11 @@ export const getTokenLockFactoryAddress = () => {
   return getAddress(addresses.tokenLockFactory)
 }
 export const getMulticallAddress = () => {
-  return getAddress(addresses.mulltiCall)
+  return getAddress(addresses.multiCall)
+}
+export const getPSFactoryAddress = () => {
+  return getAddress(addresses.psFactory)
+}
+export const getPSRouterAddress = () => {
+  return getAddress(addresses.psRouter)
 }

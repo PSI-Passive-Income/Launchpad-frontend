@@ -9,7 +9,7 @@ const initialState: TokenLocksState = {
 }
 
 export const tokensSlice = createSlice({
-  name: 'campaigns',
+  name: 'tokenLocks',
   initialState,
   reducers: {
     locksLoadStart: (state) => {

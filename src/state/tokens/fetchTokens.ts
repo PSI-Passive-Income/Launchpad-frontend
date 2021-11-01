@@ -1,4 +1,4 @@
-import IBEP20Abi from '@passive-income/launchpad-contracts/abi/contracts/token/interfaces/IBEP20.sol/IBEP20.json'
+import IBEP20Abi from 'config/abi/IBEP20.json'
 import { first, toFinite } from 'lodash'
 import { Token } from 'state/types'
 import { getUserTokens } from 'utils/callHelpers'
