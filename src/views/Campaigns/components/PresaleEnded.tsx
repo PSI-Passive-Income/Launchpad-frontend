@@ -1,14 +1,15 @@
 import React from 'react'
-import { Campaign, CampaignStatus } from 'state/types'
+import { Campaign, CampaignStatus, Token } from 'state/types'
 import { useWithdrawFunds, useWithdrawTokens } from 'hooks/useContributions'
 import { useLock, useUnlock } from 'hooks/useCampaignLocks'
 import { useActiveWeb3React } from 'hooks/web3'
 
 interface Props {
   campaign: Campaign
+  token: Token
 }
 
-const PresaleEnded: React.FC<Props> = ({ campaign }) => {
+const PresaleEnded: React.FC<Props> = ({ campaign, token }) => {
   const { account } = useActiveWeb3React()
 
   const lock = useLock(campaign?.id)
@@ -44,10 +45,15 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
           <>
             <h5>Presale has ended. Check out our other projects!</h5>
 
-            {campaign.locked ? (
-              <button type="button" className="btn btn-danger mb-10">
+            {token ? (
+              <a
+                className="btn btn-danger mb-10"
+                href={`https://psidex.passive-income.io/#/swap?outputCurrency=${token.address}`}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Trade On PSI Dex
-              </button>
+              </a>
             ) : null}
           </>
         ) : null}

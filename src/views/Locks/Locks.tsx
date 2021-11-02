@@ -60,11 +60,11 @@ const Locks: React.FC = () => {
                     </div>
                     <div className="form-group">
                       <Label>Total locked tokens:</Label>
-                      <p>{formatBN(lock.amount)}</p>
+                      <p>{formatBN(lock.amount, tokens[lock.token?.toLowerCase()]?.decimals)}</p>
                     </div>
                     <div className="form-group">
                       <Label>Unlocked tokens:</Label>
-                      <p>{formatBN(lock.amountUnlocked)}</p>
+                      <p>{formatBN(lock.amountUnlocked, tokens[lock.token?.toLowerCase()]?.decimals)}</p>
                     </div>
                     <Link to={`/lock/${lock.id}`}>Details</Link>
                   </div>

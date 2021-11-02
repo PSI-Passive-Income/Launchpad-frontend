@@ -76,14 +76,14 @@ const LockDetail: React.FC = () => {
                 </div>
                 <div className="form-group">
                   <Label>Locked token amount:</Label>
-                  <p>{formatBN(lock.amount)} ({formatBN(lock.amountUnlocked)} unlocked)</p>
+                  <p>{formatBN(lock.amount, token?.decimals)} ({formatBN(lock.amountUnlocked, token?.decimals)} unlocked)</p>
                 </div>
                 <div className="form-group">
                   <Label>Available for unlock:</Label>
-                  <p>{formatBN(lock.amountToUnlock)}</p>
+                  <p>{formatBN(lock.amountToUnlock, token?.decimals)}</p>
                 </div>
 
-                <Releases lock={lock} />
+                <Releases lock={lock} token={token} />
 
                 {isOwner ? (
                   <Button onClick={onUnlock} disabled={lock.amountToUnlock.lte(0)}>

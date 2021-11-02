@@ -85,7 +85,7 @@ const CampaignDetail: React.FC = () => {
                     {campaign.status === CampaignStatus.Ended || campaign.status === CampaignStatus.Failed ? (
                       <>
                         <hr />
-                        <PresaleEnded campaign={campaign} />
+                        <PresaleEnded campaign={campaign} token={token} />
                       </>
                     ) : null}
                     {campaign.status === CampaignStatus.Live ||

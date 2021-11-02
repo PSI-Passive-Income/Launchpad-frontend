@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
-import { TokenLock } from 'state/types'
+import { Token, TokenLock } from 'state/types'
 import { formatBN, formatDateTime } from 'utils/formatters'
 
 interface Props {
   lock: Partial<TokenLock>
+  token: Token
 }
 
-const Releases: React.FC<Props> = ({ lock }) => {
+const Releases: React.FC<Props> = ({ lock, token }) => {
   const releases = useMemo(() => {
     if (lock.unlockTime && lock.releases && lock.amount) {
       const results: { release: number; time: Date; amountUnlocked: BigNumber; unlocked: boolean }[] = []
@@ -33,7 +34,7 @@ const Releases: React.FC<Props> = ({ lock }) => {
     <div className="form-group mt-4">
       {releases.map((release) => (
         <div>
-          {release.release}: {formatDateTime(release.time)} - {formatBN(release.amountUnlocked)}
+          {release.release}: {formatDateTime(release.time)} - {formatBN(release.amountUnlocked, token?.decimals)}
           {release.unlocked ? ' - UNLOCKED' : null}
         </div>
       ))}

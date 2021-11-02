@@ -29,16 +29,16 @@ const LockToken: React.FC = () => {
   )
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
-  const changeValue = (value: string | moment.Moment, name: string, type: string, mandatory = true) => {
-    const { newValue, newErrors } = validate(lock, validationErrors, value, name, type, mandatory)
+  const changeValue = (value: string | moment.Moment, name: string, type: string, mandatory = true, extra?: any) => {
+    const { newValue, newErrors } = validate(lock, validationErrors, value, name, type, mandatory, extra)
     setValidationErrors(newErrors)
     setLock(newValue)
   }
 
-  const changeRange = (value: string, name: string, type: string, mandatory = true) => {
+  const changeRange = (value: string, name: string, type: string, mandatory = true, extra?: any) => {
     const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
     const amount = token.accountBalance.multipliedBy(rangeValue).div(10 ** token.decimals)
-    changeValue(amount.toString(), name, type, mandatory)
+    changeValue(amount.toString(), name, type, mandatory, extra)
   }
 
   const mandatoryErrors = useMemo(() => {
@@ -116,7 +116,7 @@ const LockToken: React.FC = () => {
                         {errors.tokenAddress ? <FormFeedback>{errors.tokenAddress}</FormFeedback> : null}
                         {!isEmpty(token) ? (
                           <FormText>
-                            {token.name} - {formatBN(token.totalSupply)} {token.symbol}
+                            {token.name} - {formatBN(token.totalSupply, token.decimals)} {token.symbol}
                           </FormText>
                         ) : null}
                       </FormGroup>
@@ -138,13 +138,13 @@ const LockToken: React.FC = () => {
                         <div className="m-2">
                           <Label htmlFor="tokensupply">Total Supply:</Label>
                           <h5>
-                            {formatBN(token.totalSupply)} {token.symbol}
+                            {formatBN(token.totalSupply, token.decimals)} {token.symbol}
                           </h5>
                         </div>
                         <div className="m-2">
                           <Label htmlFor="accountBalance">Token Balance:</Label>
                           <h5>
-                            {formatBN(token.accountBalance)} {token.symbol}
+                            {formatBN(token.accountBalance, token.decimals)} {token.symbol}
                           </h5>
                         </div>
                       </div>
@@ -196,7 +196,7 @@ const LockToken: React.FC = () => {
                           name="amount"
                           id="amount"
                           value={amountRange > 100 ? 100 : amountRange}
-                          onChange={(e) => changeRange(e.target.value, 'amount', 'BigNumber')}
+                          onChange={(e) => changeRange(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           invalid={!!errors.amount}
                           min={0}
                           max={100}
@@ -208,14 +208,14 @@ const LockToken: React.FC = () => {
                           name="amount"
                           id="amount"
                           value={lock.amount?.div(10 ** token.decimals).toNumber()}
-                          onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber')}
+                          onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           placeholder="0"
                           invalid={!!errors.amount}
                         />
                         {errors.amount ? <FormFeedback>{errors.amount}</FormFeedback> : null}
                       </FormGroup>
 
-                      {valid ? <Releases lock={lock} /> : null}
+                      {valid ? <Releases lock={lock} token={token} /> : null}
 
                       <div className="text-center mt-5">
                         {isApproved ? (
