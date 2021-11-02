@@ -96,13 +96,13 @@ const CampaignDetail: React.FC = () => {
                         <div>
                           <div className="contribution-box">
                             <Label>Your contributed amount</Label>
-                            <h5>{formatBN(campaign.userContributed)} BNB</h5>
+                            <h5>{formatBN(campaign?.userContributed)} BNB</h5>
                           </div>
                           {campaign.status !== CampaignStatus.Failed ? (
                             <div className="contribution-box">
                               <Label>Your tokens:</Label>
                               <h5>
-                                {formatBN(campaign.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** token.decimals))}{' '}
+                                {formatBN(campaign?.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** token.decimals))}{' '}
                                 {token.symbol}
                               </h5>
                             </div>

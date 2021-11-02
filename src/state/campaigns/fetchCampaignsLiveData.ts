@@ -36,6 +36,7 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
     else if (callData[7]) campaign.status = CampaignStatus.Ended
     else if (callData[8]) campaign.status = CampaignStatus.Failed
     else campaign.status = CampaignStatus.NotStarted
+    campaign.userContributed = toBigNumber(0)
     if (connectedWallet) campaign.userContributed = toBigNumber(callData[9])
   })
 }
@@ -84,12 +85,13 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
       remaining: toBigNumber(tokenData[12]),
       locked: toBool(tokenData[16]),
       unlockData: unixTSToDate(tokenData[17]),
-      userContributed: toBigNumber(tokenData[18]),
     },
   }
   if (tokenData[13]) liveCampaign.status = CampaignStatus.Live
   else if (tokenData[14]) liveCampaign.status = CampaignStatus.Ended
   else if (tokenData[15]) liveCampaign.status = CampaignStatus.Failed
   else liveCampaign.status = CampaignStatus.NotStarted
+  liveCampaign.userContributed = toBigNumber(0)
+  if (connectedWallet) liveCampaign.userContributed = toBigNumber(tokenData[18])
   return liveCampaign
 }

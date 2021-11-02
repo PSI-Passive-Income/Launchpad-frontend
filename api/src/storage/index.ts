@@ -28,9 +28,11 @@ export const initSequelize = async (): Promise<Sequelize> => {
       },
     },
     pool: {
-      max: 5,
-      idle: 30000,
-      acquire: 60000,
+      max: 15,
+      min: 5,
+      idle: 5000,
+      evict: 15000,
+      acquire: 30000
     },
   })
 
