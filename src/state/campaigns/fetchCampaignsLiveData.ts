@@ -84,7 +84,7 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
       collected: toBigNumber(tokenData[11]),
       remaining: toBigNumber(tokenData[12]),
       locked: toBool(tokenData[16]),
-      unlockData: unixTSToDate(tokenData[17]),
+      unlockDate: unixTSToDate(tokenData[17]),
     },
   }
   if (tokenData[13]) liveCampaign.status = CampaignStatus.Live
