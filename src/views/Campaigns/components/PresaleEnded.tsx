@@ -90,7 +90,7 @@ const PresaleEnded: React.FC<Props> = ({ campaign }) => {
         </div>
       ) : null}
 
-      {isOwner && campaign.locked && Date.now() >= campaign.unlockDate.getTime() ? (
+      {isOwner && campaign.locked && campaign.unlockDate && Date.now() >= campaign.unlockDate.getTime() ? (
         <div>
           <button type="button" onClick={unlockClick} className="btn btn-primary">
             Unlock liquidity tokens
