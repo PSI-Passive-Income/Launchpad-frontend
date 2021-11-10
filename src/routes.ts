@@ -9,7 +9,7 @@ const Locks = lazy(() => import('./views/Locks/Locks'))
 const LockDetail = lazy(() => import('./views/Locks/LockDetail'))
 const LockToken = lazy(() => import('./views/Locks/LockToken'))
 // const Dashboard = lazy(() => import('./views/Dashboard'))
-// const userContribution = lazy(() => import('./views/userContribution/contributioncard'))
+const userContribution = lazy(() => import('./views/userContribution/contributioncard'))
 const KYC = lazy(() => import('./views/KYC'))
 const PolicyPage = lazy(() => import('./components/Footer/privacy_Policy'))
 const DisclaimerPage = lazy(() => import('./components/Footer/DisclaimerPage'))
@@ -82,12 +82,12 @@ export const routes: IRoute[] = [
   //   icon: 'tim-icons icon-chart-bar-32',
   //   component: Dashboard,
   // },
-  // {
-  //   path: '/contributionDetail',
-  //   name: 'History',
-  //   icon: 'tim-icons icon-calendar-60',
-  //   component: userContribution,
-  // },
+  {
+    path: '/contributionDetail',
+    name: 'History',
+    icon: 'tim-icons icon-calendar-60',
+    component: userContribution,
+  },
   {
     path: '/KYC',
     name: 'KYC',

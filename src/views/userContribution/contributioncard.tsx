@@ -30,7 +30,7 @@ const ContributionDetail: React.FC = () => {
                             : null}
                         {!campaignsLoading && !isEmpty(campaigns)
                             ? Object.values(campaigns).map((campaign: any) => {
-                                return <DetailContribution campaign={campaign} />
+                                return  <DetailContribution campaign={campaign} />
                             })
                             : null}
                     </Table>

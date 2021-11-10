@@ -18,7 +18,9 @@ const ContributionDetail: React.FC<Prop> = ({ campaign }) => {
             {!isLoadingToken && !isEmpty(token) ?
                 <tbody>
                     <tr>
-                        <td>{campaign.campaignAddress}</td>
+                        <a href={`/project/${campaign.campaignAddress}`}>
+                            <td>{campaign.campaignAddress}</td>
+                        </a>
                         <td>{token.name}</td>
                         <td>{campaign.tokenAddress}</td>
                         <td>{formatBN(campaign.userContributed)}</td>
@@ -42,13 +44,13 @@ const ContributionDetail: React.FC<Prop> = ({ campaign }) => {
                                 <p style={{ color: "#09b6f9" }}>Coming soon</p>
                             </td>
                         ) : null}
+
                     </tr>
                 </tbody>
-
                 : null
             }
-        </>
 
+        </>
     );
 }
 export default ContributionDetail;
