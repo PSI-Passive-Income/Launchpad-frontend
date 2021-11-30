@@ -32,5 +32,6 @@ export const formatBN = (value: utils.BigNumberish | BigNumber, decimals = 18, t
   if (isNil(value)) return ""
   const bn = new BigNumber(value.toString())
   if (toString) return decimals > 0 ? bn.div(10 ** decimals).toString() : bn.toString()
-  return decimals > 0 ? bn.div(10 ** decimals).toFormat() : bn.toFormat()
+  const decimalPlaces = bn.decimalPlaces() > decimals ? bn.decimalPlaces() - decimals : 0
+  return decimals > 0 ? bn.div(10 ** decimals).toFormat(decimalPlaces > 4 ? 4 : decimalPlaces) : bn.toFormat()
 }

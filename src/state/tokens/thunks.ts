@@ -1,5 +1,5 @@
 import { toastError } from 'state/toasts'
-import { isNil } from 'lodash'
+import { isNil, isUndefined } from 'lodash'
 import { AppDispatch, RootState } from '../store'
 import { Token } from '../types'
 import { tokenLoadStart, tokenLoadSucceeded, tokensLoadSucceeded, tokensUserLoadSucceeded, tokenLoadFailed } from '.'
@@ -10,7 +10,9 @@ import { fetchToken, fetchTokens, fetchUserTokens } from './fetchTokens'
 export const getToken =
   (tokenAddress: string, account?: string, spender?: string, refresh = false) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
-    if (getState()?.tokens?.data[tokenAddress?.toLowerCase()] && !refresh) return
+    const currentToken = getState()?.tokens?.data[tokenAddress?.toLowerCase()]
+    const approvals = currentToken?.approvals
+    if (currentToken && !refresh && !(spender && (!approvals || isUndefined(approvals[spender])))) return
 
     try {
       dispatch(tokenLoadStart())

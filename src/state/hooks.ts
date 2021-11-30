@@ -124,7 +124,7 @@ export const useToken = (address: string) => {
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const { token, isLoadingToken } = useSelector((state: RootState) => ({
-    token: state.tokens.data[address],
+    token: state.tokens.data[address?.toLowerCase()],
     isLoadingToken: state.tokens.isLoading,
   }))
 
