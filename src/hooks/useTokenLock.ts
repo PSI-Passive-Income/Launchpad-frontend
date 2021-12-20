@@ -1,11 +1,11 @@
 import { isEmpty, isNil } from 'lodash'
-import { utils } from 'ethers'
+import { BigNumberish } from '@ethersproject/bignumber'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getTokenLock, toastError } from 'state/actions'
 import { TokenLock } from 'state/types'
-import { createTokenLock, getUserLocks, unlockAvailableToken, unlockTokenAmount } from 'utils/callHelpers'
+import { createTokenLock, getUserLocks, handleTransaction, unlockAvailableToken, unlockTokenAmount } from 'utils/callHelpers'
 import { useTokenLockFactory } from './useContract'
 import { useActiveWeb3React } from './web3'
 import useApproval from './useApproval'
@@ -17,20 +17,20 @@ export const useUnlockToken = () => {
   const [unlocking, setUnlocking] = useState(false)
 
   const handleUnlock = useCallback(
-    async (lockId: number, amount?: utils.BigNumberish) => {
+    async (lockId: number, amount?: BigNumberish) => {
       if (account && lockFactory) {
         try {
           setUnlocking(true)
-          const receipt = await (isNil(amount)
+          const transaction = await (isNil(amount)
             ? unlockAvailableToken(lockFactory, account, lockId)
             : unlockTokenAmount(lockFactory, account, lockId, amount))
-          console.info(receipt)
-          if (receipt.status) {
+          const success = handleTransaction(transaction)
+          if (success) {
             dispatch(getTokenLock(lockId))
           } else {
             dispatch(toastError('Error adding campaign', 'Transaction failed'))
           }
-        } catch (error) {
+        } catch (error: any) {
           dispatch(toastError('Error unlocking token', error?.message))
         } finally {
           setUnlocking(false)
@@ -45,7 +45,7 @@ export const useUnlockToken = () => {
 
 export const useTokenLockFactoryApproval = (tokenAddress: string) => {
   const lockFactory = useTokenLockFactory()
-  return useApproval(tokenAddress, lockFactory?.options?.address)
+  return useApproval(tokenAddress, lockFactory?.address)
 }
 
 export const useCreateTokenLock = () => {
@@ -60,9 +60,9 @@ export const useCreateTokenLock = () => {
       if (account && lock && history) {
         try {
           setCreating(true)
-          const receipt = await createTokenLock(lockFactory, account, lock)
-          console.info(receipt)
-          if (receipt.status) {
+          const transaction = await createTokenLock(lockFactory, account, lock)
+          const success = handleTransaction(transaction)
+          if (success) {
             const lockIds = await getUserLocks(lockFactory, account)
             if (!isEmpty(lockIds)) {
               history.push(`/lock/${lockIds[lockIds.length - 1]}`)
@@ -72,7 +72,7 @@ export const useCreateTokenLock = () => {
           } else {
             dispatch(toastError('Error creating lock', 'Transaction failed'))
           }
-        } catch (error) {
+        } catch (error: any) {
           dispatch(toastError('Error creating lock', error?.message))
         } finally {
           setCreating(false)

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback} from 'react'
 import { Input, FormFeedback } from 'reactstrap'
 import { isEmpty, isNil, isNumber } from 'lodash'
 import { Campaign, Token } from 'state/types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useBuyTokens } from 'hooks/useContributions'
 import { formatBN } from 'utils/formatters'
 import { validateSingle } from 'utils/validate'
@@ -25,13 +25,13 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
 
   const changeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, error } = validateSingle<BigNumber>(event.target.value, 'BigNumber', false)
-    const finalValue = value ?? new BigNumber(0)
+    const finalValue = value ?? BigNumber.from(0)
 
     if (error) {
       setContributionError(error)
-    } else if (finalValue && finalValue.gt(0) && finalValue.plus(campaign.userContributed).lt(campaign.minAllowed)) {
+    } else if (finalValue && finalValue.gt(0) && finalValue.add(campaign.userContributed).lt(campaign.minAllowed)) {
       setContributionError(`Contribution amount cannot be lower than ${formatBN(campaign.minAllowed)}`)
-    } else if (finalValue && finalValue.gt(0) && finalValue.plus(campaign.userContributed).gt(campaign.maxAllowed)) {
+    } else if (finalValue && finalValue.gt(0) && finalValue.add(campaign.userContributed).gt(campaign.maxAllowed)) {
       setContributionError(`Contribution amount cannot be higher than ${formatBN(campaign.maxAllowed)}`)
     } else {
       setContributionError(null)
@@ -41,9 +41,9 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
   }
 
   const tokenAmount = useCallback((bnb: number | BigNumber) => {
-    const bnbBN = isNumber(bnb) ? new BigNumber(bnb).multipliedBy(10 ** 18) : bnb
+    const bnbBN = isNumber(bnb) ? BigNumber.from(bnb).mul(10 ** 18) : bnb
     if (isNil(campaign) || !bnbBN || bnbBN.lte(0)) return '0'
-    return formatBN(campaign.rate.multipliedBy(bnbBN).div(10 ** 18), token.decimals)
+    return formatBN(campaign.rate.mul(bnbBN).div(10 ** 18), token.decimals)
   }, [campaign, token])
 
   const contributionTokens = useMemo(() => tokenAmount(contribution), [tokenAmount, contribution])

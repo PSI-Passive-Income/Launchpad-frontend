@@ -18,7 +18,7 @@ export const getToken =
       dispatch(tokenLoadStart())
       const token: Token = await fetchToken(tokenAddress, account, spender)
       dispatch(tokenLoadSucceeded(token))
-    } catch (error) {
+    } catch (error: any) {
       dispatch(toastError('Error retrieving token data', error?.message))
       dispatch(tokenLoadFailed(error?.message))
     }
@@ -34,7 +34,7 @@ export const getTokens =
       dispatch(tokenLoadStart())
       const tokens: Token[] = await fetchTokens(tokensToGet, account, spender)
       dispatch(tokensLoadSucceeded(tokens))
-    } catch (error) {
+    } catch (error: any) {
       dispatch(toastError('Error retrieving tokens data', error?.message))
       dispatch(tokenLoadFailed(error?.message))
     }
@@ -55,7 +55,7 @@ export const getUserTokens =
       }
 
       dispatch(tokensUserLoadSucceeded(tokens))
-    } catch (error) {
+    } catch (error: any) {
       dispatch(toastError('Error retrieving user tokens data', error?.message))
       dispatch(tokenLoadFailed(error?.message))
     }

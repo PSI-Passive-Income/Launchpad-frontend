@@ -107,7 +107,7 @@ const CreateToken: React.FC = () => {
                           type="number"
                           name="initialSupply"
                           id="initialSupply"
-                          value={formatBN(token.initialSupply, 18, true)}
+                          value={formatBN(token.initialSupply, 18)}
                           onChange={(e) => changeValue(e.target.value, 'initialSupply', 'BigNumber')}
                           placeholder="Initial supply"
                           invalid={!!errors.initialSupply}
@@ -172,7 +172,7 @@ const CreateToken: React.FC = () => {
                               type="number"
                               name="maximumSupply"
                               id="maximumSupply"
-                              value={formatBN(token.maximumSupply, 18, true)}
+                              value={formatBN(token.maximumSupply, 18)}
                               onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
                               placeholder="Maximum supply"
                               invalid={!!errors.maximumSupply}

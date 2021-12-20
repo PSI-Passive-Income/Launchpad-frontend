@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { Button, Collapse, Label } from 'reactstrap'
+import { Label } from 'reactstrap'
 import { useCampaign, useToken } from 'state/hooks'
 import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
 import Loader from 'components/Loader'
+import { useActiveWeb3React } from 'hooks/web3'
 import Timer from '../../components/Timer'
-import Comments from '../../components/UserComments'
 import Contribute from './components/Contribute'
 import PresaleEnded from './components/PresaleEnded'
-import UploadFile from './components/uploadFile'
+import WhitelistAdd from './components/WhitelistAdd'
 
 interface Params {
   campaignId: string
@@ -20,10 +20,12 @@ const CampaignDetail: React.FC = () => {
   const { campaignId: tmpCampaignId } = useParams<Params>()
   const campaignId = tmpCampaignId.startsWith('0x') ? tmpCampaignId : parseInt(tmpCampaignId)
 
+  const { account } = useActiveWeb3React()
   const { campaign, isLoadingCampaign } = useCampaign(campaignId)
   const { token, isLoadingToken } = useToken(campaign?.tokenAddress)
 
-  const loading = !campaign || !token || isLoadingCampaign || isLoadingToken  
+  const isOwner = account && campaign?.owner && campaign.owner.toLowerCase() === account.toLowerCase()
+  const loading = !campaign || !token || isLoadingCampaign || isLoadingToken
 
   return (
     <div className="content">
@@ -49,6 +51,18 @@ const CampaignDetail: React.FC = () => {
                     <Label>Token Address:</Label>
                     <h5>{campaign.tokenAddress}</h5>
                   </div>
+                  {campaign?.whitelistEnabled ? (
+                    <div className="text-center">
+                      <Label>Whitelist status:</Label>
+                      <h5>
+                        {campaign.userWhitelisted ? (
+                          <span className="text-success">Whitelisted</span>
+                        ) : (
+                          <span className="text-danger">Not whitelisted</span>
+                        )}
+                      </h5>
+                    </div>
+                  ) : null}
                   <hr />
                   {campaign.status === CampaignStatus.Live || campaign.status === CampaignStatus.Failed ? (
                     <>
@@ -66,7 +80,7 @@ const CampaignDetail: React.FC = () => {
                   ) : null}
                   <div className="col-lg-6 offset-lg-3 text-center">
                     {campaign.status === CampaignStatus.NotStarted ? (
-                      <div className="presale-end-timer mt-5">
+                      <div className="presale-end-timer mt-2">
                         <Label>Presale starts in:</Label>
                         {/* <p>06:13:22:34</p> */}
                         <Timer date={campaign.startDate} />
@@ -76,7 +90,7 @@ const CampaignDetail: React.FC = () => {
                     {campaign.status === CampaignStatus.Live ? (
                       <>
                         <Contribute campaign={campaign} token={token} />
-                        <div className="presale-end-timer mt-5">
+                        <div className="presale-end-timer mt-2">
                           <Label>Presale ends in:</Label>
                           <Timer date={campaign.endDate} />
                         </div>
@@ -89,8 +103,8 @@ const CampaignDetail: React.FC = () => {
                       </>
                     ) : null}
                     {campaign.status === CampaignStatus.Live ||
-                      campaign.status === CampaignStatus.Ended ||
-                      campaign.status === CampaignStatus.Failed ? (
+                    campaign.status === CampaignStatus.Ended ||
+                    campaign.status === CampaignStatus.Failed ? (
                       <>
                         <hr />
                         <div>
@@ -102,7 +116,7 @@ const CampaignDetail: React.FC = () => {
                             <div className="contribution-box">
                               <Label>Your tokens:</Label>
                               <h5>
-                                {formatBN(campaign?.userContributed?.multipliedBy(campaign.rate).dividedBy(10 ** token.decimals))}{' '}
+                                {formatBN(campaign?.userContributed?.mul(campaign.rate).div(10 ** token.decimals))}{' '}
                                 {token.symbol}
                               </h5>
                             </div>
@@ -111,12 +125,17 @@ const CampaignDetail: React.FC = () => {
                       </>
                     ) : null}
                   </div>
+
+                  {isOwner ? (
+                    <>
+                      <hr />
+                      <WhitelistAdd campaign={campaign} />
+                    </>
+                  ) : null}
                 </div>
               </div>
               <div className="row">
-                <div className="col-lg-12">
-                  {/* <Comments topicId={campaign.tokenAddress} /> */}
-                </div>
+                <div className="col-lg-12">{/* <Comments topicId={campaign.tokenAddress} /> */}</div>
               </div>
             </div>
             <div className="col-lg-5 col-md-5">

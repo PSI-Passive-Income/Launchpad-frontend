@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import { isNumber } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -7,14 +7,14 @@ import { campaignsAdd, toastError } from 'state/actions'
 import { useLoggedInUser } from 'state/hooks'
 import { Campaign } from 'state/types'
 import { addCampaign, getKYCuserVerifcation } from 'utils/apiHelper'
-import { tokensNeeded, createCampaign, getUserCampaigns, getCampaignAddress } from 'utils/callHelpers'
+import { tokensNeeded, createCampaign, getUserCampaigns, getCampaignAddress, handleTransaction } from 'utils/callHelpers'
 import useApproval from './useApproval'
 import { useCampaignFactory } from './useContract'
 import { useActiveWeb3React } from './web3'
 
 export const useTokensNeeded = (campaign: Partial<Campaign>) => {
   const campaignFactory = useCampaignFactory()
-  const [needed, setNeeded] = useState(new BigNumber(0))
+  const [needed, setNeeded] = useState(BigNumber.from(0))
 
   useEffect(() => {
     const getTokensNeeded = async () => {
@@ -31,7 +31,7 @@ export const useTokensNeeded = (campaign: Partial<Campaign>) => {
 
 export const useCampaignFactoryApproval = (tokenAddress: string) => {
   const campaignFactory = useCampaignFactory()
-  return useApproval(tokenAddress, campaignFactory?.options?.address)
+  return useApproval(tokenAddress, campaignFactory?.address)
 }
 
 export const useCreateCampaign = () => {
@@ -48,8 +48,9 @@ export const useCreateCampaign = () => {
       if (account && campaign && history) {
         try {
           setCreating(true)
-          const receipt = await createCampaign(campaignFactory, account, campaign)
-          if (receipt.status) {
+          const transaction = await createCampaign(campaignFactory, account, campaign)
+          const success = await handleTransaction(transaction)
+          if (success) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]

@@ -191,6 +191,11 @@
             "internalType": "uint256",
             "name": "liquidity_rate",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "whitelist_enabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct IPSIPadCampaign.CampaignData",
@@ -282,6 +287,11 @@
             "internalType": "uint256",
             "name": "liquidity_rate",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "whitelist_enabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct IPSIPadCampaign.CampaignData",
@@ -349,6 +359,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "campaignId",
+        "type": "uint256"
+      }
+    ],
+    "name": "emergencyRefund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -660,6 +683,11 @@
             "internalType": "uint256",
             "name": "liquidity_rate",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "whitelist_enabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct IPSIPadCampaign.CampaignData",

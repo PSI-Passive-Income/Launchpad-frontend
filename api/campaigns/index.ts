@@ -5,11 +5,10 @@ import {
   funcValidationError,
   func404NotFound,
   func500Error,
-  validateJWTWalletSign,
 } from '@passive-income/psi-api'
+import { isNumber } from 'lodash'
 import { initSequelize } from '../src/storage'
 import Campaign from '../src/models/campaign.model'
-import { isEmpty, isNumber } from 'lodash'
 
 const httpTrigger: AzureFunction = async function httpTrigger(context: Context, req: HttpRequest): Promise<void> {
   try {
@@ -80,7 +79,7 @@ const update = async (context: Context, req: HttpRequest) => {
     if (!req.body.user_address || !web3.utils.isAddress(req.body.user_address)) return funcValidationError(context, 'Post parameter user address not set or not an valid address')
     const campaigns = await Campaign.update({ kycVerified: req.body.kyc_verified }, { where: { owner: req.body.user_address } })
     console.log('campaign',campaigns)
-    return funcSuccess(context, campaigns ? campaigns : null)
+    return funcSuccess(context, campaigns || null)
   }
 }
 

@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Toast } from '../components/Toast'
 
 // Models
@@ -37,6 +37,7 @@ export interface Campaign {
   lockDuration?: number
   liquidityRate?: number
   description?: string
+  whitelistEnabled?: boolean
 
   campaignTokens?: BigNumber
   collected?: BigNumber
@@ -44,6 +45,7 @@ export interface Campaign {
   locked?: boolean
   unlockDate?: Date
   userContributed?: BigNumber
+  userWhitelisted?: boolean
 
   status?: CampaignStatus
 }

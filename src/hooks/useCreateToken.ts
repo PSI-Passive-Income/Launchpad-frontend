@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { toastError } from 'state/actions'
 import { TokenCreationInfo } from 'state/types'
-import { createToken } from 'utils/callHelpers'
+import { createToken, handleTransaction } from 'utils/callHelpers'
 import { useTokenFactory } from './useContract'
 import { useActiveWeb3React } from './web3'
 
@@ -19,14 +19,14 @@ const useCreateToken = () => {
       if (account && tokenFactory && history && token) {
         try {
           setCreating(true)
-          const receipt = await createToken(tokenFactory, account, token)
-          console.info(receipt)
-          if (receipt.status) {
+          const transaction = await createToken(tokenFactory, account, token)
+          const success = handleTransaction(transaction)
+          if (success) {
             history.push(`/manage-tokens`)
           } else {
             dispatch(toastError('Error adding token', 'Transaction failed'))
           }
-        } catch (error) {
+        } catch (error: any) {
           dispatch(toastError('Error adding token', error?.message))
         } finally {
           setCreating(false)

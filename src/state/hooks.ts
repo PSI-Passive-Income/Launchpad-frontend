@@ -3,7 +3,6 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { isEmpty, isFinite, isNil, isObject, isString } from 'lodash'
 import Web3 from 'web3'
 import { Contract } from 'ethers'
-import { BaseContract } from 'config/types/types'
 import { useActiveWeb3React } from 'hooks/web3'
 import useActiveWeb3 from 'hooks/useActiveWeb3'
 import useUserVerification from 'hooks/useUserKYC'
@@ -137,14 +136,14 @@ export const useToken = (address: string) => {
   return { token, isLoadingToken }
 }
 
-export const useTokenWithApproval = (address: string, spender: string | Contract | BaseContract) => {
+export const useTokenWithApproval = (address: string, spender: string | Contract) => {
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const { token, isLoadingToken } = useSelector((state: RootState) => ({
     token: state.tokens.data[address?.toLowerCase()],
     isLoadingToken: state.tokens.isLoading,
   }))
-  const spenderAddress = isObject(spender) ? (spender as BaseContract).options.address : spender
+  const spenderAddress = isObject(spender) ? spender.address : spender
 
   useEffect(() => {
     if (account && address && Web3.utils.isAddress(address) && spenderAddress && Web3.utils.isAddress(spenderAddress)) {

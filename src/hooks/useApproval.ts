@@ -19,7 +19,7 @@ const useApproval = (tokenAddress: string, spender: string) => {
         setApproving(true)
         await approve(tokenContract, account, spender)
         dispatch(getToken(tokenAddress, account, spender, true))
-      } catch (error) {
+      } catch (error: any) {
         dispatch(toastError('Error approving tokens', error?.message))
       } finally {
         setApproving(false)

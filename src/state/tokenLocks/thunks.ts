@@ -11,7 +11,7 @@ export const getUserTokenLocks = (account: string) => async (dispatch: AppDispat
     dispatch(locksLoadStart())
     const locks: TokenLock[] = await fetchLocks(account)
     dispatch(locksLoadSucceeded(locks))
-  } catch (error) {
+  } catch (error: any) {
     dispatch(toastError('Error retrieving token locks', error?.message))
     dispatch(locksLoadFailed(error?.message))
   }
@@ -22,7 +22,7 @@ export const getTokenLock = (lockId: number) => async (dispatch: AppDispatch) =>
     dispatch(locksLoadStart())
     const lock: TokenLock = await fetchLock(lockId)
     dispatch(locksLoadSucceeded([lock]))
-  } catch (error) {
+  } catch (error: any) {
     dispatch(toastError('Error retrieving token locks', error?.message))
     dispatch(locksLoadFailed(error?.message))
   }

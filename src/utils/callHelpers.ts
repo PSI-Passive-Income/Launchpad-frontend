@@ -1,52 +1,85 @@
+import { Dispatch } from 'react'
 import { IBEP20 } from 'config/types/IBEP20'
 import { PSIPadCampaign } from 'config/types/PSIPadCampaign'
 import { PSIPadCampaignFactory } from 'config/types/PSIPadCampaignFactory'
 import { PSIPadTokenDeployer } from 'config/types/PSIPadTokenDeployer'
 import { PSIPadTokenLockFactory } from 'config/types/PSIPadTokenLockFactory'
-import { BaseContract } from 'config/types/types'
-import { utils, constants, Contract } from 'ethers'
-import { isNil, isObject, parseInt, round } from 'lodash'
+import { Contract, ContractTransaction, ContractReceipt } from '@ethersproject/contracts'
+import { BigNumberish } from '@ethersproject/bignumber'
+import { AddressZero, MaxUint256 } from '@ethersproject/constants'
+import { parseEther } from '@ethersproject/units'
+import { isNil, isObject, round } from 'lodash'
 import { Campaign, TokenCreationInfo, TokenLock } from 'state/types'
+import { toastError } from 'state/toasts'
+import { solidityPack } from 'ethers/lib/utils'
 import { getPSFactoryAddress, getPSRouterAddress } from './addressHelpers'
-import { toBigNumber } from './converters'
 
-export const approve = async (
-  contract: IBEP20,
-  account: string,
-  spender: string | Contract | BaseContract,
-  amount?: utils.BigNumberish,
-) => {
-  const spenderAddress = isObject(spender) ? (spender as BaseContract).options.address : spender
-  const finalAmount = !isNil(amount) ? amount.toString() : constants.MaxUint256.toString()
-  return contract.methods.approve(spenderAddress, finalAmount).send({ from: account })
+export const handleTransactionCall = async (call: () => Promise<ContractTransaction>, dispatch?: Dispatch<any>) => {
+  try {
+    const transaction = await call();
+    return handleTransaction(transaction, dispatch)
+  } catch(err: any) {
+    const message = err?.data?.message ?? err?.message ?? "Check your console for more information"
+    dispatch(toastError('Error processing transaction', message))
+    return false
+  }
 }
 
-export const buyTokens = async (campaign: PSIPadCampaign, account: string, amount: utils.BigNumberish) => {
-  return campaign.methods.buyTokens().send({ from: account, value: amount.toString() })
+export const handleTransaction = async (transaction: ContractTransaction, dispatch?: Dispatch<any>) => {
+  const receipt = await transaction.wait()
+  if (dispatch) handleReceipt(receipt, dispatch)
+  return receipt.status > 0
+}
+
+export const handleReceipt = (receipt: ContractReceipt, dispatch: Dispatch<any>) => {
+  if (receipt.status === 0) {
+    dispatch(toastError('Error processing transaction', 'Check your console for more information'))
+    console.error('Error processing transaction', receipt)
+  }
+  return receipt.status > 0
+}
+
+export const approve = async (contract: IBEP20, account: string, spender: string | Contract, amount?: BigNumberish) => {
+  const spenderAddress = isObject(spender) ? spender.address : spender
+  const finalAmount = !isNil(amount) ? amount.toString() : MaxUint256.toString()
+  return contract.approve(spenderAddress, finalAmount, { from: account })
+}
+
+export const setWhitelistEnabled = async (campaign: PSIPadCampaign, value: boolean) => {
+  return campaign.setWhitelistEnabled(value)
+}
+
+export const setWhitelist = async (campaign: PSIPadCampaign, addresses: string[], whitelisted: boolean) => {
+  const data = `0x${addresses?.map(address => solidityPack(["address"], [address]).substr(2)).join('')}`
+  return campaign.addWhitelist(data, whitelisted)
+}
+
+export const buyTokens = async (campaign: PSIPadCampaign, account: string, amount: BigNumberish) => {
+  return campaign.buyTokens({ from: account, value: amount.toString() })
 }
 
 export const withdrawTokens = async (campaign: PSIPadCampaign, account: string) => {
-  return campaign.methods.withdrawTokens().send({ from: account })
+  return campaign.withdrawTokens({ from: account })
 }
 
 export const withdrawFunds = async (campaign: PSIPadCampaign, account: string) => {
-  return campaign.methods.withdrawFunds().send({ from: account })
+  return campaign.withdrawFunds({ from: account })
 }
 
 export const lockCampaign = async (
   campaignFactory: PSIPadCampaignFactory,
   account: string,
-  campaignId: utils.BigNumberish,
+  campaignId: BigNumberish,
 ) => {
-  return campaignFactory.methods.lock(campaignId.toString()).send({ from: account })
+  return campaignFactory.lock(campaignId.toString(), { from: account })
 }
 
 export const unlockCampaign = async (
   campaignFactory: PSIPadCampaignFactory,
   account: string,
-  campaignId: utils.BigNumberish,
+  campaignId: BigNumberish,
 ) => {
-  return campaignFactory.methods.unlock(campaignId.toString()).send({ from: account })
+  return campaignFactory.unlock(campaignId.toString(), { from: account })
 }
 
 export const tokensNeeded = async (
@@ -54,24 +87,23 @@ export const tokensNeeded = async (
   campaign: Partial<Campaign>,
   feePercentage = 0,
 ) => {
-  const result = await campaignFactory.methods
-    .tokensNeeded(
-      [
-        campaign.softCap?.toString() ?? 0,
-        campaign.hardCap.toString(),
-        round((campaign.startDate?.getTime() ?? 0) / 1000),
-        round((campaign.endDate?.getTime() ?? 0) / 1000),
-        campaign.rate.toString(),
-        campaign.minAllowed?.toString() ?? 0,
-        campaign.maxAllowed?.toString() ?? 0,
-        campaign.poolRate.toString(),
-        campaign.lockDuration?.toString() ?? 0,
-        campaign.liquidityRate.toString(),
-      ],
-      feePercentage,
-    )
-    .call()
-  return toBigNumber(result)
+  const result = await campaignFactory.tokensNeeded(
+    {
+      softCap: campaign.softCap?.toString() ?? 0,
+      hardCap: campaign.hardCap.toString(),
+      start_date: round((campaign.startDate?.getTime() ?? 0) / 1000),
+      end_date: round((campaign.endDate?.getTime() ?? 0) / 1000),
+      rate: campaign.rate.toString(),
+      min_allowed: campaign.minAllowed?.toString() ?? 0,
+      max_allowed: campaign.maxAllowed?.toString() ?? 0,
+      pool_rate: campaign.poolRate.toString(),
+      lock_duration: campaign.lockDuration?.toString() ?? 0,
+      liquidity_rate: campaign.liquidityRate.toString(),
+      whitelist_enabled: !!campaign.whitelistEnabled
+    },
+    feePercentage,
+  )
+  return result
 }
 
 export const createCampaign = async (
@@ -80,31 +112,30 @@ export const createCampaign = async (
   campaign: Partial<Campaign>,
   feePercentage = 0,
 ) => {
-  const hi = [
-    campaign.softCap.toString(),
-    campaign.hardCap.toString(),
-    round(campaign.startDate.getTime() / 1000),
-    round(campaign.endDate.getTime() / 1000),
-    campaign.rate.toString(),
-    campaign.minAllowed.toString(),
-    campaign.maxAllowed.toString(),
-    campaign.poolRate.toString(),
-    campaign.lockDuration.toString(),
-    campaign.liquidityRate.toString(),
-  ]
-  return campaignFactory.methods
-    .createCampaign(
-      hi as any,
-      campaign.tokenAddress,
-      feePercentage,
-      getPSFactoryAddress(),
-      getPSRouterAddress()
-    )
-    .send({ from: account })
+  return campaignFactory.createCampaign(
+    {
+      softCap: campaign.softCap?.toString() ?? 0,
+      hardCap: campaign.hardCap.toString(),
+      start_date: round((campaign.startDate?.getTime() ?? 0) / 1000),
+      end_date: round((campaign.endDate?.getTime() ?? 0) / 1000),
+      rate: campaign.rate.toString(),
+      min_allowed: campaign.minAllowed?.toString() ?? 0,
+      max_allowed: campaign.maxAllowed?.toString() ?? 0,
+      pool_rate: campaign.poolRate.toString(),
+      lock_duration: campaign.lockDuration?.toString() ?? 0,
+      liquidity_rate: campaign.liquidityRate.toString(),
+      whitelist_enabled: !!campaign.whitelistEnabled
+    },
+    campaign.tokenAddress,
+    feePercentage,
+    getPSFactoryAddress(),
+    getPSRouterAddress(),
+    { from: account },
+  )
 }
 
 export const getUserTokens = async (tokenFactory: PSIPadTokenDeployer, account: string) => {
-  return tokenFactory.methods.getUserTokens(account).call()
+  return tokenFactory.getUserTokens(account)
 }
 
 export const createToken = async (
@@ -112,38 +143,39 @@ export const createToken = async (
   account: string,
   token: Partial<TokenCreationInfo>,
 ) => {
-  return tokenFactory.methods
-    .createToken([
-      token.name,
-      token.symbol,
-      token.initialSupply?.toString(),
-      token.maximumSupply?.toString() ?? 0,
-      token.burnable ?? false,
-      token.mintable ?? false,
-      token.minterDelay ?? 0,
-      token.crossChain ?? false,
-      constants.AddressZero,
-      constants.AddressZero,
-    ])
-    .send({ from: account, value: utils.parseEther('0.2').toString() })
+  return tokenFactory.createToken(
+    {
+      name: token.name,
+      symbol: token.symbol,
+      initialSupply: token.initialSupply?.toString(),
+      maximumSupply: token.maximumSupply?.toString() ?? 0,
+      burnable: token.burnable ?? false,
+      mintable: token.mintable ?? false,
+      minterDelay: token.minterDelay ?? 0,
+      crossChain: token.crossChain ?? false,
+      underlying: AddressZero,
+      vault: AddressZero,
+    },
+    { from: account, value: parseEther('0.2').toString() },
+  )
 }
 
 export const getUserCampaigns = async (campaignFactory: PSIPadCampaignFactory, account: string) => {
-  const results = await campaignFactory.methods.getUserCampaigns(account).call()
-  return results?.map((id) => parseInt(id))
+  const results = await campaignFactory.getUserCampaigns(account)
+  return results?.map((id) => id.toNumber())
 }
 
 export const getCampaignAddress = async (campaignFactory: PSIPadCampaignFactory, campaignId: number) => {
-  return campaignFactory.methods.campaigns(campaignId).call()
+  return campaignFactory.campaigns(campaignId)
 }
 
 export const getUserLocks = async (lockFactory: PSIPadTokenLockFactory, account: string) => {
-  const results = await lockFactory.methods.getUserLocks(account).call()
-  return results?.map((id) => parseInt(id))
+  const results = await lockFactory.getUserLocks(account)
+  return results?.map((id) => id.toNumber())
 }
 
 export const getTokenLock = async (lockFactory: PSIPadTokenLockFactory, lockId: number) => {
-  return lockFactory.methods.tokensLocked(lockId).call()
+  return lockFactory.tokensLocked(lockId)
 }
 
 export const createTokenLock = async (
@@ -151,26 +183,25 @@ export const createTokenLock = async (
   account: string,
   lock: Partial<TokenLock>,
 ) => {
-  return lockFactory.methods
-    .lock(
-      lock.token,
-      lock.amount.toString(),
-      round(lock.startTime.getTime() / 1000),
-      round(lock.duration / 1000),
-      lock.releases,
-    )
-    .send({ from: account, value: utils.parseEther('0.2').toString() })
+  return lockFactory.lock(
+    lock.token,
+    lock.amount.toString(),
+    round(lock.startTime.getTime() / 1000),
+    round(lock.duration / 1000),
+    lock.releases,
+    { from: account, value: parseEther('0.2').toString() },
+  )
 }
 
 export const unlockAvailableToken = async (lockFactory: PSIPadTokenLockFactory, account: string, lockId: number) => {
-  return lockFactory.methods.unlockAvailable(lockId).send({ from: account })
+  return lockFactory.unlockAvailable(lockId, { from: account })
 }
 
 export const unlockTokenAmount = async (
   lockFactory: PSIPadTokenLockFactory,
   account: string,
   lockId: number,
-  amount: utils.BigNumberish,
+  amount: BigNumberish,
 ) => {
-  return lockFactory.methods.unlock(lockId, amount.toString()).send({ from: account })
+  return lockFactory.unlock(lockId, amount.toString(), { from: account })
 }

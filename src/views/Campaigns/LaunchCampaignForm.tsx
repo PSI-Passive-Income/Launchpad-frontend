@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText } from 'reactstrap'
+import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText, FormGroup } from 'reactstrap'
 import Datetime from 'react-datetime'
 import { Moment } from 'moment'
 import { useCampaignFactoryApproval, useCreateCampaign, useTokensNeeded } from 'hooks/useCreateCampaign'
@@ -27,7 +27,7 @@ const LaunchCampaignForm: React.FC = () => {
   )
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
-  const changeValue = (value: string | Moment, name: string, type: string, mandatory = true, extra?: any) => {
+  const changeValue = (value: string | Moment | boolean, name: string, type: string, mandatory = true, extra?: any) => {
     const { newValue, newErrors } = validate(campaign, validationErrors, value, name, type, mandatory, extra)
     setValidationErrors(newErrors)
     setCampaign(newValue)
@@ -66,7 +66,6 @@ const LaunchCampaignForm: React.FC = () => {
       _errors.rate = `You do no not have enough tokens in your wallet (needed: ${formatBN(
         tokensNeeded,
         token.decimals,
-        true,
       )})`
     if (campaign.endDate && campaign.startDate && campaign.endDate.getTime() <= campaign.startDate.getTime())
       _errors.endDate = 'End date should be later than the start date and time'
@@ -115,7 +114,7 @@ const LaunchCampaignForm: React.FC = () => {
                 <div className="col-md-12 pr-md-1">
                   <Label>Token Address</Label>
                   <Input
-                    value={campaign.tokenAddress}
+                    value={campaign.tokenAddress || ''}
                     onChange={(e) => changeValue(e.target.value, 'tokenAddress', 'address')}
                     placeholder="Enter token address"
                     invalid={!!errors.tokenAddress}
@@ -135,7 +134,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Hard cap</Label>
                       <Input
-                        defaultValue={formatBN(campaign.hardCap, 18, true)}
+                        defaultValue={formatBN(campaign.hardCap, 18)}
                         onChange={(e) => changeValue(e.target.value, 'hardCap', 'BigNumber')}
                         placeholder="Hard cap"
                         invalid={!!errors.hardCap}
@@ -145,7 +144,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Soft cap</Label>
                       <Input
-                        defaultValue={formatBN(campaign.softCap, 18, true)}
+                        defaultValue={formatBN(campaign.softCap, 18)}
                         onChange={(e) => changeValue(e.target.value, 'softCap', 'BigNumber')}
                         placeholder="Soft cap"
                         invalid={!!errors.softCap}
@@ -155,7 +154,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Minimum BNB per wallet</Label>
                       <Input
-                        defaultValue={formatBN(campaign.minAllowed, 18, true)}
+                        defaultValue={formatBN(campaign.minAllowed, 18)}
                         onChange={(e) => changeValue(e.target.value, 'minAllowed', 'BigNumber')}
                         placeholder="Min BNB per wallet"
                         invalid={!!errors.minAllowed}
@@ -165,7 +164,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Maximum BNB per wallet</Label>
                       <Input
-                        defaultValue={formatBN(campaign.maxAllowed, 18, true)}
+                        defaultValue={formatBN(campaign.maxAllowed, 18)}
                         onChange={(e) => changeValue(e.target.value, 'maxAllowed', 'BigNumber')}
                         placeholder="Max BNB per wallet"
                         invalid={!!errors.maxAllowed}
@@ -194,7 +193,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Tokens per BNB</Label>
                       <Input
-                        defaultValue={formatBN(campaign.rate, token.decimals, true)}
+                        defaultValue={formatBN(campaign.rate, token.decimals)}
                         onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
                         invalid={!!errors.rate}
@@ -204,7 +203,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Tokens per BNB in liquidity pool</Label>
                       <Input
-                        defaultValue={formatBN(campaign.poolRate, token.decimals, true)}
+                        defaultValue={formatBN(campaign.poolRate, token.decimals)}
                         onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
                         invalid={!!errors.poolRate}
@@ -214,7 +213,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Liquidity lock duration (in hours)</Label>
                       <Input
-                        defaultValue={campaign.lockDuration}
+                        defaultValue={campaign.lockDuration || ''}
                         onChange={(e) => changeValue(e.target.value, 'lockDuration', 'number')}
                         placeholder="Liquidity lock duration (in hours)"
                         invalid={!!errors.lockDuration}
@@ -225,7 +224,7 @@ const LaunchCampaignForm: React.FC = () => {
                       <Label>Start date</Label>
                       <Datetime
                         className={errors.startDate ? "is-invalid" : ""}
-                        value={campaign.startDate}
+                        value={campaign.startDate || ''}
                         onChange={(v) => changeValue(v, 'startDate', 'date')}
                         inputProps={{ placeholder: 'Start date' }}
                       />
@@ -235,7 +234,7 @@ const LaunchCampaignForm: React.FC = () => {
                       <Label>End date</Label>
                       <Datetime
                         className={errors.endDate ? "is-invalid" : ""}
-                        value={campaign.endDate}
+                        value={campaign.endDate || ''}
                         onChange={(v) => changeValue(v, 'endDate', 'date')}
                         inputProps={{ placeholder: 'End date' }}
                       />
@@ -244,10 +243,33 @@ const LaunchCampaignForm: React.FC = () => {
                   </div>
 
                   <div className="row">
+                    <div className="col-lg-6">
+                      <FormGroup check>
+                        <div className="mb-10 psi-switch custom-control custom-switch">
+                          <Input
+                            type="checkbox"
+                            name="whitelistEnabled"
+                            id="whitelistEnabled"
+                            className="custom-control-input"
+                            checked={!!campaign.whitelistEnabled}
+                            onChange={(e) => changeValue(e.target.checked, 'whitelistEnabled', 'boolean')}
+                            invalid={!!errors.whitelistEnabled}
+                          />
+                          <Label className="custom-control-label" htmlFor="whitelistEnabled">
+                            {' '}
+                            Enable whitelisting{' '}
+                          </Label>
+                        </div>
+                        {errors.whitelistEnabled ? <FormFeedback>{errors.whitelistEnabled}</FormFeedback> : null}
+                      </FormGroup>
+                    </div>
+                  </div>
+
+                  <div className="row">
                     <div className="col-md-8">
                       <Label>Description</Label>
                       <Input
-                        defaultValue={campaign.description}
+                        defaultValue={campaign.description || ''}
                         onChange={(e) => changeValue(e.target.value, 'description', 'text')}
                         type="textarea"
                         rows="4"

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Token, TokenLock } from 'state/types'
 import { formatBN, formatDateTime } from 'utils/formatters'
 
@@ -18,7 +18,7 @@ const Releases: React.FC<Props> = ({ lock, token }) => {
         const result = {
           release,
           time: new Date(lock.startTime.getTime() + durationSteps * release),
-          amountUnlocked: amountPerStep.multipliedBy(release),
+          amountUnlocked: amountPerStep.mul(release),
           unlocked: false,
         }
         if (lock.amountUnlocked && lock.amountUnlocked.gte(result.amountUnlocked)) result.unlocked = true

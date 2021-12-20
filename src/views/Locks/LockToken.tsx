@@ -37,7 +37,7 @@ const LockToken: React.FC = () => {
 
   const changeRange = (value: string, name: string, type: string, mandatory = true, extra?: any) => {
     const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
-    const amount = token.accountBalance.multipliedBy(rangeValue).div(10 ** token.decimals)
+    const amount = token.accountBalance.mul(rangeValue).div(10 ** token.decimals)
     changeValue(amount.toString(), name, type, mandatory, extra)
   }
 

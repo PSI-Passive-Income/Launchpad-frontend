@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { useDispatch } from "react-redux"
-import { utils } from 'ethers'
+import { BigNumberish } from '@ethersproject/bignumber'
 import { getCampaign } from "state/actions"
 import { buyTokens, withdrawTokens, withdrawFunds } from "utils/callHelpers"
 import { useCampaign } from "./useContract"
@@ -12,7 +12,7 @@ export const useBuyTokens = (campaignAddress: string) => {
   const campaign = useCampaign(campaignAddress)
 
   return useCallback(
-    async (amount: utils.BigNumberish) => {
+    async (amount: BigNumberish) => {
       if (account && campaign) {
         const receipt = await buyTokens(campaign, account, amount)
         dispatch(getCampaign(campaignAddress, account))

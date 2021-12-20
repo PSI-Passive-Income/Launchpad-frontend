@@ -1,6 +1,6 @@
-import Web3 from 'web3'
-import { AbiItem } from 'web3-utils'
-import web3NoAccount from 'utils/web3'
+import { Web3Provider } from '@ethersproject/providers'
+import { Contract, ContractInterface } from '@ethersproject/contracts'
+import { Signer } from '@ethersproject/abstract-signer'
 
 // Addresses
 import {
@@ -24,31 +24,30 @@ import campaignFactoryAbi from 'config/abi/PSIPadCampaignFactory.json'
 import tokenFactoryAbi from 'config/abi/PSIPadTokenDeployer.json'
 import tokenLockFactoryAbi from 'config/abi/PSIPadTokenLockFactory.json'
 
-const getContract = (abi: any, address: string, web3?: Web3) => {
-  const _web3 = web3 ?? web3NoAccount
-  return new _web3.eth.Contract(abi as unknown as AbiItem, address)
+const getContract = (address: string, abi: ContractInterface, signerOrProvider?: Web3Provider | Signer) => {
+  return new Contract(address, abi, signerOrProvider)
 }
 
-export const getBep20Contract = (address: string, web3?: Web3) => {
-  return getContract(bep20Abi, address, web3) as unknown as IBEP20
+export const getBep20Contract = (address: string, signerOrProvider?: Web3Provider | Signer) => {
+  return getContract(address, bep20Abi, signerOrProvider) as unknown as IBEP20
 }
 
-export const getPSIContact = (web3?: Web3) => {
-  return getBep20Contract(getPSIAddress(), web3)
+export const getPSIContact = (signerOrProvider?: Web3Provider | Signer) => {
+  return getBep20Contract(getPSIAddress(), signerOrProvider)
 }
 
-export const getCampaignContract = (address: string, web3?: Web3) => {
-  return getContract(campaignAbi, address, web3) as unknown as PSIPadCampaign
+export const getCampaignContract = (address: string, signerOrProvider?: Web3Provider | Signer) => {
+  return getContract(address, campaignAbi, signerOrProvider) as unknown as PSIPadCampaign
 }
 
-export const getCampaignFactoryContract = (web3?: Web3) => {
-  return getContract(campaignFactoryAbi, getCampaignFactoryAddress(), web3) as unknown as PSIPadCampaignFactory
+export const getCampaignFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
+  return getContract(getCampaignFactoryAddress(), campaignFactoryAbi, signerOrProvider) as unknown as PSIPadCampaignFactory
 }
 
-export const getTokenFactoryContract = (web3?: Web3) => {
-  return getContract(tokenFactoryAbi, getTokenFactoryAddress(), web3) as unknown as PSIPadTokenDeployer
+export const getTokenFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
+  return getContract(getTokenFactoryAddress(), tokenFactoryAbi, signerOrProvider) as unknown as PSIPadTokenDeployer
 }
 
-export const getTokenLockFactoryContract = (web3?: Web3) => {
-  return getContract(tokenLockFactoryAbi, getTokenLockFactoryAddress(), web3) as unknown as PSIPadTokenLockFactory
+export const getTokenLockFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
+  return getContract(getTokenLockFactoryAddress(), tokenLockFactoryAbi, signerOrProvider) as unknown as PSIPadTokenLockFactory
 }

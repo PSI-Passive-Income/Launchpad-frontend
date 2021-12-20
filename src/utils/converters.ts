@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import _, { isBoolean, isNil, isString } from 'lodash'
 
 export const camelCaseKeys = (obj: any | any[]) => {
@@ -40,7 +40,7 @@ export const unixTSToDate = (value: string | number) => {
 export const toBigNumber = (value: string | number) => {
   const stringValue = value?.toString()
   if (isNil(stringValue) || !isString(stringValue)) return null
-  return new BigNumber(stringValue)
+  return BigNumber.from(stringValue)
 }
 
 export const toBool = (value: string | number) => {

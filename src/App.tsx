@@ -1,6 +1,5 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
-import BigNumber from 'bignumber.js'
 import { useCheckLoginLogout } from 'state/hooks'
 // import ResetCSS from './style/ResetCSS'
 import GlobalStyle from './style/Global'
@@ -10,12 +9,6 @@ import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import PageLoader from './components/PageLoader'
 import history from './routerHistory'
 import Layout from './views/Layout'
-
-// This config is required for number formating
-BigNumber.config({
-  EXPONENTIAL_AT: 1000,
-  DECIMAL_PLACES: 80,
-})
 
 const App: React.FC = () => {
   // Monkey patch warn() because of web3 flood
