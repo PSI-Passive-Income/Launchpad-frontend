@@ -126,7 +126,7 @@ const CampaignDetail: React.FC = () => {
                     ) : null}
                   </div>
 
-                  {isOwner ? (
+                  {isOwner && (campaign.status === CampaignStatus.NotStarted || campaign.status === CampaignStatus.Live) ? (
                     <>
                       <hr />
                       <WhitelistAdd campaign={campaign} />

@@ -18,10 +18,8 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
     campaignCalls.push({ address: campaign.campaignAddress, name: 'isLive' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'finalized' })
     campaignCalls.push({ address: campaign.campaignAddress, name: 'failed' })
-    campaignCalls.push({ address: campaign.campaignAddress, name: 'whitelistEnabled' })
     if (connectedWallet) {
       campaignCalls.push({ address: campaign.campaignAddress, name: 'getGivenAmount', params: [connectedWallet] })
-      campaignCalls.push({ address: campaign.campaignAddress, name: 'whitelisted', params: [connectedWallet] })
     }
     return campaignCalls
   })
@@ -40,17 +38,18 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
     else if (callData[7]) campaign.status = CampaignStatus.Ended
     else if (callData[8]) campaign.status = CampaignStatus.Failed
     else campaign.status = CampaignStatus.NotStarted
-    campaign.whitelistEnabled = callData[9]
     campaign.userContributed = toBigNumber(0)
     if (connectedWallet) {
-      campaign.userContributed = toBigNumber(callData[10])
-      campaign.userWhitelisted = callData[11]
+      campaign.userContributed = toBigNumber(callData[9])
     }
   })
 }
 
 export const fetchDetailedData = async (campaign: Campaign, connectedWallet: string): Promise<Campaign> => {
   if (!campaign) return campaign
+  
+  const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
+  const withWhitelist = !((chainId === 97 && campaign?.id < 21) || (chainId === 56 && campaign?.id < 2))
 
   const calls: Call[] = []
   calls.push({ address: campaign.campaignAddress, name: 'softCap' })
@@ -71,11 +70,14 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   calls.push({ address: campaign.campaignAddress, name: 'failed' })
   calls.push({ address: campaign.campaignAddress, name: 'locked' })
   calls.push({ address: campaign.campaignAddress, name: 'unlock_date' })
-  calls.push({ address: campaign.campaignAddress, name: 'whitelistEnabled' })
   if (connectedWallet) {
     calls.push({ address: campaign.campaignAddress, name: 'getGivenAmount', params: [connectedWallet] })
-    calls.push({ address: campaign.campaignAddress, name: 'whitelisted', params: [connectedWallet] })
   }
+  if (withWhitelist) {
+    calls.push({ address: campaign.campaignAddress, name: 'whitelistEnabled' })
+    if (connectedWallet) calls.push({ address: campaign.campaignAddress, name: 'whitelisted', params: [connectedWallet] })
+  }
+
   const tokenData = await multicall(PSIPadCampaignAbi, calls)
   const liveCampaign = {
     ...campaign,
@@ -95,7 +97,7 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
       remaining: toBigNumber(tokenData[12]),
       locked: toBool(tokenData[16]),
       unlockDate: unixTSToDate(tokenData[17]),
-      whitelistEnabled: tokenData[18],
+      whitelistEnabled: withWhitelist ? tokenData[19] : false,
     },
   }
   if (tokenData[13]) liveCampaign.status = CampaignStatus.Live
@@ -104,8 +106,8 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   else liveCampaign.status = CampaignStatus.NotStarted
   liveCampaign.userContributed = toBigNumber(0)
   if (connectedWallet) {
-    liveCampaign.userContributed = toBigNumber(tokenData[19])
-    liveCampaign.userWhitelisted = tokenData[20]
+    liveCampaign.userContributed = toBigNumber(tokenData[18])
+    liveCampaign.userWhitelisted = withWhitelist ? tokenData[20] : false
   }
   return liveCampaign
 }

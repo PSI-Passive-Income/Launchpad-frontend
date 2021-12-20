@@ -28,7 +28,9 @@ const ExploreCampaigns: React.FC = () => {
           (contributed === ContributedFilter.All ||
             (contributed === ContributedFilter.Yes && !c.userContributed.isZero()) ||
             c.userContributed.isZero()),
-      ),
+      ).sort((a, b) => {
+        return b.startDate.getTime() - a.startDate.getTime()
+      }),
     [campaigns, filter, contributed],
   )
 
