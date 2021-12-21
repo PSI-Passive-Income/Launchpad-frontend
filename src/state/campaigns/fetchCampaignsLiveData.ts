@@ -49,7 +49,7 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   if (!campaign) return campaign
   
   const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
-  const withWhitelist = !((chainId === 97 && campaign?.id < 21) || (chainId === 56 && campaign?.id < 2))
+  const withWhitelist = !((chainId === 97 && campaign?.id < 21) || (chainId === 56 && campaign?.id < 1))
 
   const calls: Call[] = []
   calls.push({ address: campaign.campaignAddress, name: 'softCap' })
