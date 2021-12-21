@@ -1,4 +1,4 @@
-import Web3 from 'web3'
+import { Web3Provider } from '@ethersproject/providers'
 import { toastError } from 'state/toasts'
 import { AppDispatch, RootState } from '../store'
 import { User } from '../types'
@@ -18,7 +18,7 @@ import getUserNonce from './getUserNonce'
 
 // Thunks
 export const loginWallet =
-  (web3: Web3, address: string, onlySilent = false) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (library: Web3Provider, address: string, onlySilent = false) => async (dispatch: AppDispatch, getState: () => RootState) => {
     if (getState().user.isLoggingIn) return
 
     const tokenInfo = sessionStorage.getItem('MM_TokenInfo')
@@ -30,7 +30,7 @@ export const loginWallet =
       dispatch(userLoginStart())
 
       const nonce = await getUserNonce(address)
-      const signature = await userSignMessage(web3, address, nonce)
+      const signature = await userSignMessage(library, address, nonce)
       ;({ username, accessToken } = await userAuthenticate(address, signature))
       sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
 

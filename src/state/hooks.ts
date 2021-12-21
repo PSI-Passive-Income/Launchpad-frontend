@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isFinite, isNil, isObject, isString } from 'lodash'
+import { isFinite, isNil, isObject, isString } from 'lodash'
 import Web3 from 'web3'
 import { Contract } from 'ethers'
 import { useActiveWeb3React } from 'hooks/web3'
-import useActiveWeb3 from 'hooks/useActiveWeb3'
-import useUserVerification from 'hooks/useUserKYC'
 import { AppDispatch, RootState } from './store'
 import { Toast } from '../components/Toast'
 import { push as pushToast, remove as removeToast, clear as clearToast } from './actions'
@@ -46,29 +44,27 @@ export const useToast = () => {
 // User
 
 export const useCheckLoginLogout = () => {
-  const { account, active } = useActiveWeb3React()
-  const web3 = useActiveWeb3()
+  const { library, account, active } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (active && account && web3) {
-      dispatch(loginWallet(web3, account, true))
-    } else if (active && web3) {
+    if (active && account && library) {
+      dispatch(loginWallet(library, account, true))
+    } else if (active && library) {
       dispatch(logoutWallet())
     }
-  }, [account, active, web3, dispatch])
+  }, [account, active, library, dispatch])
 }
 
 export const useLoginWallet = () => {
-  const { account } = useActiveWeb3React()
-  const web3 = useActiveWeb3()
+  const { library, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   return useCallback(() => {
-    if (account && web3) {
-      dispatch(loginWallet(web3, account))
+    if (account && library) {
+      dispatch(loginWallet(library, account))
     }
-  }, [account, web3, dispatch])
+  }, [account, library, dispatch])
 }
 
 export const useLoggedInUser = () => {

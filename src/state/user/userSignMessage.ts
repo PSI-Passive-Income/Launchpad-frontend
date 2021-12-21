@@ -1,12 +1,10 @@
 import { ApplicationName } from 'config/constants/misc'
-import Web3 from 'web3'
+import { Web3Provider } from '@ethersproject/providers'
 
-const userSignMessage = async (web3: Web3, publicAddress: string, nonce: string): Promise<string> => {
+const userSignMessage = async (library: Web3Provider, publicAddress: string, nonce: string): Promise<string> => {
   try {
-    const signature = await web3.eth.personal.sign(
-      `I am signing in to ${ApplicationName}. Unique nonce: ${nonce}`,
-      publicAddress,
-      '', // MetaMask will ignore the password argument here
+    const signature = await library.getSigner(publicAddress).signMessage(
+      `I am signing in to ${ApplicationName}. Unique nonce: ${nonce}`
     )
 
     return signature
