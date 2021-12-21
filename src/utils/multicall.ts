@@ -1,7 +1,7 @@
 import { AbiItem } from 'web3-utils'
 import { Interface } from '@ethersproject/abi'
 import { getWeb3NoAccount } from 'utils/web3'
-import MultiCallAbi from 'config/abi/multicall.json'
+import MultiCallAbi from 'config/abi/Multicall.json'
 import { getMulticallAddress } from 'utils/addressHelpers'
 
 export interface Call {
