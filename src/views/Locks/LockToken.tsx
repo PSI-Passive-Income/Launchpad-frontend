@@ -8,6 +8,7 @@ import { isEmpty, isNil, round } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
 import Loader from 'components/Loader'
+import { parseEther } from '@ethersproject/units'
 import Releases from './components/Releases'
 
 const LockToken: React.FC = () => {
@@ -37,7 +38,7 @@ const LockToken: React.FC = () => {
 
   const changeRange = (value: string, name: string, type: string, mandatory = true, extra?: any) => {
     const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
-    const amount = token.accountBalance.mul(rangeValue).div(10 ** token.decimals)
+    const amount = token.accountBalance.mul(rangeValue).div(parseEther('10'))
     changeValue(amount.toString(), name, type, mandatory, extra)
   }
 
@@ -207,7 +208,7 @@ const LockToken: React.FC = () => {
                           type="number"
                           name="amount"
                           id="amount"
-                          value={lock.amount?.div(10 ** token.decimals).toNumber()}
+                          value={lock.amount?.div(parseEther('10')).toNumber()}
                           onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           placeholder="0"
                           invalid={!!errors.amount}
