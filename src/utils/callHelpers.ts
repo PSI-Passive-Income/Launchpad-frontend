@@ -5,6 +5,7 @@ import { PSIPadCampaignFactory } from 'config/types/PSIPadCampaignFactory'
 import { PSIPadTokenDeployer } from 'config/types/PSIPadTokenDeployer'
 import { PSIPadTokenLockFactory } from 'config/types/PSIPadTokenLockFactory'
 import { Contract, ContractTransaction, ContractReceipt } from '@ethersproject/contracts'
+import { getAddress } from '@ethersproject/address'
 import { BigNumberish } from '@ethersproject/bignumber'
 import { AddressZero, MaxUint256 } from '@ethersproject/constants'
 import { parseEther } from '@ethersproject/units'
@@ -50,7 +51,14 @@ export const setWhitelistEnabled = async (campaign: PSIPadCampaign, value: boole
 }
 
 export const setWhitelist = async (campaign: PSIPadCampaign, addresses: string[], whitelisted: boolean) => {
-  const data = `0x${addresses?.map(address => solidityPack(["address"], [address]).substr(2)).join('')}`
+  const finalAddresses = addresses.map(address => {
+    try {
+      return getAddress(address)
+    } catch(err) {
+      throw new Error(`Invalid address: ${address}`)
+    }
+  })
+  const data = `0x${finalAddresses?.map(address => solidityPack(["address"], [address]).substr(2)).join('')}`
   return campaign.addWhitelist(data, whitelisted)
 }
 

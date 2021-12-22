@@ -1,9 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { Input } from 'reactstrap'
-import { Campaign, CampaignStatus, Token } from 'state/types'
-import { useWithdrawFunds, useWithdrawTokens } from 'hooks/useContributions'
-import { useLock, useUnlock } from 'hooks/useCampaignLocks'
-import { useActiveWeb3React } from 'hooks/web3'
+import { Campaign } from 'state/types'
 import useWhitelisting from 'hooks/useWhitelist'
 
 interface Props {
