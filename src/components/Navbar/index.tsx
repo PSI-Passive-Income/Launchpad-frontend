@@ -58,7 +58,7 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
             </div>
             <NavbarBrand href="/projects" >
                 <div className='logo-box-area'>
-                  <img className="header-logo-main" src="https://s2.coinmarketcap.com/static/img/coins/64x64/8243.png" alt="" />
+                  <img className="header-logo-main" src="/img/onlypsi.png" alt="" />
                   <p>PSI PAD</p>
                 </div>
             </NavbarBrand>
