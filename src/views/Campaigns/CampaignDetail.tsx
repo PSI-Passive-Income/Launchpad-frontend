@@ -89,7 +89,7 @@ const CampaignDetail: React.FC = () => {
 
                     {campaign.status === CampaignStatus.Live ? (
                       <>
-                        <Contribute campaign={campaign} token={token} />
+                        {!campaign?.whitelistEnabled || campaign.userWhitelisted ? <Contribute campaign={campaign} token={token} /> : null}
                         <div className="presale-end-timer mt-2">
                           <Label>Presale ends in:</Label>
                           <Timer date={campaign.endDate} />
