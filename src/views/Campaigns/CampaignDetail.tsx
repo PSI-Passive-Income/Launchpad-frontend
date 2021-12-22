@@ -117,7 +117,7 @@ const CampaignDetail: React.FC = () => {
                             <div className="contribution-box">
                               <Label>Your tokens:</Label>
                               <h5>
-                                {formatBN(campaign?.userContributed?.mul(campaign.rate).div(parseEther('10')))}{' '}
+                                {formatBN(campaign?.userContributed?.mul(campaign.rate).div(parseEther('1')))}{' '}
                                 {token.symbol}
                               </h5>
                             </div>

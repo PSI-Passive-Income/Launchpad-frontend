@@ -44,7 +44,7 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
   const tokenAmount = useCallback((bnb: number | BigNumber) => {
     const bnbBN = isNumber(bnb) ? parseEther(bnb.toString()) : bnb
     if (!campaign?.rate || campaign.rate.lte(0) || !bnbBN || bnbBN.lte(0)) return '0'
-    return formatBN(campaign.rate.mul(bnbBN).div(parseEther('10')), token.decimals)
+    return formatBN(campaign.rate.mul(bnbBN).div(parseEther('1')), token.decimals)
   }, [campaign, token])
 
   const contributionTokens = useMemo(() => tokenAmount(contribution), [tokenAmount, contribution])

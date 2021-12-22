@@ -38,7 +38,7 @@ const LockToken: React.FC = () => {
 
   const changeRange = (value: string, name: string, type: string, mandatory = true, extra?: any) => {
     const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
-    const amount = token.accountBalance.mul(rangeValue).div(parseEther('10'))
+    const amount = token.accountBalance.mul(rangeValue).div(parseEther('1'))
     changeValue(amount.toString(), name, type, mandatory, extra)
   }
 
@@ -208,7 +208,7 @@ const LockToken: React.FC = () => {
                           type="number"
                           name="amount"
                           id="amount"
-                          value={lock.amount?.div(parseEther('10')).toNumber()}
+                          value={lock.amount?.div(parseEther('1')).toNumber()}
                           onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           placeholder="0"
                           invalid={!!errors.amount}
