@@ -9,6 +9,7 @@ import { validateSingle } from 'utils/validate'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useWalletModal } from 'components/WalletModal'
 import useAuth from 'hooks/useAuth'
+import { parseEther } from '@ethersproject/units'
 
 interface Props {
   campaign: Campaign
@@ -41,9 +42,9 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
   }
 
   const tokenAmount = useCallback((bnb: number | BigNumber) => {
-    const bnbBN = isNumber(bnb) ? BigNumber.from(bnb).mul(10 ** 18) : bnb
-    if (isNil(campaign) || !bnbBN || bnbBN.lte(0)) return '0'
-    return formatBN(campaign.rate.mul(bnbBN).div(10 ** 18), token.decimals)
+    const bnbBN = isNumber(bnb) ? parseEther(bnb.toString()) : bnb
+    if (!campaign?.rate || campaign.rate.lte(0) || !bnbBN || bnbBN.lte(0)) return '0'
+    return formatBN(campaign.rate.mul(bnbBN).div(parseEther('10')), token.decimals)
   }, [campaign, token])
 
   const contributionTokens = useMemo(() => tokenAmount(contribution), [tokenAmount, contribution])

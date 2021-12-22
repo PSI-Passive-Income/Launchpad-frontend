@@ -7,6 +7,7 @@ import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
 import Loader from 'components/Loader'
 import { useActiveWeb3React } from 'hooks/web3'
+import { parseEther } from '@ethersproject/units'
 import Timer from '../../components/Timer'
 import Contribute from './components/Contribute'
 import PresaleEnded from './components/PresaleEnded'
@@ -116,7 +117,7 @@ const CampaignDetail: React.FC = () => {
                             <div className="contribution-box">
                               <Label>Your tokens:</Label>
                               <h5>
-                                {formatBN(campaign?.userContributed?.mul(campaign.rate).div(10 ** token.decimals))}{' '}
+                                {formatBN(campaign?.userContributed?.mul(campaign.rate).div(parseEther('10')))}{' '}
                                 {token.symbol}
                               </h5>
                             </div>
