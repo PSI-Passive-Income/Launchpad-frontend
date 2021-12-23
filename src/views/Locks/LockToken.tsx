@@ -8,7 +8,7 @@ import { isEmpty, isNil, round } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
 import Loader from 'components/Loader'
-import { parseEther } from '@ethersproject/units'
+import { BigNumber } from '@ethersproject/bignumber'
 import Releases from './components/Releases'
 
 const LockToken: React.FC = () => {
@@ -24,10 +24,10 @@ const LockToken: React.FC = () => {
     [lock.amount, approvedAmount],
   )
 
-  const amountRange = useMemo(
-    () => (token?.accountBalance && lock.amount ? round(lock.amount.div(token.accountBalance).toNumber() * 100, 1) : 0),
-    [token, lock.amount],
-  )
+  const amountRange = useMemo(() => {
+    if (!token?.accountBalance || !lock.amount) return 0
+    return round((parseFloat(formatBN(lock.amount, token?.decimals)) / parseFloat(formatBN(token.accountBalance, token?.decimals))) * 100, 1)
+  }, [token, lock.amount])
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
   const changeValue = (value: string | moment.Moment, name: string, type: string, mandatory = true, extra?: any) => {
@@ -37,9 +37,14 @@ const LockToken: React.FC = () => {
   }
 
   const changeRange = (value: string, name: string, type: string, mandatory = true, extra?: any) => {
-    const rangeValue = (!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) / 100
-    const amount = token.accountBalance.mul(rangeValue).div(parseEther('1'))
-    changeValue(amount.toString(), name, type, mandatory, extra)
+    const rangeValue = Math.ceil((!Number.isNaN(parseFloat(value)) ? parseFloat(value) : 0) * 100)
+    const amount =
+      rangeValue === 0
+        ? BigNumber.from('0')
+        : rangeValue >= 10000
+        ? token.accountBalance
+        : token.accountBalance.mul(rangeValue).div(10000)
+    changeValue(formatBN(amount, token?.decimals), name, type, mandatory, extra)
   }
 
   const mandatoryErrors = useMemo(() => {
@@ -196,7 +201,7 @@ const LockToken: React.FC = () => {
                           type="range"
                           name="amount"
                           id="amount"
-                          value={amountRange > 100 ? 100 : amountRange}
+                          value={amountRange > 100 ? 100 : amountRange ?? 0}
                           onChange={(e) => changeRange(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           invalid={!!errors.amount}
                           min={0}
@@ -208,7 +213,7 @@ const LockToken: React.FC = () => {
                           type="number"
                           name="amount"
                           id="amount"
-                          value={lock.amount?.div(parseEther('1')).toNumber()}
+                          value={formatBN(lock?.amount)}
                           onChange={(e) => changeValue(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
                           placeholder="0"
                           invalid={!!errors.amount}
