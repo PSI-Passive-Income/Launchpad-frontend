@@ -45,7 +45,7 @@ const PresaleEnded: React.FC<Props> = ({ campaign, token }) => {
           <>
             <h5>Presale has ended. Check out our other projects!</h5>
 
-            {token ? (
+            {token && campaign.locked ? (
               <a
                 className="btn btn-danger mb-10"
                 href={`https://psidex.passive-income.io/#/swap?outputCurrency=${token.address}`}
@@ -78,7 +78,7 @@ const PresaleEnded: React.FC<Props> = ({ campaign, token }) => {
           </>
         ) : null}
 
-        {isOwner && campaign.status === CampaignStatus.Failed ? (
+        {isOwner && campaign.locked && campaign.status === CampaignStatus.Failed ? (
           <>
             <p>Please click the button below to withdraw the token sale tokens.</p>
             <button type="button" onClick={withdrawFundsClick} className="btn btn-primary">
