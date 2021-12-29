@@ -180,14 +180,15 @@ export const useUserTokens = () => {
 // Token locks
 
 export const useUserTokenLocks = () => {
-  const { account } = useActiveWeb3React()
+  const { library, account } = useActiveWeb3React()
+  const signer = useMemo(() => account ? library?.getSigner(account) : undefined, [library, account])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (account) {
-      dispatch(getUserTokenLocks(account))
+    if (signer) {
+      dispatch(getUserTokenLocks(signer))
     }
-  }, [dispatch, account])
+  }, [dispatch, signer])
 
   const { userLocks, isLoading } = useSelector((state: RootState) => state.tokenLocks)
   return { tokenLocks: userLocks[account], isLoadingLocks: isLoading }

@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers'
 import PSIPadTokenLockFactoryAbi from 'config/abi/PSIPadTokenLockFactory.json'
 import { first, isEmpty, isNil, toFinite } from 'lodash'
 import { TokenLock } from 'state/types'
@@ -40,12 +41,11 @@ const _fetchLocks = async(lockIds: number[]) => {
   return callData.map((lock: any[], idx: number) => convertLockData(lockIds[idx], lock)).filter((l) => !isNil(l))
 }
 
-export const fetchLocks = async (account: string): Promise<TokenLock[]> => {
-  if (!account) return null
+export const fetchLocks = async (signer: JsonRpcSigner): Promise<TokenLock[]> => {
+  if (!signer) return null
 
-  const lockFactory = getTokenLockFactoryContract()
-  const lockIds = await getUserLocks(lockFactory, account)
-
+  const lockFactory = getTokenLockFactoryContract(signer)
+  const lockIds = await getUserLocks(lockFactory, signer._address)
   return _fetchLocks(lockIds)
 }
 

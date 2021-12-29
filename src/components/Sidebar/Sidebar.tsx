@@ -84,7 +84,7 @@ const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
           {routes.map((prop) => {
             if (prop.redirect || !prop.name) return null
             return (
-              <li className={activeRoute(prop.path)}>
+              <li className={activeRoute(prop.path)} key={prop.path}>
                 <NavLink
                   to={prop.path}
                   className="nav-link"

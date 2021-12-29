@@ -33,7 +33,7 @@ const Locks: React.FC = () => {
         ) : null}
         {tokenLocks
           ? allLocks.map((lock) => (
-              <div className="col-md-4">
+              <div className="col-md-4" key={lock.id}>
                 <div className="card">
                   <div className="card-header">
                     <h5 className="title text-center">{tokens[lock.token?.toLowerCase()]?.name}</h5>

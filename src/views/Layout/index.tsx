@@ -22,7 +22,7 @@ const Layout: React.FC = () => {
   }
 
   const allRoutes = routes.map((prop) => {
-    return <Route path={prop.path} component={prop.component} exact={prop.exact} />
+    return <Route key={prop.path} path={prop.path} component={prop.component} exact={prop.exact} />
   })
 
   return (

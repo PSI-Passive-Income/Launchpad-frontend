@@ -2,9 +2,9 @@ import React from 'react'
 import { useLoading } from '@agney/react-loading'
 import styled from 'styled-components'
 
-const LoaderSection = styled.section<{ loading: boolean }>`
+const LoaderSection = styled.section<{ $loading: boolean }>`
   position: absolute;
-  display: ${({ loading }) => (loading ? 'block' : 'none')};
+  display: ${({ $loading }) => ($loading ? 'block' : 'none')};
   top: 50%;
   left: 50%;
   margin: auto;
@@ -19,7 +19,7 @@ const Loader: React.FC<Props> = ({ loading }) => {
   const { containerProps, indicatorEl } = useLoading({ loading })
 
   return (
-    <LoaderSection loading={loading} {...containerProps}>
+    <LoaderSection $loading={loading} {...containerProps}>
       {indicatorEl} {/* renders only while loading */}
     </LoaderSection>
   )
