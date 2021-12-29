@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers'
 import { toastError } from 'state/toasts'
 import { isNil, isUndefined } from 'lodash'
 import { AppDispatch, RootState } from '../store'
@@ -41,17 +42,17 @@ export const getTokens =
   }
 
 export const getUserTokens =
-  (account: string, spender?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (signer: JsonRpcSigner, spender?: string) => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       dispatch(tokenLoadStart())
 
-      const userTokens = await fetchUserTokens(account)
+      const userTokens = await fetchUserTokens(signer)
       const tokens: Token[] = userTokens
         ?.map((t) => getState()?.tokens?.data[t?.toLowerCase()])
         .filter((t) => !isNil(t))
       const tokensToGet = userTokens?.filter((t) => isNil(getState()?.tokens?.data[t?.toLowerCase()]))
       if (tokensToGet) {
-        tokens.push(...(await fetchTokens(tokensToGet, account, spender)))
+        tokens.push(...(await fetchTokens(tokensToGet, signer._address, spender)))
       }
 
       dispatch(tokensUserLoadSucceeded(tokens))

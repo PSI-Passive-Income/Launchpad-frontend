@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers'
 import IBEP20Abi from 'config/abi/IBEP20.json'
 import { first, toFinite } from 'lodash'
 import { Token } from 'state/types'
@@ -48,9 +49,9 @@ export const fetchToken = async (tokenAddress: string, account?: string, spender
   return first(tokens)
 }
 
-export const fetchUserTokens = async (account: string) => {
-  if (!account) return []
+export const fetchUserTokens = async (signer: JsonRpcSigner) => {
+  if (!signer) return []
 
-  const tokenFactory = getTokenFactoryContract()
-  return getUserTokens(tokenFactory, account)
+  const tokenFactory = getTokenFactoryContract(signer)
+  return getUserTokens(tokenFactory, signer._address)
 }

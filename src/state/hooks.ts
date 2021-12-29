@@ -164,15 +164,16 @@ export const useTokens = (addresses: string[]) => {
 }
 
 export const useUserTokens = () => {
-  const { account } = useActiveWeb3React()
+  const { library, account } = useActiveWeb3React()
+  const signer = useMemo(() => account ? library?.getSigner(account) : undefined, [library, account])
   const dispatch = useAppDispatch()
   const { userTokens, isLoading } = useSelector((state: RootState) => state.tokens)
 
   useEffect(() => {
-    if (account) {
-      dispatch(getUserTokens(account))
+    if (signer) {
+      dispatch(getUserTokens(signer))
     }
-  }, [dispatch, account])
+  }, [dispatch, signer])
 
   return { tokens: userTokens, isLoadingTokens: isLoading }
 }
