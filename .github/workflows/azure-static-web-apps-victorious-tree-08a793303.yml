@@ -3,11 +3,11 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - develop
+      - test
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - develop
+      - test
 
 jobs:
   build_and_deploy_job:
@@ -28,9 +28,16 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
+          api_location: "/api" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          CI: false
+          REACT_APP_CHAIN_ID: 97
+          REACT_APP_NODE_1: "https://data-seed-prebsc-1-s1.binance.org:8545"
+          REACT_APP_NODE_2: "https://data-seed-prebsc-2-s1.binance.org:8545"
+          REACT_APP_NODE_3: "https://data-seed-prebsc-1-s2.binance.org:8545"
+          REACT_APP_PSI_API_URL: "https://psi-api-test.azurewebsites.net/api"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
