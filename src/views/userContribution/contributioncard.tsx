@@ -1,20 +1,21 @@
 import React from 'react'
 import { useCampaigns, useLoggedInUser } from 'state/hooks'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 import { isEmpty } from 'lodash'
-import { Label, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import DetailContribution from './contributionDetail'
 
 const ContributionDetail: React.FC = () => {
   const { campaigns, campaignsLoading } = useCampaigns()
   const { accessToken, account } = useLoggedInUser()
 
+  useGlobalLoader(campaignsLoading)
+
   return (
     <div className="content">
       <div className="card">
-        <Loader loading={campaignsLoading} />
         {account && accessToken ? (
-          <Table dark>
+          <Table variant="dark">
             {!campaignsLoading ? (
               <thead>
                 <tr>

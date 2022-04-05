@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { isNumber } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { campaignsAdd, toastError } from 'state/actions'
 import { useLoggedInUser } from 'state/hooks'
 import { Campaign } from 'state/types'
@@ -45,12 +45,12 @@ export const useCreateCampaign = () => {
   const { account } = useActiveWeb3React()
   const { accessToken } = useLoggedInUser()
   const campaignFactory = useCampaignFactory()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [creating, setCreating] = useState(false)
 
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
-      if (account && campaign && history) {
+      if (account && campaign && navigate) {
         try {
           setCreating(true)
           const transaction = await createCampaign(campaignFactory, account, campaign)
@@ -70,7 +70,7 @@ export const useCreateCampaign = () => {
                   kycVerified,
                 })
                 dispatch(campaignsAdd(addedCampaign))
-                history.push(`/project/${addedCampaign.campaignAddress}`)
+                navigate(`/project/${addedCampaign.campaignAddress}`)
               } else {
                 dispatch(toastError('Error adding campaign', 'Campaign not added correctly'))
               }
@@ -81,14 +81,14 @@ export const useCreateCampaign = () => {
             dispatch(toastError('Error adding campaign', 'Transaction failed'))
           }
         } catch (error: any) {
-          console.log('error', error)
+          console.error(error)
           dispatch(toastError('Error adding campaign', error?.message))
         } finally {
           setCreating(false)
         }
       }
     },
-    [dispatch, account, accessToken, campaignFactory, history],
+    [dispatch, account, accessToken, campaignFactory, navigate],
   )
 
   return { createCampaign: handleCreateCampaign, creatingCampaign: creating }

@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-// eslint-disable-next-line import/no-unresolved
 import { NoBscProviderError } from '@binance-chain/bsc-connector'
 import {
   NoEthereumProviderError,
@@ -19,7 +18,7 @@ const useAuth = () => {
   const { activate, deactivate } = useWeb3React()
   const { toastError } = useToast()
 
-  const login = useCallback((connectorID: ConnectorNames) => {
+  const connect = useCallback((connectorID: ConnectorNames) => {
     const connector = connectorsByName[connectorID]
     if (connector) {
       activate(connector, async (error: Error) => {
@@ -28,6 +27,7 @@ const useAuth = () => {
           if (hasSetup) {
             activate(connector)
           }
+          toastError('Unsupported chain error', 'Please connect to the correct chain')
         } else {
           window.localStorage.removeItem(connectorLocalStorageKey)
           if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
@@ -52,7 +52,7 @@ const useAuth = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { login, logout: deactivate }
+  return { connect, disconnect: deactivate }
 }
 
 export default useAuth

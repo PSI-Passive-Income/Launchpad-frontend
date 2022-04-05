@@ -22,7 +22,6 @@ const useUserVerification = () => {
   const onSumit = useCallback(
     async (key) => {
       const kyc = await setkycUserVerification(account, key)
-      console.log('kyc', kyc)
       await updateCampaignKyc(accessToken, kyc, account)
     },
     [account, accessToken],

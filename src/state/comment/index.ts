@@ -19,7 +19,7 @@ export const userComments = createSlice({
         isSignUp: false,
       }
     },
-    userLogInfailed: (state, action) => {
+    userLogInfailed: (state) => {
       return {
         ...state,
         isSignUp: true,

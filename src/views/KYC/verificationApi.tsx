@@ -12,26 +12,24 @@ const Verification: React.FC = () => {
         <div className="col-md-12">
           <div>
             {account && accessToken ? (
-              <>
-                {verified ? (
-                  <h3 className="text-center">User Verified</h3>
-                ) : (
-                  <div>
-                    <VerifyButton
-                      apiKey={PASSBASE_API_KEY}
-                      onSubmitted={submit}
-                      onError={error}
-                      onStart={start}
-                      prefillAttributes={{
-                        email: 'bergmediagroup@gmail.com',
-                      }}
-                      theme={{
-                        darkMode: false,
-                      }}
-                    />
-                  </div>
-                )}
-              </>
+              verified ? (
+                <h3 className="text-center">User Verified</h3>
+              ) : (
+                <div>
+                  <VerifyButton
+                    apiKey={PASSBASE_API_KEY}
+                    onSubmitted={submit}
+                    onError={error}
+                    onStart={start}
+                    prefillAttributes={{
+                      email: 'bergmediagroup@gmail.com',
+                    }}
+                    theme={{
+                      darkMode: false,
+                    }}
+                  />
+                </div>
+              )
             ) : (
               <h3 className=" text-center">Please connect wallet</h3>
             )}

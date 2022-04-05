@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import moment from 'moment'
 import { isFinite, isNil, isObject, isString } from 'lodash'
 import Web3 from 'web3'
 import { Contract } from 'ethers'
@@ -7,8 +8,8 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { AppDispatch, RootState } from './store'
 import { Toast } from '../components/Toast'
 import { push as pushToast, remove as removeToast, clear as clearToast } from './actions'
-import { loginWallet, logoutWallet, updateUser } from './user/thunks'
-import { User, UserState, commentData } from './types'
+import { loadLoggedInUser, loginWallet, updateUser } from './user/thunks'
+import { User, commentData } from './types'
 import { toastError, toastInfo, toastSuccess, toastWarning } from './toasts'
 import { getCampaigns, getCampaign } from './campaigns/thunks'
 import { getToken, getTokens, getUserTokens } from './tokens/thunks'
@@ -23,6 +24,7 @@ import {
 } from './comment/thunks'
 import { addedComment } from './comment/index'
 import { createComment } from '../utils/apiHelper'
+import { userUnload } from './user'
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -49,40 +51,88 @@ export const useToast = () => {
 // User
 
 export const useCheckLoginLogout = () => {
-  const { library, account, active } = useActiveWeb3React()
+  const { account, library, active } = useActiveWeb3React()
   const dispatch = useAppDispatch()
+
+  const { data, isLoggedIn } = useAppSelector((state) => state.user)
 
   useEffect(() => {
-    if (active && account && library) {
-      dispatch(loginWallet(library, account, true))
-    } else if (active && library) {
-      dispatch(logoutWallet())
+    if (account && data?.publicAddress && account.toLowerCase() !== data.publicAddress.toLowerCase()) {
+      dispatch(userUnload())
     }
-  }, [account, active, library, dispatch])
+
+    if (!isLoggedIn && active && account && library) {
+      dispatch(loginWallet(library, account, true))
+    }
+  }, [account, data, isLoggedIn, active, library, dispatch])
 }
 
-export const useLoginWallet = () => {
-  const { library, account } = useActiveWeb3React()
+export const useLogin = () => {
+  const { account, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
-  return useCallback(() => {
+  const login = useCallback(() => {
     if (account && library) {
       dispatch(loginWallet(library, account))
     }
   }, [account, library, dispatch])
+
+  const { data, isLoggedIn, isLoading, accessToken } = useAppSelector((state) => state.user)
+  return { isLoggedIn, isLoggingIn: isLoading, accessToken, user: data, account, login }
 }
 
 export const useLoggedInUser = () => {
   const { account } = useActiveWeb3React()
-  const { isLoggedIn, isLoggingIn, username, accessToken }: UserState = useAppSelector((state) => state.user)
-  return { isLoggedIn, isLoggingIn, username, accessToken, account }
+  const { data, isLoggedIn, isLoading, accessToken } = useAppSelector((state) => state.user)
+  return { isLoggedIn, isLoggingIn: isLoading, accessToken, user: data, account }
 }
 
 export const useUpdateUser = () => {
   const dispatch = useAppDispatch()
-  return useMemo(() => {
-    return (user: Partial<User>) => dispatch(updateUser(user))
-  }, [dispatch])
+  const { account } = useActiveWeb3React()
+  const handleUpdateUser = useCallback(
+    (user: Partial<User>) => {
+      if (account) dispatch(updateUser(user))
+    },
+    [dispatch, account],
+  )
+  return handleUpdateUser
+}
+
+export const useUserKYC = () => {
+  const dispatch = useAppDispatch()
+  const { account } = useActiveWeb3React()
+  const { isLoggedIn, data } = useAppSelector((state) => state.user)
+
+  const [triggered, setTriggered] = useState(false)
+  useEffect(() => {
+    if (!triggered && data && (!data.lastRefreshed || moment(data.lastRefreshed) < moment().subtract('1 hours'))) {
+      setTriggered(true)
+      dispatch(loadLoggedInUser())
+    }
+  }, [dispatch, data, triggered])
+
+  const onStart = useCallback(() => {
+    if (!account) dispatch(toastError('Verification error', 'Your wallet is not connected'))
+    if (!isLoggedIn) dispatch(toastError('Verification error', 'You are not logged in'))
+    return account && isLoggedIn
+  }, [dispatch, account, isLoggedIn])
+
+  const onSubmit = useCallback(
+    (kycKey: string) => {
+      if (account) dispatch(updateUser({ kycKey }))
+    },
+    [dispatch, account],
+  )
+
+  const onError = useCallback(
+    (errorCode) => {
+      dispatch(toastError('Verification error', errorCode))
+    },
+    [dispatch],
+  )
+
+  return { onStart, onSubmit, onError, account, kyced: data?.kyced, kycStatus: data?.kycStatus }
 }
 
 // Campaigns
@@ -324,7 +374,6 @@ export const useUserComments = () => {
   const handleReply = useCallback(
     async (responseTo, comment, campaignAddress, userId, userName) => {
       const data = { responseTo, comment, campaignAddress, userId, userName }
-      console.log('reply', data)
       const abc = await createComment(data)
       dispatch(addedComment(abc))
     },

@@ -9,60 +9,95 @@ import {
   userLoginStart,
   userLoginSucceeded,
   userLoginFailed,
-  userLogout,
-  userUpdateStart,
-  userUpdateSucceeded,
-  userUpdateFailed,
+  userUnload,
+  userLoadStart,
+  userLoadSucceeded,
+  userLoadFailed,
 } from '.'
 import getUserNonce from './getUserNonce'
+import { getLoggedInUser } from './getUser'
+
+const storage = localStorage // sessionStorage
+
+interface TokenInfo {
+  user: User
+  accessToken: string
+}
 
 // Thunks
 export const loginWallet =
-  (library: Web3Provider, address: string, onlySilent = false) =>
+  (library: Web3Provider, account: string, onlySilent = false) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
-    if (getState().user.isLoggingIn) return
+    if (!account || getState().user.isLoading) return
 
-    const tokenInfo = sessionStorage.getItem('MM_TokenInfo')
-    let { username, accessToken } = tokenInfo ? JSON.parse(tokenInfo) : { username: null, accessToken: null }
-    if (accessToken) dispatch(userLoginSucceeded({ username, accessToken }))
-    if (accessToken || onlySilent) return
+    const tokenInfo = storage.getItem(`MM_TokenInfo_${account.toLowerCase()}`)
+    let { user, accessToken }: TokenInfo = tokenInfo ? JSON.parse(tokenInfo) : {}
+    if (user && accessToken && user?.publicAddress?.toLowerCase() === account?.toLowerCase()) {
+      dispatch(userLoginSucceeded({ user, accessToken }))
+      return
+    }
+    if (onlySilent) return
 
     try {
       dispatch(userLoginStart())
 
-      const nonce = await getUserNonce(address)
-      const signature = await userSignMessage(library, address, nonce)
-      ;({ username, accessToken } = await userAuthenticate(address, signature))
-      sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
+      const nonce = await getUserNonce(account)
+      const signature = await userSignMessage(library, account, nonce)
+      ;({ user, accessToken } = await userAuthenticate(account, signature))
+      user.lastRefreshed = new Date().toISOString()
+      storage.setItem(`MM_TokenInfo_${account.toLowerCase()}`, JSON.stringify({ user, accessToken }))
 
-      dispatch(userLoginSucceeded({ username, accessToken }))
+      dispatch(userLoginSucceeded({ user, accessToken }))
     } catch (error: any) {
       dispatch(toastError('Error logging in', error?.message))
-      dispatch(userLoginFailed(error?.message))
+      dispatch(userLoginFailed())
     }
   }
 
-export const logoutWallet = () => {
-  sessionStorage.removeItem('MM_TokenInfo')
-  return userLogout()
+export const logoutWallet = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  if (getState().user?.accessToken) {
+    const user = await getLoggedInUser(getState().user.accessToken)
+    storage.removeItem(`MM_TokenInfo_${user?.publicAddress?.toLowerCase()}`)
+  }
+  dispatch(userUnload())
+}
+
+export const loadLoggedInUser = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  if (getState().user.isLoading || !getState().user.accessToken) return
+
+  try {
+    dispatch(userLoadStart())
+
+    const user = await getLoggedInUser(getState().user.accessToken)
+    user.lastRefreshed = new Date().toISOString()
+    storage.setItem(
+      `MM_TokenInfo_${user.publicAddress.toLowerCase()}`,
+      JSON.stringify({ user, accessToken: getState().user.accessToken }),
+    )
+
+    dispatch(userLoadSucceeded(user))
+  } catch (error: any) {
+    dispatch(toastError('Error loading user', error?.message))
+    dispatch(userLoadFailed())
+  }
 }
 
 export const updateUser = (user: Partial<User>) => async (dispatch: AppDispatch, getState: () => RootState) => {
-  if (getState().user.isLoggingIn || !getState().user.accessToken) return
+  if (getState().user.isLoading || !getState().user.accessToken) return
 
   try {
-    dispatch(userUpdateStart())
+    dispatch(userLoadStart())
 
-    const finalUser = { ...getState().user.data, ...user }
-    const userReturned = await userUpdate(getState().user.accessToken, finalUser)
+    const userReturned = await userUpdate(getState().user.accessToken, user)
+    userReturned.lastRefreshed = new Date().toISOString()
     sessionStorage.setItem(
-      'MM_TokenInfo',
-      JSON.stringify({ username: userReturned.username, accessToken: getState().user.accessToken }),
+      `MM_TokenInfo_${userReturned.publicAddress.toLowerCase()}`,
+      JSON.stringify({ user: userReturned, accessToken: getState().user.accessToken }),
     )
 
-    dispatch(userUpdateSucceeded(userReturned))
+    dispatch(userLoadSucceeded(userReturned))
   } catch (error: any) {
     dispatch(toastError('Error updating user', error?.message))
-    dispatch(userUpdateFailed(error?.message))
+    dispatch(userLoadFailed())
   }
 }

@@ -4,7 +4,7 @@ import { ButtonGroup, Button } from 'react-bootstrap'
 import { isEmpty } from 'lodash'
 import { useCampaigns } from 'state/hooks'
 import { CampaignStatus } from 'state/types'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 import ProjectCardSmall from './CampaignSmallCard'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -16,9 +16,11 @@ enum ContributedFilter {
 
 const ExploreCampaigns: React.FC = () => {
   const { campaigns, campaignsLoading } = useCampaigns()
+  useGlobalLoader(campaignsLoading)
 
   const [filter, setFilter] = useState(CampaignStatus.All)
-  const [contributed, setContributed] = useState(ContributedFilter.All)
+  const contributed = ContributedFilter.All
+  // const [contributed, setContributed] = useState(ContributedFilter.All)
 
   const filteredCampaigns = useMemo(
     () =>
@@ -39,11 +41,9 @@ const ExploreCampaigns: React.FC = () => {
   return (
     <div className="content">
       <div className="row">
-        <Loader loading={campaignsLoading} />
         <div className="col-sm-12 mb-20 text-center tabsbtns">
           <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
             <Button
-              tag="label"
               className={classNames('btn btn-xs btn-primary btn-simple', {
                 active: filter === CampaignStatus.All,
               })}
@@ -59,7 +59,6 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="1"
               size="sm"
-              tag="label"
               className={classNames('btn btn-xs btn-primary btn-simple', {
                 active: filter === CampaignStatus.Live,
               })}
@@ -73,7 +72,6 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              tag="label"
               className={classNames('btn btn-xs btn-primary btn-simple', {
                 active: filter === CampaignStatus.NotStarted,
               })}
@@ -87,7 +85,6 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              tag="label"
               className={classNames('btn btn-xs btn-primary btn-simple', {
                 active: filter === CampaignStatus.Ended,
               })}
@@ -101,7 +98,6 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              tag="label"
               className={classNames('btn btn-xs btn-primary btn-simple', {
                 active: filter === CampaignStatus.Failed,
               })}

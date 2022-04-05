@@ -1,7 +1,7 @@
 import { isEmpty, isNil } from 'lodash'
 import { BigNumberish } from '@ethersproject/bignumber'
 import { useCallback, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getTokenLock, toastError } from 'state/actions'
 import { TokenLock } from 'state/types'
@@ -58,12 +58,12 @@ export const useCreateTokenLock = () => {
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
   const lockFactory = useTokenLockFactory()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [creating, setCreating] = useState(false)
 
   const handleCreateTokenLock = useCallback(
     async (lock: Partial<TokenLock>) => {
-      if (account && lock && history) {
+      if (account && lock && navigate) {
         try {
           setCreating(true)
           const transaction = await createTokenLock(lockFactory, account, lock)
@@ -71,7 +71,7 @@ export const useCreateTokenLock = () => {
           if (success) {
             const lockIds = await getUserLocks(lockFactory, account)
             if (!isEmpty(lockIds)) {
-              history.push(`/lock/${lockIds[lockIds.length - 1]}`)
+              navigate(`/lock/${lockIds[lockIds.length - 1]}`)
             } else {
               dispatch(toastError('Error creating lock', 'Lock is not found on the contract'))
             }
@@ -85,7 +85,7 @@ export const useCreateTokenLock = () => {
         }
       }
     },
-    [dispatch, account, lockFactory, history],
+    [dispatch, account, lockFactory, navigate],
   )
 
   return { createLock: handleCreateTokenLock, creatingLock: creating }

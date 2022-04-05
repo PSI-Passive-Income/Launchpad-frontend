@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react'
-import { Label, Input, FormGroup, FormFeedback, FormText } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import 'react-toastify/dist/ReactToastify.css'
 import { TokenCreationInfo } from 'state/types'
 import useCreateToken from 'hooks/useCreateToken'
 import { isEmpty, isNil } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 
 const CreateToken: React.FC = () => {
   const [token, setToken] = useState<Partial<TokenCreationInfo>>({})
@@ -55,10 +55,10 @@ const CreateToken: React.FC = () => {
     }
   }
 
+  useGlobalLoader(creatingToken)
+
   return (
     <div className="content">
-      <Loader loading={creatingToken} />
-
       <div className="row">
         <div className="col-md-12">
           <div className="card">
@@ -71,49 +71,51 @@ const CreateToken: React.FC = () => {
                   <h5 className="title">Token details</h5>
                   <div className="row">
                     <div className="col-lg-6">
-                      <FormGroup>
-                        <Label for="name">Token name</Label>
-                        <Input
+                      <Form.Group>
+                        <Form.Label for="name">Token name</Form.Label>
+                        <Form.Control
                           type="text"
                           name="name"
                           id="name"
                           value={token.name}
                           onChange={(e) => changeValue(e.target.value, 'name', 'text')}
                           placeholder="Token name"
-                          invalid={!!errors.name}
+                          isInvalid={!!errors.name}
                         />
-                        {errors.name ? <FormFeedback>{errors.name}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.name ? <Form.Control.Feedback>{errors.name}</Form.Control.Feedback> : null}
+                      </Form.Group>
                     </div>
                     <div className="col-lg-6">
-                      <FormGroup>
-                        <Label for="symbol">Token symbol</Label>
-                        <Input
+                      <Form.Group>
+                        <Form.Label for="symbol">Token symbol</Form.Label>
+                        <Form.Control
                           type="text"
                           name="symbol"
                           id="symbol"
                           value={token.symbol}
                           onChange={(e) => changeValue(e.target.value, 'symbol', 'text')}
                           placeholder="Token symbol"
-                          invalid={!!errors.symbol}
+                          isInvalid={!!errors.symbol}
                         />
-                        {errors.symbol ? <FormFeedback>{errors.symbol}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.symbol ? <Form.Control.Feedback>{errors.symbol}</Form.Control.Feedback> : null}
+                      </Form.Group>
                     </div>
                     <div className="col-lg-6">
-                      <FormGroup>
-                        <Label for="initialSupply">Initial supply</Label>
-                        <Input
+                      <Form.Group>
+                        <Form.Label for="initialSupply">Initial supply</Form.Label>
+                        <Form.Control
                           type="number"
                           name="initialSupply"
                           id="initialSupply"
                           value={formatBN(token.initialSupply, 18)}
                           onChange={(e) => changeValue(e.target.value, 'initialSupply', 'BigNumber')}
                           placeholder="Initial supply"
-                          invalid={!!errors.initialSupply}
+                          isInvalid={!!errors.initialSupply}
                         />
-                        {errors.initialSupply ? <FormFeedback>{errors.initialSupply}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.initialSupply ? (
+                          <Form.Control.Feedback>{errors.initialSupply}</Form.Control.Feedback>
+                        ) : null}
+                      </Form.Group>
                     </div>
                   </div>
 
@@ -123,85 +125,91 @@ const CreateToken: React.FC = () => {
 
                   <div className="row">
                     <div className="col-lg-6">
-                      <FormGroup check>
+                      <Form.Group>
                         <div className="mb-10 psi-switch custom-control custom-switch">
-                          <Input
+                          <Form.Check
                             type="checkbox"
                             name="burnable"
                             id="burnable"
                             className="custom-control-input"
                             checked={token.burnable}
                             onChange={(e) => changeValue(e.target.checked, 'burnable', 'boolean')}
-                            invalid={!!errors.burnable}
+                            isInvalid={!!errors.burnable}
+                            label="Burnable"
                           />
-                          <Label className="custom-control-label" htmlFor="burnable">
+                          {/* <Form.Label className="custom-control-label" htmlFor="burnable">
                             {' '}
                             Burnable{' '}
-                          </Label>
+                          </Form.Label> */}
                         </div>
-                        {errors.burnable ? <FormFeedback>{errors.burnable}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.burnable ? <Form.Control.Feedback>{errors.burnable}</Form.Control.Feedback> : null}
+                      </Form.Group>
                     </div>
                     <div className="col-lg-6">
-                      <FormGroup check>
+                      <Form.Group>
                         <div className="mb-10 psi-switch custom-control custom-switch">
-                          <Input
+                          <Form.Check
                             type="checkbox"
                             name="mintable"
                             id="mintable"
                             className="custom-control-input"
                             checked={token.mintable}
                             onChange={(e) => changeValue(e.target.checked, 'mintable', 'boolean')}
-                            invalid={!!errors.mintable}
+                            isInvalid={!!errors.mintable}
+                            label="Mintable"
                           />
-                          <Label className="custom-control-label" htmlFor="mintable">
+                          {/* <Form.Label className="custom-control-label" htmlFor="mintable">
                             {' '}
                             Mintable{' '}
-                          </Label>
+                          </Form.Label> */}
                         </div>
-                        {errors.mintable ? <FormFeedback>{errors.mintable}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.mintable ? <Form.Control.Feedback>{errors.mintable}</Form.Control.Feedback> : null}
+                      </Form.Group>
                     </div>
 
                     {token.mintable ? (
                       <>
                         <div className="col-lg-6">
-                          <FormGroup>
-                            <Label for="maximumSupply">Maximum supply</Label>
-                            <Input
+                          <Form.Group>
+                            <Form.Label for="maximumSupply">Maximum supply</Form.Label>
+                            <Form.Control
                               type="number"
                               name="maximumSupply"
                               id="maximumSupply"
                               value={formatBN(token.maximumSupply, 18)}
                               onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
                               placeholder="Maximum supply"
-                              invalid={!!errors.maximumSupply}
+                              isInvalid={!!errors.maximumSupply}
                             />
-                            {errors.maximumSupply ? <FormFeedback>{errors.maximumSupply}</FormFeedback> : null}
-                            <FormText>
+                            {errors.maximumSupply ? (
+                              <Form.Control.Feedback>{errors.maximumSupply}</Form.Control.Feedback>
+                            ) : null}
+                            <Form.Text>
                               When the token is mintable, a maximum supply could be set to ensure that it&apos;s
                               impossible to mint more tokens than configureds
-                            </FormText>
-                          </FormGroup>
+                            </Form.Text>
+                          </Form.Group>
                         </div>
                         <div className="col-lg-6">
-                          <FormGroup>
-                            <Label for="minterDelay">Add minter delay</Label>
-                            <Input
+                          <Form.Group>
+                            <Form.Label for="minterDelay">Add minter delay</Form.Label>
+                            <Form.Control
                               type="number"
                               name="minterDelay"
                               id="minterDelay"
                               value={token.minterDelay}
                               onChange={(e) => changeValue(e.target.value, 'minterDelay', 'number')}
                               placeholder="Minter delay"
-                              invalid={!!errors.minterDelay}
+                              isInvalid={!!errors.minterDelay}
                             />
-                            {errors.minterDelay ? <FormFeedback>{errors.minterDelay}</FormFeedback> : null}
-                            <FormText>
+                            {errors.minterDelay ? (
+                              <Form.Control.Feedback>{errors.minterDelay}</Form.Control.Feedback>
+                            ) : null}
+                            <Form.Text>
                               Delay in hours when a new minter is added. After the delay has ended, the owner also needs
                               to approve the new minter. This delay is not changeable.
-                            </FormText>
-                          </FormGroup>
+                            </Form.Text>
+                          </Form.Group>
                         </div>
                       </>
                     ) : null}
@@ -218,24 +226,27 @@ const CreateToken: React.FC = () => {
                 <div className="col-md-4 pr-md-1">
                   <h5 className="title">Network and Transaction: Binance Smart Chain (BSC)</h5>
 
-                  <FormGroup check>
+                  <Form.Group>
                     <div className="mb-10 psi-switch custom-control custom-switch">
-                      <Input
+                      <Form.Check
                         type="checkbox"
                         name="termsAccepted"
                         id="termsAccepted"
                         className="custom-control-input"
                         checked={termsAccepted}
                         onChange={changeTerms}
-                        invalid={!!errors.termsAccepted}
+                        isInvalid={!!errors.termsAccepted}
+                        label="I have read, understood and agreed to PSI Terms of Use. Use at your own risk."
                       />
-                      <Label className="custom-control-label" htmlFor="termsAccepted">
+                      {/* <Form.Label className="custom-control-label" htmlFor="termsAccepted">
                         {' '}
                         I have read, understood and agreed to PSI Terms of Use. Use at your own risk.{' '}
-                      </Label>
+                      </Form.Label> */}
                     </div>
-                    {errors.termsAccepted ? <FormFeedback>{errors.termsAccepted}</FormFeedback> : null}
-                  </FormGroup>
+                    {errors.termsAccepted ? (
+                      <Form.Control.Feedback>{errors.termsAccepted}</Form.Control.Feedback>
+                    ) : null}
+                  </Form.Group>
 
                   <p> Commission Fee: Free (Promotion active) </p>
                   <p> Gas Fee: Variable </p>

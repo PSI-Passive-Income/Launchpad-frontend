@@ -107,6 +107,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],\
             ["moment", "npm:2.29.2"],\
             ["moment-duration-format", "npm:2.3.2"],\
+            ["ms.macro", "npm:2.0.0"],\
             ["os-browserify", "npm:0.3.0"],\
             ["perfect-scrollbar", "npm:1.5.0"],\
             ["pnp-webpack-plugin", "npm:1.7.0"],\
@@ -4843,6 +4844,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],\
             ["moment", "npm:2.29.2"],\
             ["moment-duration-format", "npm:2.3.2"],\
+            ["ms.macro", "npm:2.0.0"],\
             ["os-browserify", "npm:0.3.0"],\
             ["perfect-scrollbar", "npm:1.5.0"],\
             ["pnp-webpack-plugin", "npm:1.7.0"],\
@@ -9136,6 +9138,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["babel-plugin-macros", [\
+        ["npm:2.8.0", {\
+          "packageLocation": "./.yarn/cache/babel-plugin-macros-npm-2.8.0-451367d7e7-59b09a21cf.zip/node_modules/babel-plugin-macros/",\
+          "packageDependencies": [\
+            ["babel-plugin-macros", "npm:2.8.0"],\
+            ["@babel/runtime", "npm:7.17.8"],\
+            ["cosmiconfig", "npm:6.0.0"],\
+            ["resolve", "patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=07638b"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/babel-plugin-macros-npm-3.1.0-320e781f4e-765de4abeb.zip/node_modules/babel-plugin-macros/",\
           "packageDependencies": [\
@@ -20096,6 +20108,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["npm:2.1.3", {\
           "packageLocation": "./.yarn/cache/ms-npm-2.1.3-81ff3cfac1-aa92de6080.zip/node_modules/ms/",\
           "packageDependencies": [\
+            ["ms", "npm:2.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ms.macro", [\
+        ["npm:2.0.0", {\
+          "packageLocation": "./.yarn/cache/ms.macro-npm-2.0.0-06ea0fa00f-fa0b444f2e.zip/node_modules/ms.macro/",\
+          "packageDependencies": [\
+            ["ms.macro", "npm:2.0.0"],\
+            ["babel-plugin-macros", "npm:2.8.0"],\
             ["ms", "npm:2.1.3"]\
           ],\
           "linkType": "HARD"\

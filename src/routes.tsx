@@ -1,4 +1,5 @@
-import { lazy } from 'react'
+import React, { lazy } from 'react'
+import { RouteObject } from 'react-router-dom'
 
 const ExploreCampaigns = lazy(() => import('./views/Campaigns'))
 const CampaignDetail = lazy(() => import('./views/Campaigns/CampaignDetail'))
@@ -9,99 +10,101 @@ const Locks = lazy(() => import('./views/Locks/Locks'))
 const LockDetail = lazy(() => import('./views/Locks/LockDetail'))
 const LockToken = lazy(() => import('./views/Locks/LockToken'))
 // const Dashboard = lazy(() => import('./views/Dashboard'))
-const userContribution = lazy(() => import('./views/userContribution/contributioncard'))
+const UserContribution = lazy(() => import('./views/userContribution/contributioncard'))
 const KYC = lazy(() => import('./views/KYC'))
 const PolicyPage = lazy(() => import('./components/Footer/privacy_Policy'))
 const DisclaimerPage = lazy(() => import('./components/Footer/DisclaimerPage'))
 
-export interface IRoute {
-  path: string
+const NotFound = lazy(() => import('./views/NotFound'))
+
+export interface IRoute extends RouteObject {
   name?: string
   icon?: string
-  component: (props: any) => JSX.Element
-  exact?: boolean
-  redirect?: boolean
 }
 
 export const routes: IRoute[] = [
   {
     path: '/',
-    exact: true,
-    component: ExploreCampaigns,
+    element: <ExploreCampaigns />,
   },
   {
     path: '/projects',
     name: 'EXPLORE PROJECTS',
     icon: 'tim-icons icon-chart-pie-36',
-    component: ExploreCampaigns,
+    element: <ExploreCampaigns />,
   },
   {
     path: '/project/:campaignId',
-    component: CampaignDetail,
+    element: <CampaignDetail />,
   },
   {
     path: '/launch-Project',
     name: 'LAUNCH YOUR PROJECT',
     icon: 'tim-icons icon-spaceship',
-    component: LaunchCampaign,
+    element: <LaunchCampaign />,
   },
 
   {
     path: '/manage-tokens',
     name: 'Manage tokens',
     icon: 'tim-icons icon-money-coins',
-    component: ManageTokens,
+    element: <ManageTokens />,
   },
   {
     path: '/create-token',
     name: 'Create Token',
     icon: 'tim-icons icon-coins',
-    component: CreateToken,
+    element: <CreateToken />,
   },
 
   {
     path: '/locks',
     name: 'Manage locks',
     icon: 'tim-icons icon-laptop',
-    component: Locks,
+    element: <Locks />,
   },
   {
     path: '/lock/:lockId',
-    component: LockDetail,
+    element: <LockDetail />,
   },
   {
     path: '/lock-token',
     name: 'Lock token',
     icon: 'tim-icons icon-lock-circle',
-    component: LockToken,
+    element: <LockToken />,
   },
 
   // {
   //   path: '/dashboard',
   //   name: 'Dashboard',
   //   icon: 'tim-icons icon-chart-bar-32',
-  //   component: Dashboard,
+  //   element: <Dashboard />,
   // },
   {
     path: '/contributionDetail',
     name: 'History',
     icon: 'tim-icons icon-calendar-60',
-    component: userContribution,
+    element: <UserContribution />,
   },
   {
     path: '/KYC',
     name: 'KYC',
     icon: 'tim-icons icon-chart-bar-32',
-    component: KYC,
+    element: <KYC />,
   },
   {
     path: '/Policy',
-    component: PolicyPage,
+    element: <PolicyPage />,
   },
   {
     path: '/Disclaimer',
     name: 'Disclaimer',
     icon: 'tim-icons icon-alert-circle-exc',
-    component: DisclaimerPage,
+    element: <DisclaimerPage />,
+  },
+
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]

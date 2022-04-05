@@ -24,7 +24,7 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string }>`
  * need ...rest for layered styles on top
  */
 // eslint-disable-next-line react/require-default-props
-export default function Loader({ size = '16px', stroke, ...rest }: { size?: string; stroke?: string }) {
+const Loader = ({ size = '16px', stroke, ...rest }: { size?: string; stroke?: string }) => {
   return (
     <StyledSVG viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" size={size} stroke={stroke} {...rest}>
       <path
@@ -36,3 +36,4 @@ export default function Loader({ size = '16px', stroke, ...rest }: { size?: stri
     </StyledSVG>
   )
 }
+export default Loader

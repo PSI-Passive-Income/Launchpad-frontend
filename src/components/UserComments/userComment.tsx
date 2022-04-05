@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react'
-import { Input, Button } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
 import { useUserComments, useUserEmailInfo } from '../../state/hooks'
 
 interface Props {
@@ -24,7 +24,7 @@ const UserComment: React.FC<Props> = ({ campaignId }) => {
 
   return (
     <div>
-      <Input
+      <Form.Control
         className="classNamem-control"
         type="textarea"
         name="text"

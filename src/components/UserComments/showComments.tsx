@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Input, Label } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { useUserComments, useUserEmailInfo } from '../../state/hooks'
 import dletImage from '../../assets/img/icons/delete.png'
 import Edit from '../../assets/img/icons/edit.png'
@@ -21,6 +21,7 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
   const [responseUpdateValue, setResponseUpdateValue] = useState('')
 
   const handleDelete = (id: number) => {
+    // eslint-disable-next-line no-alert
     if (window.confirm('Do You wanna delete')) {
       deleteComment(campaignId, id)
     }
@@ -38,7 +39,8 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
     setReplyId(0)
   }
   const handleResponseDelete = (id: number) => {
-    console.log(id)
+    // console.log(id)
+    // eslint-disable-next-line no-alert
     if (window.confirm('Do You wanna delete')) {
       deleteComment(campaignId, id)
     }
@@ -84,54 +86,44 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
                     <span>{comment.message}</span>
                     <div style={{ display: 'flex' }}>
                       {time.days > 0 ? (
-                        <Label>{time.days}d</Label>
+                        <Form.Label>{time.days}d</Form.Label>
+                      ) : time.hours > 0 ? (
+                        <Form.Label for=" ">{time.hours}h</Form.Label>
+                      ) : time.minutes > 0 ? (
+                        <Form.Label>{time.minutes}min</Form.Label>
                       ) : (
-                        <>
-                          {time.hours > 0 ? (
-                            <Label for=" ">{time.hours}h</Label>
-                          ) : (
-                            <>{time.minutes > 0 ? <Label>{time.minutes}min</Label> : <Label>just now</Label>}</>
-                          )}
-                        </>
+                        <Form.Label>just now</Form.Label>
                       )}
                       <p aria-hidden>&nbsp;</p>
-                      {isLogIn ? (
-                        <>
-                          {user.id !== comment.userId ? (
-                            <Label className=" img-button" role="presentation" onClick={() => setReplyId(comment.id)}>
-                              Reply
-                            </Label>
-                          ) : null}
-                        </>
+                      {isLogIn && user.id !== comment.userId ? (
+                        <Form.Label className=" img-button" role="presentation" onClick={() => setReplyId(comment.id)}>
+                          Reply
+                        </Form.Label>
                       ) : null}
                     </div>
                   </div>
-                  {isLogIn ? (
-                    <>
-                      {user.id === comment.userId ? (
-                        <div className="col-lg-1 col-sm-2">
-                          <img
-                            src={dletImage}
-                            className="img-button"
-                            alt="delete data"
-                            role="presentation"
-                            onClick={() => handleDelete(comment.id)}
-                          />
-                          <img
-                            src={Edit}
-                            className="img-button"
-                            alt="update data"
-                            role="presentation"
-                            onClick={() => setIndex(comment.id)}
-                          />
-                        </div>
-                      ) : null}
-                    </>
+                  {isLogIn && user.id === comment.userId ? (
+                    <div className="col-lg-1 col-sm-2">
+                      <img
+                        src={dletImage}
+                        className="img-button"
+                        alt="delete data"
+                        role="presentation"
+                        onClick={() => handleDelete(comment.id)}
+                      />
+                      <img
+                        src={Edit}
+                        className="img-button"
+                        alt="update data"
+                        role="presentation"
+                        onClick={() => setIndex(comment.id)}
+                      />
+                    </div>
                   ) : null}
                 </div>
                 {comment.id === replyId ? (
                   <div className="col-lg-10 col-md-10">
-                    <Input
+                    <Form.Control
                       className="classNamem-control"
                       type="textarea"
                       name="text"
@@ -139,9 +131,9 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
                       onChange={(e) => setReplyValue(e.target.value)}
                       value={replyValue}
                     />
-                    <Label className="img-button" role="presentation" onClick={handleReply}>
+                    <Form.Label className="img-button" role="presentation" onClick={handleReply}>
                       Send
-                    </Label>
+                    </Form.Label>
                     <p className="img-button" role="presentation" onClick={closeBox}>
                       x
                     </p>
@@ -149,7 +141,7 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
                 ) : null}
                 {comment.id === index ? (
                   <>
-                    <Input
+                    <Form.Control
                       className="classNamem-control"
                       type="textarea"
                       name="text"
@@ -181,44 +173,38 @@ const ShowComments: React.FC<Props> = ({ campaignId }) => {
                         <span>{response.message}</span>
                         <div>
                           {time1.days > 0 ? (
-                            <Label>{time1.days}d</Label>
+                            <Form.Label>{time1.days}d</Form.Label>
+                          ) : time1.hours > 0 ? (
+                            <Form.Label>{time1.hours}h</Form.Label>
+                          ) : time1.minutes > 0 ? (
+                            <Form.Label>{time1.minutes}min</Form.Label>
                           ) : (
-                            <>
-                              {time1.hours > 0 ? (
-                                <Label>{time1.hours}h</Label>
-                              ) : (
-                                <>{time1.minutes > 0 ? <Label>{time1.minutes}min</Label> : <Label>just now</Label>}</>
-                              )}
-                            </>
+                            <Form.Label>just now</Form.Label>
                           )}
                         </div>
                       </div>
                       <hr />
-                      {isLogIn ? (
-                        <>
-                          {user.id === response.userId ? (
-                            <div className="col-lg-2 col-sm-2">
-                              <img
-                                src={dletImage}
-                                className="img-button"
-                                alt="delete data"
-                                role="presentation"
-                                onClick={() => handleResponseDelete(response.id)}
-                              />
-                              <img
-                                src={Edit}
-                                className="img-button"
-                                role="presentation"
-                                alt="update data"
-                                onClick={() => setReponseUpdateId(response.id)}
-                              />
-                            </div>
-                          ) : null}
-                        </>
+                      {isLogIn && user.id === response.userId ? (
+                        <div className="col-lg-2 col-sm-2">
+                          <img
+                            src={dletImage}
+                            className="img-button"
+                            alt="delete data"
+                            role="presentation"
+                            onClick={() => handleResponseDelete(response.id)}
+                          />
+                          <img
+                            src={Edit}
+                            className="img-button"
+                            role="presentation"
+                            alt="update data"
+                            onClick={() => setReponseUpdateId(response.id)}
+                          />
+                        </div>
                       ) : null}
                       {response.id === responseUpdateId ? (
                         <>
-                          <Input
+                          <Form.Control
                             className="classNamem-control"
                             type="textarea"
                             name="text"

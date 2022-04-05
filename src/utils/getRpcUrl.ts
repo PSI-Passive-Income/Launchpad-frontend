@@ -1,11 +1,17 @@
 import random from 'lodash/random'
-
-// Array of available nodes to connect to
-export const nodes = [process.env.REACT_APP_NODE_1, process.env.REACT_APP_NODE_2, process.env.REACT_APP_NODE_3]
+import { CHAIN_INFO } from 'config/constants/chains'
 
 const getNodeUrl = () => {
-  const randomIndex = random(0, nodes.length - 1)
-  return nodes[randomIndex]
+  const nodeOverride = process.env.REACT_APP_NODE_OVERRIDE
+  if (nodeOverride) return nodeOverride
+
+  const chainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10)
+  const chain = CHAIN_INFO[chainId]
+  if (chain) {
+    const randomIndex = random(0, chain.rpc.length - 1)
+    return chain.rpc[randomIndex]
+  }
+  throw new Error('Chain not found')
 }
 
 export default getNodeUrl

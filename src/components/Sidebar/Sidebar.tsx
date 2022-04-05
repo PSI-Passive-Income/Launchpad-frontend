@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { IRoute } from 'routes'
 import PerfectScrollbar from 'perfect-scrollbar'
 import { Nav } from 'react-bootstrap'
@@ -8,20 +8,10 @@ let perfectScrollBar = null
 
 interface Props {
   routes: IRoute[]
-  logo: {
-    innerLink?: string
-    // outterLink is for links that will direct the user outside the app
-    // it will be rendered as simple <a href="...">...</a> tag
-    outterLink?: string
-    // the text of the logo
-    text?: React.ReactNode
-    // the image src of the logo
-    imgSrc?: string
-  }
   toggleSidebar: () => void
 }
 
-const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
+const Sidebar: React.FC<Props> = ({ routes, toggleSidebar }) => {
   const location = useLocation()
   const sidebarRef = React.useRef(null)
 
@@ -45,59 +35,19 @@ const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
     }
   })
 
-  let logoImg = null
-  let logoText = null
-  if (logo !== undefined) {
-    if (logo.outterLink !== undefined) {
-      logoImg = (
-        <a
-          href={logo.outterLink}
-          className="simple-text logo-mini"
-          target="_blank"
-          onClick={toggleSidebar}
-          rel="noreferrer"
-        >
-          <div className="logo-img">
-            <img src={logo.imgSrc} alt="react-logo" />
-          </div>
-        </a>
-      )
-      logoText = (
-        <a
-          href={logo.outterLink}
-          className="simple-text logo-normal"
-          target="_blank"
-          onClick={toggleSidebar}
-          rel="noreferrer"
-        >
-          {logo.text}
-        </a>
-      )
-    } else {
-      logoImg = (
-        <Link to={logo.innerLink} className="simple-text logo-mini" onClick={toggleSidebar}>
-          <div className="logo-img">
-            <img src={logo.imgSrc} alt="react-logo" />
-          </div>
-        </Link>
-      )
-      logoText = (
-        <Link to={logo.innerLink} className="simple-text logo-normal" onClick={toggleSidebar}>
-          {logo.text}
-        </Link>
-      )
-    }
-  }
-
   return (
     <div className="sidebar" data-type="psi">
       <div className="sidebar-wrapper" ref={sidebarRef}>
         <Nav>
           {routes.map((prop) => {
-            if (prop.redirect || !prop.name) return null
+            if (!prop.name) return null
             return (
               <li className={activeRoute(prop.path)} key={prop.path}>
-                <NavLink to={prop.path} className="nav-link" activeClassName="active" onClick={toggleSidebar}>
+                <NavLink
+                  to={prop.path}
+                  onClick={toggleSidebar}
+                  className={({ isActive }) => `nav-link ${isActive ? ' active' : ''}`}
+                >
                   <i className={prop.icon} />
                   <p>{prop.name}</p>
                 </NavLink>

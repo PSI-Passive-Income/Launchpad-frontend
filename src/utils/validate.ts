@@ -4,7 +4,7 @@ import { isMoment } from 'moment'
 import Web3 from 'web3'
 import { toBool } from './converters'
 
-export const validateSingle = <T>(value: any, type: string, mandatory = true, extra?: any) => {
+export const validateSingle = <T>(value: any, type: string, mandatory = true, extra: any = undefined) => {
   const { newValue, newErrors } = validate<{ value?: T }>({}, {}, value, 'value', type, mandatory, extra)
   return { value: newValue?.value, error: newErrors?.value }
 }
@@ -16,7 +16,7 @@ const validate = <T>(
   name: string,
   type: string,
   mandatory = true,
-  extra?: any,
+  extra: any = undefined,
 ) => {
   const newErrors = { ...errors }
   delete newErrors[name]

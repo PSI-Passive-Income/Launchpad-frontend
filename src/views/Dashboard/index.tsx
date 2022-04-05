@@ -1,26 +1,7 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames'
-import { Line, Bar, Bubble } from 'react-chartjs-2'
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  Label,
-  FormGroup,
-  Input,
-  Table,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from 'react-bootstrap'
-import ApexCharts from 'apexcharts'
+import { Line, Bar } from 'react-chartjs-2'
+import { Button, ButtonGroup, Card, Row, Col } from 'react-bootstrap'
 import axios from 'axios'
 import config from 'config'
 import * as chartConfigs from '../../components/Charts/config'
@@ -35,25 +16,19 @@ const Dashboard: React.FC = () => {
     const now = +new Date() / 1000
     const from = new Date().setDate(new Date().getDate() - 89) / 1000
 
-    console.log(now)
-    console.log(from)
     axios
       .get(
         `https://api.coingecko.com/api/v3/coins/passive-income/market_chart/range?vs_currency=usd&from=${from}&to=${now}`,
       )
       .then((res) => {
-        console.log('response', res)
-        const labels = res.data.prices.map(function (data) {
+        const labels = res.data.prices.map((data) => {
           const date = new Date(data[0])
           return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         })
 
-        const prices = res.data.prices.map(function (data) {
+        const prices = res.data.prices.map((data) => {
           return data[1]
         })
-
-        console.log(labels)
-        console.log(prices)
 
         chartData({
           bigLineChart: {
@@ -98,7 +73,7 @@ const Dashboard: React.FC = () => {
         })
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
       })
   }
   useEffect(() => {
@@ -110,16 +85,15 @@ const Dashboard: React.FC = () => {
       <Row>
         <Col xs="12">
           <Card className="card-chart">
-            <CardHeader>
+            <Card.Header>
               <Row>
                 <Col className="text-left" sm="6">
                   <h5 className="card-category">Market Prices</h5>
-                  <CardTitle tag="h2">PSI</CardTitle>
+                  <Card.Title>PSI</Card.Title>
                 </Col>
                 <Col sm="6">
                   <ButtonGroup className="btn-group-toggle float-right" data-toggle="buttons">
                     <Button
-                      tag="label"
                       className={classNames('btn-simple', {
                         active: bigChartData,
                       })}
@@ -137,7 +111,6 @@ const Dashboard: React.FC = () => {
                       color="info"
                       id="1"
                       size="sm"
-                      tag="label"
                       className={classNames('btn-simple', {})}
                       onClick={() => setBgChartData}
                     >
@@ -150,7 +123,6 @@ const Dashboard: React.FC = () => {
                       color="info"
                       id="2"
                       size="sm"
-                      tag="label"
                       className={classNames('btn-simple', {})}
                       onClick={() => setBgChartData}
                     >
@@ -162,40 +134,40 @@ const Dashboard: React.FC = () => {
                   </ButtonGroup>
                 </Col>
               </Row>
-            </CardHeader>
-            <CardBody>
+            </Card.Header>
+            <Card.Body>
               <div className="chart-area">
                 <Line data={bigChartData} options={chartExample1.options} />
               </div>
-            </CardBody>
+            </Card.Body>
           </Card>
         </Col>
       </Row>
       <Row>
         <Col lg="4">
           <Card className="card-chart">
-            <CardHeader>
+            <Card.Header>
               <h5 className="card-category">Total Funded</h5>
-              <CardTitle tag="h3">
+              <Card.Title>
                 <i className="tim-icons icon-bell-55 text-info" /> 763.28 ETH
-              </CardTitle>
-            </CardHeader>
-            <CardBody>
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
               <div className="chart-area">
                 <Line data={chartExample2.data} options={chartExample2.options} />
               </div>
-            </CardBody>
+            </Card.Body>
           </Card>
         </Col>
         <Col lg="4">
           <Card className="card-chart">
-            <CardHeader>
+            <Card.Header>
               <h5 className="card-category">Launch Your Project</h5>
-              <CardTitle tag="h3">
+              <Card.Title>
                 <i className="tim-icons icon-delivery-fast text-primary" /> How it Works
-              </CardTitle>
-            </CardHeader>
-            <CardBody>
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
               <div>
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type
@@ -204,22 +176,22 @@ const Dashboard: React.FC = () => {
               <button type="button" className="btn center btn-primary" slot="footer">
                 Launch
               </button>
-            </CardBody>
+            </Card.Body>
           </Card>
         </Col>
         <Col lg="4">
           <Card className="card-chart">
-            <CardHeader>
+            <Card.Header>
               <h5 className="card-category">Completed Projects</h5>
-              <CardTitle tag="h3">
+              <Card.Title>
                 <i className="tim-icons icon-send text-success" /> 32
-              </CardTitle>
-            </CardHeader>
-            <CardBody>
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
               <div className="chart-area">
                 <Bar data={chartExample3.data} options={chartExample3.options} />
               </div>
-            </CardBody>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

@@ -2,8 +2,6 @@ import React from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useEmailLoginLogout, useUserEmail, useUserEmailInfo } from 'state/hooks'
 import UserReaction from './userReaction'
-import UserSignUp from './userSignUp'
-import UserLogin from './userLogin'
 import UserComment from './userComment'
 import ShowComments from './showComments'
 
@@ -17,7 +15,7 @@ const UserComments: React.FC<Props> = ({ topicId }) => {
   useEmailLoginLogout()
 
   const { logOut } = useUserEmail()
-  const { isLogIn, isSignUp } = useUserEmailInfo()
+  const { isLogIn } = useUserEmailInfo()
 
   const handleLogOut = () => {
     logOut()
@@ -32,12 +30,7 @@ const UserComments: React.FC<Props> = ({ topicId }) => {
               log Out
             </Button>
           </div>
-        ) : (
-          <>
-            <UserLogin />
-            <UserSignUp />
-          </>
-        )}
+        ) : null}
         <UserComment campaignId={topicId} />
         <ShowComments campaignId={topicId} />
       </Container>

@@ -1,5 +1,5 @@
 import { toastError } from 'state/toasts'
-import { fetchCampaignsData, fetchCampaignData, getKYCuserVerifcation } from 'utils/apiHelper'
+import { fetchCampaignsData, fetchCampaignData } from 'utils/apiHelper'
 import { AppDispatch, RootState } from '../store'
 import { Campaign } from '../types'
 import {

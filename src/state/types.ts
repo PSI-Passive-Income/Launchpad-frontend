@@ -7,6 +7,12 @@ export interface User {
   id: string
   publicAddress: string
   username?: string
+  mailAddress?: string
+  avatar?: string
+  kycKey?: string
+  kyced?: boolean
+  kycStatus?: 'created' | 'processing' | 'pending' | 'approved' | 'declined'
+  lastRefreshed?: string
 }
 
 export enum CampaignStatus {
@@ -92,12 +98,8 @@ export interface ToastsState {
 export interface UserState {
   isLoggedIn: boolean
   data: User
-  username: string
   accessToken: string
-  isLoggingIn: boolean
-  loginError: string
-  isUpdating: boolean
-  updateError: string
+  isLoading: boolean
 }
 
 export interface CampaignsState {

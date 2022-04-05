@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import { Collapse, NavbarBrand, Navbar as BootstrapNavbar, Nav, Container, NavbarToggler } from 'react-bootstrap'
+import { Container, Navbar as BootstrapNavbar, Nav } from 'react-bootstrap'
 import Authenticate from 'components/Authenticate'
 
 interface Props {
-  brandText: string
   sidebarOpened: boolean
   toggleSidebar: () => void
 }
 
-const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) => {
-  const [collapseOpen, setcollapseOpen] = useState(false)
+const Navbar: React.FC<Props> = ({ sidebarOpened, toggleSidebar }) => {
   const [color, setcolor] = useState('navbar-transparent')
 
   useEffect(() => {
@@ -30,44 +28,26 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
     }
   }
 
-  // this function opens and closes the collapse on small devices
-  const toggleCollapse = () => {
-    if (collapseOpen) {
-      setcolor('navbar-transparent')
-    } else {
-      setcolor('bg-white')
-    }
-    setcollapseOpen(!collapseOpen)
-  }
-
   return (
     <BootstrapNavbar className={classNames('navbar-absolute', color)} expand="lg">
       <Container fluid>
         <div className="navbar-wrapper">
-          <div
-            className={classNames('navbar-toggle d-inline', {
-              toggled: sidebarOpened,
-            })}
-          >
-            <NavbarToggler onClick={toggleSidebar}>
-              <span className="navbar-toggler-bar bar1" />
-              <span className="navbar-toggler-bar bar2" />
-              <span className="navbar-toggler-bar bar3" />
-            </NavbarToggler>
-          </div>
-          <NavbarBrand href="/projects">
+          <BootstrapNavbar.Brand href="/projects" style={{ padding: 0 }}>
             <div className="logo-box-area">
               <img className="header-logo-main" src="/img/onlypsi.png" alt="" />
               <p>PSI PAD</p>
             </div>
-          </NavbarBrand>
+          </BootstrapNavbar.Brand>
+
+          <BootstrapNavbar.Toggle
+            className={classNames('navbar-toggle d-inline', {
+              toggled: sidebarOpened,
+            })}
+            onClick={toggleSidebar}
+          />
         </div>
-        {/* <NavbarToggler onClick={toggleCollapse}>
-            <span className="navbar-toggler-bar navbar-kebab" />
-            <span className="navbar-toggler-bar navbar-kebab" />
-            <span className="navbar-toggler-bar navbar-kebab" />
-          </NavbarToggler> */}
-        <Collapse navbar className="mobile-collapse-show">
+
+        <BootstrapNavbar.Collapse className="mobile-collapse-show">
           <Nav className="ml-auto" navbar>
             <Authenticate />
             {/* <FormGroup>
@@ -77,7 +57,7 @@ const Navbar: React.FC<Props> = ({ brandText, sidebarOpened, toggleSidebar }) =>
                 </Input>
               </FormGroup> */}
           </Nav>
-        </Collapse>
+        </BootstrapNavbar.Collapse>
       </Container>
     </BootstrapNavbar>
   )

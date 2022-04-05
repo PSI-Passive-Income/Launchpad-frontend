@@ -40,6 +40,7 @@ const radii = {
 const zIndices = {
   dropdown: 10,
   modal: 100,
+  loader: 100,
 }
 
 export default {

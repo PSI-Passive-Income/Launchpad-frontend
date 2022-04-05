@@ -1,26 +1,21 @@
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { useCheckLoginLogout } from 'state/hooks'
+import { useEagerConnect } from 'hooks/web3'
 // import ResetCSS from './style/ResetCSS'
 import GlobalStyle from './style/Global'
 import ToastListener from './components/Toast/ToastListener'
 import Web3ReactManager from './components/Web3ReactManager'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import PageLoader from './components/PageLoader'
-import history from './routerHistory'
 import Layout from './views/Layout'
 
 const App: React.FC = () => {
-  // Monkey patch warn() because of web3 flood
-  // To be removed when web3 1.3.5 is released
-  // useEffect(() => {
-  //   console.warn = () => null
-  // }, [])
-
+  useEagerConnect()
   useCheckLoginLogout()
 
   return (
-    <Router history={history}>
+    <Router>
       {/* <ResetCSS /> */}
       <GlobalStyle />
       <SuspenseWithChunkError fallback={<PageLoader />}>

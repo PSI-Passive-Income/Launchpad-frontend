@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { Input, FormFeedback } from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import { isEmpty, isNil, isNumber } from 'lodash'
 import { Campaign, Token } from 'state/types'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -18,8 +18,8 @@ interface Props {
 
 const Contribute: React.FC<Props> = ({ campaign, token }) => {
   const { account } = useActiveWeb3React()
-  const { login, logout } = useAuth()
-  const { onPresentConnectModal } = useWalletModal(login, logout, account)
+  const { connect, disconnect } = useAuth()
+  const { onPresentConnectModal } = useWalletModal(connect, disconnect, account)
 
   const [contribution, setContribution] = useState<BigNumber>(null)
   const [contributionError, setContributionError] = useState<string>(null)
@@ -60,33 +60,37 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
 
   return (
     <>
-      <div className="form-group">
-        <Input
-          type="number"
-          aria-describedby="addon-right addon-left"
-          placeholder={`1 BNB = ${tokenAmount(1)} tokens`}
-          className="classNamem-control"
-          onChange={changeValue}
-          invalid={!isNil(contributionError)}
-          disabled={isNil(campaign)}
-        />
-        {!isNil(contributionError) ? <FormFeedback>{contributionError}</FormFeedback> : null}
-        <p className="text-center">you will get {contributionTokens} tokens</p>
-      </div>
-      {!isEmpty(account) ? (
-        <button
-          onClick={contributeClick}
-          type="button"
-          className="btn btn-primary"
-          disabled={contribution?.lte(0) || isNil(campaign) || !isNil(contributionError)}
-        >
-          Contribute
-        </button>
-      ) : (
-        <button onClick={onPresentConnectModal} type="button" className="btn btn-primary">
-          Connect
-        </button>
-      )}
+      <Row>
+        <Form.Group as={Col} controlId="bathrooms">
+          <Form.Control
+            type="number"
+            aria-describedby="addon-right addon-left"
+            placeholder={`1 BNB = ${tokenAmount(1)} tokens`}
+            className="classNamem-control"
+            onChange={changeValue}
+            isInvalid={!isNil(contributionError)}
+            disabled={isNil(campaign)}
+          />
+          {!isNil(contributionError) ? <Form.Control.Feedback>{contributionError}</Form.Control.Feedback> : null}
+          <p className="text-center">you will get {contributionTokens} tokens</p>
+        </Form.Group>
+      </Row>
+      <Row>
+        {!isEmpty(account) ? (
+          <button
+            onClick={contributeClick}
+            type="button"
+            className="btn btn-primary"
+            disabled={contribution?.lte(0) || isNil(campaign) || !isNil(contributionError)}
+          >
+            Contribute
+          </button>
+        ) : (
+          <button onClick={onPresentConnectModal} type="button" className="btn btn-primary">
+            Connect
+          </button>
+        )}
+      </Row>
     </>
   )
 }

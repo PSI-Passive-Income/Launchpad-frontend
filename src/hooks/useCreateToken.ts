@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { toastError } from 'state/actions'
 import { TokenCreationInfo } from 'state/types'
 import { createToken, handleTransaction } from 'utils/callHelpers'
@@ -11,18 +11,18 @@ const useCreateToken = () => {
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
   const tokenFactory = useTokenFactory()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [creating, setCreating] = useState(false)
 
   const handleCreateToken = useCallback(
     async (token: Partial<TokenCreationInfo>) => {
-      if (account && tokenFactory && history && token) {
+      if (account && tokenFactory && navigate && token) {
         try {
           setCreating(true)
           const transaction = await createToken(tokenFactory, account, token)
           const success = handleTransaction(transaction)
           if (success) {
-            history.push(`/manage-tokens`)
+            navigate(`/manage-tokens`)
           } else {
             dispatch(toastError('Error adding token', 'Transaction failed'))
           }
@@ -33,7 +33,7 @@ const useCreateToken = () => {
         }
       }
     },
-    [dispatch, account, tokenFactory, history],
+    [dispatch, account, tokenFactory, navigate],
   )
 
   return { createToken: handleCreateToken, creatingToken: creating }

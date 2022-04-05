@@ -32,6 +32,7 @@ class SuspenseWithChunkError extends React.Component<SuspenseProps, State> {
       return
     }
 
+    console.error('ERRRORRR', error)
     throw error
   }
 

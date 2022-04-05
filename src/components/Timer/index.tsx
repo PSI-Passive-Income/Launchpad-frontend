@@ -7,7 +7,6 @@ interface Props {
 
 const Timer: React.FC<Props> = ({ date }) => {
   const calculateTimeLeft = () => {
-    const year = new Date().getFullYear()
     const difference = +new Date(date) - +new Date()
 
     let timeLeft = {}
@@ -25,7 +24,6 @@ const Timer: React.FC<Props> = ({ date }) => {
   }
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
-  const [year] = useState(new Date().getFullYear())
 
   useEffect(() => {
     setTimeout(() => {

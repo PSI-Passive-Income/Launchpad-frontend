@@ -4,13 +4,8 @@ import { User, UserState } from '../types'
 const initialState: UserState = {
   isLoggedIn: false,
   data: null,
-  username: null,
   accessToken: null,
-
-  isLoggingIn: false,
-  loginError: null,
-  isUpdating: false,
-  updateError: null,
+  isLoading: false,
 }
 
 export const userSlice = createSlice({
@@ -18,48 +13,38 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     userLoginStart: (state) => {
-      return { ...state, isLoggingIn: true }
+      return { ...state, isLoading: true }
     },
-    userLoginSucceeded: (state, action: PayloadAction<{ username: string; accessToken: string }>) => {
-      const { username, accessToken } = action.payload
+    userLoginSucceeded: (state, action: PayloadAction<{ user: User; accessToken: string }>) => {
+      const { user, accessToken } = action.payload
 
       return {
         ...state,
         isLoggedIn: true,
-        isLoggingIn: false,
-        data: state.data,
-        username,
+        isLoading: false,
+        data: user,
         accessToken,
       }
     },
-    userLoginFailed: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        isLoggingIn: false,
-        isLoggedIn: false,
-        loginError: action.payload,
-      }
+    userLoginFailed: (state) => {
+      return { ...state, isLoading: false, isLoggedIn: false }
     },
-    userLogout: () => {
+    userUnload: () => {
       return initialState
     },
-    userUpdateStart: (state) => {
-      return { ...state, isUpdating: true }
+    userLoadStart: (state) => {
+      return { ...state, isLoading: true }
     },
-    userUpdateSucceeded: (state, action: PayloadAction<User>) => {
+    userLoadSucceeded: (state, action: PayloadAction<User>) => {
       return {
         ...state,
-        isUpdating: false,
+        isLoading: false,
         data: action.payload,
         username: action.payload?.username,
       }
     },
-    userUpdateFailed: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        isUpdating: false,
-        loginError: action.payload,
-      }
+    userLoadFailed: (state) => {
+      return { ...state, isLoading: false }
     },
   },
 })
@@ -69,10 +54,10 @@ export const {
   userLoginStart,
   userLoginSucceeded,
   userLoginFailed,
-  userLogout,
-  userUpdateStart,
-  userUpdateSucceeded,
-  userUpdateFailed,
+  userUnload,
+  userLoadStart,
+  userLoadSucceeded,
+  userLoadFailed,
 } = userSlice.actions
 
 export default userSlice.reducer

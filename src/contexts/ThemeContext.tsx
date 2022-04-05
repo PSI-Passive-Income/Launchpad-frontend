@@ -1,23 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 import { light, dark } from 'style/theme'
 
 const CACHE_KEY = 'IS_DARK'
 
-// export const themes = {
-//   dark: "",
-//   light: "white-content",
-// };
+const ThemeContext = React.createContext({ isDark: null, toggleTheme: () => null })
 
-// export const ThemeContext = React.createContext({ theme: themes.dark, isDark: true, toggleTheme: () => null })
-export const ThemeContext = React.createContext({ isDark: true, toggleTheme: () => null })
-
-export const ThemeContextProvider = ({ children }) => {
-  const [isDark, setIsDark] = useState(() => {
-    // const isDarkUserSetting = localStorage.getItem(CACHE_KEY)
-    // return isDarkUserSetting ? JSON.parse(isDarkUserSetting) : false
-    return true
-  })
+const ThemeContextProvider = ({ children }) => {
+  const [isDark, setIsDark] = useState(
+    () =>
+      // const isDarkUserSetting = localStorage.getItem(CACHE_KEY)
+      // return isDarkUserSetting ? JSON.parse(isDarkUserSetting) : false
+      false,
+  )
 
   const toggleTheme = () => {
     setIsDark((prevState) => {
@@ -26,9 +21,12 @@ export const ThemeContextProvider = ({ children }) => {
     })
   }
 
+  const props = useMemo(() => ({ isDark, toggleTheme }), [isDark])
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    <ThemeContext.Provider value={props}>
       <SCThemeProvider theme={isDark ? dark : light}>{children}</SCThemeProvider>
     </ThemeContext.Provider>
   )
 }
+
+export { ThemeContext, ThemeContextProvider }

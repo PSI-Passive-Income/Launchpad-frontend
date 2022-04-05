@@ -1,5 +1,4 @@
 import { LAUNCHPAD_API_URL } from 'config/constants/misc'
-import { method, StringIterator } from 'lodash'
 import { Campaign, commentData, KYCuser, loginDataInfo, signUpDataInfo } from 'state/types'
 import { camelCaseKeys } from './converters'
 
@@ -59,7 +58,7 @@ export const updateCampaignKyc = async (accessToken: string, kyc: boolean, accou
     })
     if (!response.ok) throw new Error(await response.text())
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 

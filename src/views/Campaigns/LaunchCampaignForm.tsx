@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText, FormGroup } from 'react-bootstrap'
+import { Card, Form, Container } from 'react-bootstrap'
 import Datetime from 'react-datetime'
 import { Moment } from 'moment'
 import { useCampaignFactoryApproval, useCreateCampaign, useTokensNeeded } from 'hooks/useCreateCampaign'
@@ -7,7 +7,7 @@ import { Campaign } from 'state/types'
 import { isEmpty, isNil } from 'lodash'
 import validate from 'utils/validate'
 import { formatBN } from 'utils/formatters'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 
 const LaunchCampaignForm: React.FC = () => {
   const [campaign, setCampaign] = useState<Partial<Campaign>>({})
@@ -27,7 +27,13 @@ const LaunchCampaignForm: React.FC = () => {
   )
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
-  const changeValue = (value: string | Moment | boolean, name: string, type: string, mandatory = true, extra?: any) => {
+  const changeValue = (
+    value: string | Moment | boolean,
+    name: string,
+    type: string,
+    mandatory = true,
+    extra: any = undefined,
+  ) => {
     const { newValue, newErrors } = validate(campaign, validationErrors, value, name, type, mandatory, extra)
     setValidationErrors(newErrors)
     setCampaign(newValue)
@@ -96,14 +102,13 @@ const LaunchCampaignForm: React.FC = () => {
   }
 
   const loading = isLoadingToken || approving || creatingCampaign
+  useGlobalLoader(loading)
 
   return (
     <div className="content">
-      <Loader loading={loading} />
-
       <Card>
         <Container>
-          <CardBody>
+          <Card.Body>
             <Form>
               <h5 slot="header" className="title">
                 Launch Project
@@ -111,18 +116,18 @@ const LaunchCampaignForm: React.FC = () => {
 
               <div className="row">
                 <div className="col-md-12 pr-md-1">
-                  <Label>Token Address</Label>
-                  <Input
+                  <Form.Label>Token Address</Form.Label>
+                  <Form.Control
                     value={campaign.tokenAddress || ''}
                     onChange={(e) => changeValue(e.target.value, 'tokenAddress', 'address')}
                     placeholder="Enter token address"
-                    invalid={!!errors.tokenAddress}
+                    isInvalid={!!errors.tokenAddress}
                   />
-                  {errors.tokenAddress ? <FormFeedback>{errors.tokenAddress}</FormFeedback> : null}
+                  {errors.tokenAddress ? <Form.Control.Feedback>{errors.tokenAddress}</Form.Control.Feedback> : null}
                   {!isEmpty(token) ? (
-                    <FormText>
+                    <Form.Text>
                       {token.name} - {formatBN(token.totalSupply, token.decimals)} {token.symbol}
-                    </FormText>
+                    </Form.Text>
                   ) : null}
                 </div>
               </div>
@@ -131,59 +136,61 @@ const LaunchCampaignForm: React.FC = () => {
                 <>
                   <div className="row">
                     <div className="col-md-6 pr-md-1">
-                      <Label>Hard cap</Label>
-                      <Input
+                      <Form.Label>Hard cap</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.hardCap, 18)}
                         onChange={(e) => changeValue(e.target.value, 'hardCap', 'BigNumber')}
                         placeholder="Hard cap"
-                        invalid={!!errors.hardCap}
+                        isInvalid={!!errors.hardCap}
                       />
-                      {errors.hardCap ? <FormFeedback>{errors.hardCap}</FormFeedback> : null}
+                      {errors.hardCap ? <Form.Control.Feedback>{errors.hardCap}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Soft cap</Label>
-                      <Input
+                      <Form.Label>Soft cap</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.softCap, 18)}
                         onChange={(e) => changeValue(e.target.value, 'softCap', 'BigNumber')}
                         placeholder="Soft cap"
-                        invalid={!!errors.softCap}
+                        isInvalid={!!errors.softCap}
                       />
-                      {errors.softCap ? <FormFeedback>{errors.softCap}</FormFeedback> : null}
+                      {errors.softCap ? <Form.Control.Feedback>{errors.softCap}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Minimum BNB per wallet</Label>
-                      <Input
+                      <Form.Label>Minimum BNB per wallet</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.minAllowed, 18)}
                         onChange={(e) => changeValue(e.target.value, 'minAllowed', 'BigNumber')}
                         placeholder="Min BNB per wallet"
-                        invalid={!!errors.minAllowed}
+                        isInvalid={!!errors.minAllowed}
                       />
-                      {errors.minAllowed ? <FormFeedback>{errors.minAllowed}</FormFeedback> : null}
+                      {errors.minAllowed ? <Form.Control.Feedback>{errors.minAllowed}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Maximum BNB per wallet</Label>
-                      <Input
+                      <Form.Label>Maximum BNB per wallet</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.maxAllowed, 18)}
                         onChange={(e) => changeValue(e.target.value, 'maxAllowed', 'BigNumber')}
                         placeholder="Max BNB per wallet"
-                        invalid={!!errors.maxAllowed}
+                        isInvalid={!!errors.maxAllowed}
                       />
-                      {errors.maxAllowed ? <FormFeedback>{errors.maxAllowed}</FormFeedback> : null}
+                      {errors.maxAllowed ? <Form.Control.Feedback>{errors.maxAllowed}</Form.Control.Feedback> : null}
                     </div>
                   </div>
 
                   <div className="row">
                     <div className="col-md-8 pr-md-1">
-                      <Label>Percentage allocated to PSI Dex</Label>
-                      <Input
+                      <Form.Label>Percentage allocated to PSI Dex</Form.Label>
+                      <Form.Control
                         type="range"
                         defaultValue={campaign.liquidityRate ?? 0 / 100}
                         onChange={(e) => {
                           changeValue(e.target.value, 'liquidityRate', 'number')
                         }}
-                        invalid={!!errors.liquidityRate}
+                        isInvalid={!!errors.liquidityRate}
                       />
-                      {errors.liquidityRate ? <FormFeedback>{errors.liquidityRate}</FormFeedback> : null}
+                      {errors.liquidityRate ? (
+                        <Form.Control.Feedback>{errors.liquidityRate}</Form.Control.Feedback>
+                      ) : null}
                     </div>
                     <div className="col-md-4 pr-md-1 text-white">
                       <span>{campaign.liquidityRate} %</span>
@@ -192,94 +199,99 @@ const LaunchCampaignForm: React.FC = () => {
                   <br />
                   <div className="row">
                     <div className="col-md-6 pr-md-1">
-                      <Label>Tokens per BNB</Label>
-                      <Input
+                      <Form.Label>Tokens per BNB</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.rate, token.decimals)}
                         onChange={(e) => changeValue(e.target.value, 'rate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
-                        invalid={!!errors.rate}
+                        isInvalid={!!errors.rate}
                       />
-                      {errors.rate ? <FormFeedback>{errors.rate}</FormFeedback> : null}
+                      {errors.rate ? <Form.Control.Feedback>{errors.rate}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Tokens per BNB in liquidity pool</Label>
-                      <Input
+                      <Form.Label>Tokens per BNB in liquidity pool</Form.Label>
+                      <Form.Control
                         defaultValue={formatBN(campaign.poolRate, token.decimals)}
                         onChange={(e) => changeValue(e.target.value, 'poolRate', 'BigNumber', true, token.decimals)}
                         placeholder="Token per ETH"
-                        invalid={!!errors.poolRate}
+                        isInvalid={!!errors.poolRate}
                       />
-                      {errors.poolRate ? <FormFeedback>{errors.poolRate}</FormFeedback> : null}
+                      {errors.poolRate ? <Form.Control.Feedback>{errors.poolRate}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Liquidity lock duration (in hours)</Label>
-                      <Input
+                      <Form.Label>Liquidity lock duration (in hours)</Form.Label>
+                      <Form.Control
                         defaultValue={campaign.lockDuration || ''}
                         onChange={(e) => changeValue(e.target.value, 'lockDuration', 'number')}
                         placeholder="Liquidity lock duration (in hours)"
-                        invalid={!!errors.lockDuration}
+                        isInvalid={!!errors.lockDuration}
                       />
-                      {errors.lockDuration ? <FormFeedback>{errors.lockDuration}</FormFeedback> : null}
+                      {errors.lockDuration ? (
+                        <Form.Control.Feedback>{errors.lockDuration}</Form.Control.Feedback>
+                      ) : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>Start date</Label>
+                      <Form.Label>Start date</Form.Label>
                       <Datetime
                         className={errors.startDate ? 'is-invalid' : ''}
                         value={campaign.startDate || ''}
                         onChange={(v) => changeValue(v, 'startDate', 'date')}
                         inputProps={{ placeholder: 'Start date' }}
                       />
-                      {errors.startDate ? <FormFeedback>{errors.startDate}</FormFeedback> : null}
+                      {errors.startDate ? <Form.Control.Feedback>{errors.startDate}</Form.Control.Feedback> : null}
                     </div>
                     <div className="col-md-6 pr-md-1">
-                      <Label>End date</Label>
+                      <Form.Label>End date</Form.Label>
                       <Datetime
                         className={errors.endDate ? 'is-invalid' : ''}
                         value={campaign.endDate || ''}
                         onChange={(v) => changeValue(v, 'endDate', 'date')}
                         inputProps={{ placeholder: 'End date' }}
                       />
-                      {errors.endDate ? <FormFeedback>{errors.endDate}</FormFeedback> : null}
+                      {errors.endDate ? <Form.Control.Feedback>{errors.endDate}</Form.Control.Feedback> : null}
                     </div>
                   </div>
 
                   <div className="row">
                     <div className="col-lg-6">
-                      <FormGroup check>
+                      <Form.Group>
                         <div className="mb-10 psi-switch custom-control custom-switch">
-                          <Input
+                          <Form.Check
                             type="checkbox"
                             name="whitelistEnabled"
                             id="whitelistEnabled"
-                            className="custom-control-input"
+                            className="custom-control-Form.Control"
                             checked={!!campaign.whitelistEnabled}
                             onChange={(e) => changeValue(e.target.checked, 'whitelistEnabled', 'boolean')}
-                            invalid={!!errors.whitelistEnabled}
+                            isInvalid={!!errors.whitelistEnabled}
+                            label="Enable whitelisting"
                           />
-                          <Label className="custom-control-label" htmlFor="whitelistEnabled">
+                          {/* <Form.Label className="custom-control-Form.Label" htmlFor="whitelistEnabled">
                             {' '}
                             Enable whitelisting{' '}
-                          </Label>
+                          </Form.Label> */}
                         </div>
-                        {errors.whitelistEnabled ? <FormFeedback>{errors.whitelistEnabled}</FormFeedback> : null}
-                      </FormGroup>
+                        {errors.whitelistEnabled ? (
+                          <Form.Control.Feedback>{errors.whitelistEnabled}</Form.Control.Feedback>
+                        ) : null}
+                      </Form.Group>
                     </div>
                   </div>
 
                   <div className="row">
                     <div className="col-md-8">
-                      <Label>Description</Label>
-                      <Input
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
                         defaultValue={campaign.description || ''}
                         onChange={(e) => changeValue(e.target.value, 'description', 'text')}
-                        type="textarea"
-                        rows="4"
-                        cols="80"
+                        rows={4}
+                        cols={80}
                         className="form-control"
                         placeholder="Your project description"
-                        invalid={!!errors.description}
+                        isInvalid={!!errors.description}
                       />
-                      {errors.description ? <FormFeedback>{errors.description}</FormFeedback> : null}
+                      {errors.description ? <Form.Control.Feedback>{errors.description}</Form.Control.Feedback> : null}
                     </div>
                   </div>
                   {/* <button variant="seconday" className="btn" type="submit">
@@ -307,7 +319,7 @@ const LaunchCampaignForm: React.FC = () => {
                 </>
               ) : null}
             </Form>
-          </CardBody>
+          </Card.Body>
         </Container>
       </Card>
     </div>

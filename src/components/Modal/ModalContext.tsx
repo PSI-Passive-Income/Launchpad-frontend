@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Overlay from '../Overlay/Overlay'
 import { Handler } from './types'
@@ -49,14 +49,17 @@ const ModalProvider: React.FC = ({ children }) => {
     }
   }
 
+  const providerProps = useMemo(
+    (): ModalsContext => ({
+      onPresent: handlePresent,
+      onDismiss: handleDismiss,
+      setCloseOnOverlayClick,
+    }),
+    [],
+  )
+
   return (
-    <Context.Provider
-      value={{
-        onPresent: handlePresent,
-        onDismiss: handleDismiss,
-        setCloseOnOverlayClick,
-      }}
-    >
+    <Context.Provider value={providerProps}>
       {isOpen && (
         <ModalWrapper>
           <Overlay show onClick={handleOverlayDismiss} />

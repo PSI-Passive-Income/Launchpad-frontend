@@ -62,4 +62,5 @@ export type Colors = {
 export type ZIndices = {
   dropdown: number
   modal: number
+  loader: number
 }

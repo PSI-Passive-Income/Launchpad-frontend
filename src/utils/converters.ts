@@ -1,5 +1,5 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import _, { isBoolean, isNil, isString } from 'lodash'
+import { BigNumber, utils } from 'ethers'
+import _, { isBoolean, isEmpty, isObject, isString } from 'lodash'
 
 export const camelCaseKeys = (obj: any | any[]) => {
   if (!_.isObject(obj)) return obj
@@ -37,10 +37,16 @@ export const unixTSToDate = (value: string | number) => {
   return new Date(numberValue * 1000)
 }
 
-export const toBigNumber = (value: string | number) => {
-  const stringValue = value?.toString()
-  if (isNil(stringValue) || !isString(stringValue)) return null
-  return BigNumber.from(stringValue)
+export const toBigNumber = (value: string | number | BigNumber, decimals = 18) => {
+  try {
+    if (isObject(value)) return value
+    const stringValue = value?.toString()
+    if (isEmpty(stringValue) || !isString(stringValue)) return null
+    return utils.parseUnits(stringValue, decimals)
+  } catch (err) {
+    console.error(err)
+    return null
+  }
 }
 
 export const toBool = (value: string | number) => {
