@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container } from 'reactstrap'
+import { Button, Container } from 'react-bootstrap'
 import { useEmailLoginLogout, useUserEmail, useUserEmailInfo } from 'state/hooks'
 import UserReaction from './userReaction'
 import UserSignUp from './userSignUp'
@@ -9,14 +9,12 @@ import ShowComments from './showComments'
 
 // import { useUserEmail, useUserEmailInfo, useEmailLoginLogout } from '../../state/hooks'
 
-
 interface Props {
   topicId: string
 }
 
 const UserComments: React.FC<Props> = ({ topicId }) => {
-
-  useEmailLoginLogout();
+  useEmailLoginLogout()
 
   const { logOut } = useUserEmail()
   const { isLogIn, isSignUp } = useUserEmailInfo()
@@ -28,19 +26,18 @@ const UserComments: React.FC<Props> = ({ topicId }) => {
     <div className="card">
       <Container className="themed-container">
         <UserReaction campaignId={topicId} />
-        {isLogIn ?
-          <div style={{ display:'flex',justifyContent: 'end' }}>
-            <Button
-              color="secondary"
-              onClick={handleLogOut}
-            >log Out
+        {isLogIn ? (
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <Button color="secondary" onClick={handleLogOut}>
+              log Out
             </Button>
           </div>
-          : <>
+        ) : (
+          <>
             <UserLogin />
             <UserSignUp />
           </>
-        }
+        )}
         <UserComment campaignId={topicId} />
         <ShowComments campaignId={topicId} />
       </Container>

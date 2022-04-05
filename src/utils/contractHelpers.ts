@@ -11,11 +11,11 @@ import {
 } from 'utils/addressHelpers'
 
 // Contract types
-import { IBEP20 } from "config/types/IBEP20"
-import { PSIPadCampaign } from "config/types/PSIPadCampaign"
-import { PSIPadCampaignFactory } from "config/types/PSIPadCampaignFactory"
-import { PSIPadTokenDeployer } from "config/types/PSIPadTokenDeployer"
-import { PSIPadTokenLockFactory } from "config/types/PSIPadTokenLockFactory"
+import { IBEP20 } from 'config/types/IBEP20'
+import { PSIPadCampaign } from 'config/types/PSIPadCampaign'
+import { PSIPadCampaignFactory } from 'config/types/PSIPadCampaignFactory'
+import { PSIPadTokenDeployer } from 'config/types/PSIPadTokenDeployer'
+import { PSIPadTokenLockFactory } from 'config/types/PSIPadTokenLockFactory'
 
 // ABI
 import bep20Abi from 'config/abi/IBEP20.json'
@@ -41,7 +41,11 @@ export const getCampaignContract = (address: string, signerOrProvider?: Web3Prov
 }
 
 export const getCampaignFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
-  return getContract(getCampaignFactoryAddress(), campaignFactoryAbi, signerOrProvider) as unknown as PSIPadCampaignFactory
+  return getContract(
+    getCampaignFactoryAddress(),
+    campaignFactoryAbi,
+    signerOrProvider,
+  ) as unknown as PSIPadCampaignFactory
 }
 
 export const getTokenFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
@@ -49,5 +53,9 @@ export const getTokenFactoryContract = (signerOrProvider?: Web3Provider | Signer
 }
 
 export const getTokenLockFactoryContract = (signerOrProvider?: Web3Provider | Signer) => {
-  return getContract(getTokenLockFactoryAddress(), tokenLockFactoryAbi, signerOrProvider) as unknown as PSIPadTokenLockFactory
+  return getContract(
+    getTokenLockFactoryAddress(),
+    tokenLockFactoryAbi,
+    signerOrProvider,
+  ) as unknown as PSIPadTokenLockFactory
 }

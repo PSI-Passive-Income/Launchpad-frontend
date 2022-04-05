@@ -7,11 +7,7 @@ import { getTokenFactoryContract } from 'utils/contractHelpers'
 import { toBigNumber } from 'utils/converters'
 import { Call, nestedMulticall } from 'utils/multicall'
 
-export const fetchTokens = async (
-  tokenAddresses: string[],
-  account?: string,
-  spender?: string,
-): Promise<Token[]> => {
+export const fetchTokens = async (tokenAddresses: string[], account?: string, spender?: string): Promise<Token[]> => {
   if (!tokenAddresses) return []
 
   const nestedCalls: Call[][] = tokenAddresses.map((tokenAddress) => {

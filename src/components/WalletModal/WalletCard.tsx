@@ -1,28 +1,28 @@
-import { connectorLocalStorageKey } from "config/constants/wallets";
-import React from "react";
-import Button from "../Button/Button";
-import Text from "../Text/Text";
-import { Login, Config } from "./types";
+import { connectorLocalStorageKey } from 'config/constants/wallets'
+import React from 'react'
+import Button from '../Button/Button'
+import Text from '../Text/Text'
+import { Login, Config } from './types'
 
 interface Props {
-  walletConfig: Config;
-  login: Login;
-  onDismiss: () => void;
-  mb: string;
+  walletConfig: Config
+  login: Login
+  onDismiss: () => void
+  mb: string
 }
 
 const WalletCard: React.FC<Props> = ({ login, walletConfig, onDismiss, mb }) => {
-  const { title, icon: Icon } = walletConfig;
+  const { title, icon: Icon } = walletConfig
   return (
     <Button
       width="100%"
       variant="tertiary"
       onClick={() => {
-        login(walletConfig.connectorId);
-        window.localStorage.setItem(connectorLocalStorageKey, walletConfig.connectorId);
-        onDismiss();
+        login(walletConfig.connectorId)
+        window.localStorage.setItem(connectorLocalStorageKey, walletConfig.connectorId)
+        onDismiss()
       }}
-      style={{ justifyContent: "space-between" }}
+      style={{ justifyContent: 'space-between' }}
       mb={mb}
       id={`wallet-connect-${title.toLocaleLowerCase()}`}
     >
@@ -31,7 +31,7 @@ const WalletCard: React.FC<Props> = ({ login, walletConfig, onDismiss, mb }) => 
       </Text>
       <Icon width="32px" />
     </Button>
-  );
-};
+  )
+}
 
-export default WalletCard;
+export default WalletCard

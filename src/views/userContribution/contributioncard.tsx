@@ -2,43 +2,41 @@ import React from 'react'
 import { useCampaigns, useLoggedInUser } from 'state/hooks'
 import Loader from 'components/Loader'
 import { isEmpty } from 'lodash'
-import { Label, Table } from 'reactstrap'
+import { Label, Table } from 'react-bootstrap'
 import DetailContribution from './contributionDetail'
 
-
 const ContributionDetail: React.FC = () => {
+  const { campaigns, campaignsLoading } = useCampaigns()
+  const { accessToken, account } = useLoggedInUser()
 
-    const { campaigns, campaignsLoading } = useCampaigns()
-    const { accessToken, account } = useLoggedInUser()
-
-    return (
-        <div className="content">
-            <div className="card">
-                <Loader loading={campaignsLoading} />
-                {account && accessToken ?
-                    <Table dark>
-                        {!campaignsLoading ?
-                            <thead>
-                                <tr>
-                                    <th>campaign Address</th>
-                                    <th>Token Name</th>
-                                    <th>Token Address</th>
-                                    <th>contributed Value</th>
-                                    <th>campaign status</th>
-                                </tr>
-                            </thead>
-                            : null}
-                        {!campaignsLoading && !isEmpty(campaigns)
-                            ? Object.values(campaigns).map((campaign: any) => {
-                                return  <DetailContribution campaign={campaign} />
-                            })
-                            : null}
-                    </Table>
-                    : <h3 className="KYC-box text-center">Please connect wallet</h3>
-                }
-            </div >
-
-        </div>
-    );
+  return (
+    <div className="content">
+      <div className="card">
+        <Loader loading={campaignsLoading} />
+        {account && accessToken ? (
+          <Table dark>
+            {!campaignsLoading ? (
+              <thead>
+                <tr>
+                  <th>campaign Address</th>
+                  <th>Token Name</th>
+                  <th>Token Address</th>
+                  <th>contributed Value</th>
+                  <th>campaign status</th>
+                </tr>
+              </thead>
+            ) : null}
+            {!campaignsLoading && !isEmpty(campaigns)
+              ? Object.values(campaigns).map((campaign: any) => {
+                  return <DetailContribution campaign={campaign} />
+                })
+              : null}
+          </Table>
+        ) : (
+          <h3 className="KYC-box text-center">Please connect wallet</h3>
+        )}
+      </div>
+    </div>
+  )
 }
-export default ContributionDetail;
+export default ContributionDetail

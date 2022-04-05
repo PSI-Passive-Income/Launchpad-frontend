@@ -28,14 +28,14 @@ const convertLockData = (lockId: number, callData: any[]): TokenLock => {
   return lock
 }
 
-const _fetchLocks = async(lockIds: number[]) => {
+const _fetchLocks = async (lockIds: number[]) => {
   const address = getTokenLockFactoryAddress()
 
-  const nestedCalls: Call[][] = lockIds.map((lockId) => ([
-    { address, name: 'tokensLocked', params: [lockId] }, 
+  const nestedCalls: Call[][] = lockIds.map((lockId) => [
+    { address, name: 'tokensLocked', params: [lockId] },
     { address, name: 'amountToUnlock', params: [lockId] },
     { address, name: 'unlockedAmount', params: [lockId] },
-  ]))
+  ])
 
   const callData = await nestedMulticall(PSIPadTokenLockFactoryAbi, nestedCalls, false)
   return callData.map((lock: any[], idx: number) => convertLockData(lockIds[idx], lock)).filter((l) => !isNil(l))

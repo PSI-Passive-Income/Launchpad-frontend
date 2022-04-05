@@ -1,16 +1,16 @@
-import React from "react";
-import styled from "styled-components";
-import Heading from "../Heading/Heading";
-import Flex from "../Box/Flex";
-import { ArrowBackIcon, CloseIcon } from "../Svg";
-import { IconButton } from "../Button";
-import { InjectedProps } from "./types";
+import React from 'react'
+import styled from 'styled-components'
+import Heading from '../Heading/Heading'
+import Flex from '../Box/Flex'
+import { ArrowBackIcon, CloseIcon } from '../Svg'
+import { IconButton } from '../Button'
+import { InjectedProps } from './types'
 
 interface Props extends InjectedProps {
-  title: string;
-  hideCloseButton?: boolean;
-  onBack?: () => void;
-  bodyPadding?: string;
+  title: string
+  hideCloseButton?: boolean
+  onBack?: () => void
+  bodyPadding?: string
 }
 
 const StyledModal = styled.div`
@@ -26,7 +26,7 @@ const StyledModal = styled.div`
     min-width: 360px;
     max-width: 100%;
   }
-`;
+`
 
 const ModalHeader = styled.div`
   display: flex;
@@ -34,12 +34,12 @@ const ModalHeader = styled.div`
   border-bottom: 1px solid #e9eaeb;
   align-items: center;
   padding: 12px 24px;
-`;
+`
 
 const ModalTitle = styled(Flex)`
   align-items: center;
   flex: 1;
-`;
+`
 
 const Modal: React.FC<Props> = ({
   title,
@@ -47,7 +47,7 @@ const Modal: React.FC<Props> = ({
   onBack,
   children,
   hideCloseButton = false,
-  bodyPadding = "24px",
+  bodyPadding = '24px',
 }) => (
   <StyledModal>
     <ModalHeader>
@@ -69,6 +69,6 @@ const Modal: React.FC<Props> = ({
       {children}
     </Flex>
   </StyledModal>
-);
+)
 
-export default Modal;
+export default Modal

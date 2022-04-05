@@ -25,7 +25,8 @@ export const getCampaigns = (account?: string) => async (dispatch: AppDispatch) 
   }
 }
 
-export const getCampaign = (campaignId: string | number, connectedWallet: string) =>
+export const getCampaign =
+  (campaignId: string | number, connectedWallet: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       dispatch(campaignLoadStart())

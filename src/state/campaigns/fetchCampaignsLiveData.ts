@@ -6,7 +6,7 @@ import { nestedMulticall, Call, multicall } from 'utils/multicall'
 
 export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWallet?: string) => {
   if (!campaigns) return
-  
+
   const calls: Call[][] = campaigns.map((campaign) => {
     const campaignCalls: Call[] = []
     campaignCalls.push({ address: campaign.campaignAddress, name: 'softCap' })
@@ -47,7 +47,7 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
 
 export const fetchDetailedData = async (campaign: Campaign, connectedWallet: string): Promise<Campaign> => {
   if (!campaign) return campaign
-  
+
   const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
   const withWhitelist = !((chainId === 97 && campaign?.id < 21) || (chainId === 56 && campaign?.id < 1))
 
@@ -75,7 +75,8 @@ export const fetchDetailedData = async (campaign: Campaign, connectedWallet: str
   }
   if (withWhitelist) {
     calls.push({ address: campaign.campaignAddress, name: 'whitelistEnabled' })
-    if (connectedWallet) calls.push({ address: campaign.campaignAddress, name: 'whitelisted', params: [connectedWallet] })
+    if (connectedWallet)
+      calls.push({ address: campaign.campaignAddress, name: 'whitelisted', params: [connectedWallet] })
   }
 
   const tokenData = await multicall(PSIPadCampaignAbi, calls)

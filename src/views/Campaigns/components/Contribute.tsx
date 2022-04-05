@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback} from 'react'
-import { Input, FormFeedback } from 'reactstrap'
+import React, { useState, useMemo, useCallback } from 'react'
+import { Input, FormFeedback } from 'react-bootstrap'
 import { isEmpty, isNil, isNumber } from 'lodash'
 import { Campaign, Token } from 'state/types'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -41,11 +41,14 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
     setContribution(finalValue)
   }
 
-  const tokenAmount = useCallback((bnb: number | BigNumber) => {
-    const bnbBN = isNumber(bnb) ? parseEther(bnb.toString()) : bnb
-    if (!campaign?.rate || campaign.rate.lte(0) || !bnbBN || bnbBN.lte(0)) return '0'
-    return formatBN(campaign.rate.mul(bnbBN).div(parseEther('1')), token.decimals)
-  }, [campaign, token])
+  const tokenAmount = useCallback(
+    (bnb: number | BigNumber) => {
+      const bnbBN = isNumber(bnb) ? parseEther(bnb.toString()) : bnb
+      if (!campaign?.rate || campaign.rate.lte(0) || !bnbBN || bnbBN.lte(0)) return '0'
+      return formatBN(campaign.rate.mul(bnbBN).div(parseEther('1')), token.decimals)
+    },
+    [campaign, token],
+  )
 
   const contributionTokens = useMemo(() => tokenAmount(contribution), [tokenAmount, contribution])
 
@@ -80,11 +83,7 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
           Contribute
         </button>
       ) : (
-        <button
-          onClick={onPresentConnectModal}
-          type="button"
-          className="btn btn-primary"
-        >
+        <button onClick={onPresentConnectModal} type="button" className="btn btn-primary">
           Connect
         </button>
       )}

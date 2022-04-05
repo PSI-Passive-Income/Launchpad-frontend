@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import classNames from 'classnames'
-import { ButtonGroup, Button } from 'reactstrap'
+import { ButtonGroup, Button } from 'react-bootstrap'
 import { isEmpty } from 'lodash'
 import { useCampaigns } from 'state/hooks'
 import { CampaignStatus } from 'state/types'
@@ -22,15 +22,17 @@ const ExploreCampaigns: React.FC = () => {
 
   const filteredCampaigns = useMemo(
     () =>
-      Object.values(campaigns)?.filter(
-        (c) =>
-          (filter === CampaignStatus.All || c.status === filter) &&
-          (contributed === ContributedFilter.All ||
-            (contributed === ContributedFilter.Yes && !c.userContributed.isZero()) ||
-            c.userContributed.isZero()),
-      ).sort((a, b) => {
-        return b.startDate.getTime() - a.startDate.getTime()
-      }),
+      Object.values(campaigns)
+        ?.filter(
+          (c) =>
+            (filter === CampaignStatus.All || c.status === filter) &&
+            (contributed === ContributedFilter.All ||
+              (contributed === ContributedFilter.Yes && !c.userContributed.isZero()) ||
+              c.userContributed.isZero()),
+        )
+        .sort((a, b) => {
+          return b.startDate.getTime() - a.startDate.getTime()
+        }),
     [campaigns, filter, contributed],
   )
 
@@ -124,8 +126,8 @@ const ExploreCampaigns: React.FC = () => {
         ) : null}
         {!campaignsLoading && !isEmpty(filteredCampaigns)
           ? filteredCampaigns.map((campaign) => {
-            return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
-          })
+              return <ProjectCardSmall key={campaign.tokenAddress} campaign={campaign} />
+            })
           : null}
       </div>
     </div>

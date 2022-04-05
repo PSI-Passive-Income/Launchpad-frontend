@@ -44,5 +44,5 @@ export const toBigNumber = (value: string | number) => {
 }
 
 export const toBool = (value: string | number) => {
-  return (isBoolean(value) && value) || (!!value && (isString(value) && value?.toLowerCase() !== 'false'))
+  return (isBoolean(value) && value) || (!!value && isString(value) && value?.toLowerCase() !== 'false')
 }

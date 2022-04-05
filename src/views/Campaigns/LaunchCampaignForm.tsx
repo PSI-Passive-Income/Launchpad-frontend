@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText, FormGroup } from 'reactstrap'
+import { Card, CardBody, Form, Input, Label, Container, FormFeedback, FormText, FormGroup } from 'react-bootstrap'
 import Datetime from 'react-datetime'
 import { Moment } from 'moment'
 import { useCampaignFactoryApproval, useCreateCampaign, useTokensNeeded } from 'hooks/useCreateCampaign'
@@ -35,7 +35,6 @@ const LaunchCampaignForm: React.FC = () => {
 
   // changeValue(token.name, "tokenName", "string")
   // changeValue(token.symbol, "tokenSymbol", "string")
-
 
   const mandatoryErrors = useMemo(() => {
     const _errors: { [key: string]: string } = {}
@@ -91,7 +90,7 @@ const LaunchCampaignForm: React.FC = () => {
       createCampaign({
         ...campaign,
         lockDuration: campaign.lockDuration * 60 * 60,
-        liquidityRate: campaign.liquidityRate * 100
+        liquidityRate: campaign.liquidityRate * 100,
       })
     }
   }
@@ -179,7 +178,9 @@ const LaunchCampaignForm: React.FC = () => {
                       <Input
                         type="range"
                         defaultValue={campaign.liquidityRate ?? 0 / 100}
-                        onChange={(e) => { changeValue(e.target.value, 'liquidityRate', 'number') }}
+                        onChange={(e) => {
+                          changeValue(e.target.value, 'liquidityRate', 'number')
+                        }}
                         invalid={!!errors.liquidityRate}
                       />
                       {errors.liquidityRate ? <FormFeedback>{errors.liquidityRate}</FormFeedback> : null}
@@ -223,7 +224,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>Start date</Label>
                       <Datetime
-                        className={errors.startDate ? "is-invalid" : ""}
+                        className={errors.startDate ? 'is-invalid' : ''}
                         value={campaign.startDate || ''}
                         onChange={(v) => changeValue(v, 'startDate', 'date')}
                         inputProps={{ placeholder: 'Start date' }}
@@ -233,7 +234,7 @@ const LaunchCampaignForm: React.FC = () => {
                     <div className="col-md-6 pr-md-1">
                       <Label>End date</Label>
                       <Datetime
-                        className={errors.endDate ? "is-invalid" : ""}
+                        className={errors.endDate ? 'is-invalid' : ''}
                         value={campaign.endDate || ''}
                         onChange={(v) => changeValue(v, 'endDate', 'date')}
                         inputProps={{ placeholder: 'End date' }}
@@ -285,11 +286,21 @@ const LaunchCampaignForm: React.FC = () => {
                   Save
                 </button> */}
                   {!isApproved ? (
-                    <button onClick={onApprove} className="btn btn-primary" type="button" disabled={!valid || approving}>
+                    <button
+                      onClick={onApprove}
+                      className="btn btn-primary"
+                      type="button"
+                      disabled={!valid || approving}
+                    >
                       Approve
                     </button>
                   ) : (
-                    <button onClick={onCreate} className="btn btn-primary" type="button" disabled={!valid || creatingCampaign}>
+                    <button
+                      onClick={onCreate}
+                      className="btn btn-primary"
+                      type="button"
+                      disabled={!valid || creatingCampaign}
+                    >
                       Launch
                     </button>
                   )}

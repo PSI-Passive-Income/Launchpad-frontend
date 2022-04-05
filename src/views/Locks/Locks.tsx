@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Label } from 'reactstrap'
+import { Label } from 'react-bootstrap'
 import { values } from 'lodash'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useTokens, useUserTokenLocks } from 'state/hooks'

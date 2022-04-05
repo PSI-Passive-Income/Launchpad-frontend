@@ -49,11 +49,9 @@ const Home: React.FC = () => {
         <>
           <LabelWrapper style={{ marginLeft: 16 }}>
             <Text>Set username</Text>
-            <UsernameInput onChange={handleChangeUsername} value={newUsername ?? ""} />
+            <UsernameInput onChange={handleChangeUsername} value={newUsername ?? ''} />
           </LabelWrapper>
-          <Button onClick={handleUpdateUser}>
-            Update user
-          </Button>
+          <Button onClick={handleUpdateUser}>Update user</Button>
         </>
       ) : null}
     </Page>

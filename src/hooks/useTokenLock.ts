@@ -5,7 +5,13 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getTokenLock, toastError } from 'state/actions'
 import { TokenLock } from 'state/types'
-import { createTokenLock, getUserLocks, handleTransaction, unlockAvailableToken, unlockTokenAmount } from 'utils/callHelpers'
+import {
+  createTokenLock,
+  getUserLocks,
+  handleTransaction,
+  unlockAvailableToken,
+  unlockTokenAmount,
+} from 'utils/callHelpers'
 import { useTokenLockFactory } from './useContract'
 import { useActiveWeb3React } from './web3'
 import useApproval from './useApproval'

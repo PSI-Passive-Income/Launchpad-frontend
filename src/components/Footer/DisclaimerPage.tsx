@@ -1,21 +1,20 @@
 import React from 'react'
-import { Container } from 'reactstrap'
-
+import { Container } from 'react-bootstrap'
 
 const Disclaimer: React.FC = () => (
-
-    <div className="content">
-        <Container >
-            <header>
-                <h1 className="title text-center">Disclaimer</h1>
-            </header>
-            <p>
-            The details provided by either Passive Income or a specific developer on the PSI-PAD shall not in any way constitute financial advice. 
-            By investing on our platform, you are accepting all responsibility for any potential loss of funds. The scores provided on our platform
-            are an algorithmic representation of the trust of the project, but is not an infallible system. Passive Income accepts no liability for
-            any loss that may occur due to person acting as a result of any material provided or published. © 2021 Passive Income
-            </p>
-            {/* <br />
+  <div className="content">
+    <Container>
+      <header>
+        <h1 className="title text-center">Disclaimer</h1>
+      </header>
+      <p>
+        The details provided by either Passive Income or a specific developer on the PSI-PAD shall not in any way
+        constitute financial advice. By investing on our platform, you are accepting all responsibility for any
+        potential loss of funds. The scores provided on our platform are an algorithmic representation of the trust of
+        the project, but is not an infallible system. Passive Income accepts no liability for any loss that may occur
+        due to person acting as a result of any material provided or published. © 2021 Passive Income
+      </p>
+      {/* <br />
             <h3>Website Use</h3>
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -139,9 +138,8 @@ const Disclaimer: React.FC = () => (
                 Integer rhoncus dignissim fringilla. Curabitur dignissim
                 est sed elementum porttitor. Vestibulum at varius enim.
                 Nam eu commodo massa.</p> */}
-        </Container>
-    </div>
-
+    </Container>
+  </div>
 )
 
-export default Disclaimer;
+export default Disclaimer

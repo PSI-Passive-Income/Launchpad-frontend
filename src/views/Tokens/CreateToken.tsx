@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Label, Input, FormGroup, FormFeedback, FormText } from 'reactstrap'
+import { Label, Input, FormGroup, FormFeedback, FormText } from 'react-bootstrap'
 import 'react-toastify/dist/ReactToastify.css'
 import { TokenCreationInfo } from 'state/types'
 import useCreateToken from 'hooks/useCreateToken'

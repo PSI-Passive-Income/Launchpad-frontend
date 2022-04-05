@@ -18,7 +18,8 @@ import getUserNonce from './getUserNonce'
 
 // Thunks
 export const loginWallet =
-  (library: Web3Provider, address: string, onlySilent = false) => async (dispatch: AppDispatch, getState: () => RootState) => {
+  (library: Web3Provider, address: string, onlySilent = false) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     if (getState().user.isLoggingIn) return
 
     const tokenInfo = sessionStorage.getItem('MM_TokenInfo')
@@ -35,7 +36,7 @@ export const loginWallet =
       sessionStorage.setItem('MM_TokenInfo', JSON.stringify({ username, accessToken }))
 
       dispatch(userLoginSucceeded({ username, accessToken }))
-    } catch (error:any) {
+    } catch (error: any) {
       dispatch(toastError('Error logging in', error?.message))
       dispatch(userLoginFailed(error?.message))
     }
@@ -60,7 +61,7 @@ export const updateUser = (user: Partial<User>) => async (dispatch: AppDispatch,
     )
 
     dispatch(userUpdateSucceeded(userReturned))
-  } catch (error:any) {
+  } catch (error: any) {
     dispatch(toastError('Error updating user', error?.message))
     dispatch(userUpdateFailed(error?.message))
   }

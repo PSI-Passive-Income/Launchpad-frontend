@@ -17,10 +17,10 @@ import { getPSFactoryAddress, getPSRouterAddress } from './addressHelpers'
 
 export const handleTransactionCall = async (call: () => Promise<ContractTransaction>, dispatch?: Dispatch<any>) => {
   try {
-    const transaction = await call();
+    const transaction = await call()
     return handleTransaction(transaction, dispatch)
-  } catch(err: any) {
-    const message = err?.data?.message ?? err?.message ?? "Check your console for more information"
+  } catch (err: any) {
+    const message = err?.data?.message ?? err?.message ?? 'Check your console for more information'
     dispatch(toastError('Error processing transaction', message))
     return false
   }
@@ -51,14 +51,14 @@ export const setWhitelistEnabled = async (campaign: PSIPadCampaign, value: boole
 }
 
 export const setWhitelist = async (campaign: PSIPadCampaign, addresses: string[], whitelisted: boolean) => {
-  const finalAddresses = addresses.map(address => {
+  const finalAddresses = addresses.map((address) => {
     try {
       return getAddress(address)
-    } catch(err) {
+    } catch (err) {
       throw new Error(`Invalid address: ${address}`)
     }
   })
-  const data = `0x${finalAddresses?.map(address => solidityPack(["address"], [address]).substr(2)).join('')}`
+  const data = `0x${finalAddresses?.map((address) => solidityPack(['address'], [address]).substr(2)).join('')}`
   return campaign.addWhitelist(data, whitelisted)
 }
 
@@ -107,7 +107,7 @@ export const tokensNeeded = async (
       pool_rate: campaign.poolRate.toString(),
       lock_duration: campaign.lockDuration?.toString() ?? 0,
       liquidity_rate: campaign.liquidityRate.toString(),
-      whitelist_enabled: !!campaign.whitelistEnabled
+      whitelist_enabled: !!campaign.whitelistEnabled,
     },
     feePercentage,
   )
@@ -132,7 +132,7 @@ export const createCampaign = async (
       pool_rate: campaign.poolRate.toString(),
       lock_duration: campaign.lockDuration?.toString() ?? 0,
       liquidity_rate: campaign.liquidityRate.toString(),
-      whitelist_enabled: !!campaign.whitelistEnabled
+      whitelist_enabled: !!campaign.whitelistEnabled,
     },
     campaign.tokenAddress,
     feePercentage,

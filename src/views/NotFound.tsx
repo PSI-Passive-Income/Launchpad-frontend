@@ -13,9 +13,7 @@ const StyledNotFound = styled.div`
 const NotFound = () => {
   return (
     <Page>
-      <StyledNotFound>
-        Oops, page not found
-      </StyledNotFound>
+      <StyledNotFound>Oops, page not found</StyledNotFound>
     </Page>
   )
 }

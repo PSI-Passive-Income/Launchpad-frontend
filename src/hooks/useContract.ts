@@ -21,7 +21,7 @@ export const useSigner = () => {
 
 export const useBEP20 = (address: string) => {
   const signer = useSigner()
-  return useMemo(() => address ? getBep20Contract(address, signer) : null, [address, signer])
+  return useMemo(() => (address ? getBep20Contract(address, signer) : null), [address, signer])
 }
 
 export const usePSI = () => {

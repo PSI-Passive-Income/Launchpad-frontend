@@ -1,5 +1,4 @@
-
-export const connectorLocalStorageKey = "connectorId";
+export const connectorLocalStorageKey = 'connectorId'
 
 export enum ConnectorNames {
   Injected = 'injected',

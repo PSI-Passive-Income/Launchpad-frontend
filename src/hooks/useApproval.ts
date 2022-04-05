@@ -27,10 +27,7 @@ const useApproval = (tokenAddress: string, spender: string) => {
     }
   }, [dispatch, tokenAddress, account, spender, tokenContract])
 
-  const approvedAmount = useMemo(
-    () => token?.approvals[spender],
-    [token?.approvals, spender],
-  )
+  const approvedAmount = useMemo(() => token?.approvals[spender], [token?.approvals, spender])
 
   return { token, isLoadingToken, approve: handleApprove, approving, approvedAmount }
 }

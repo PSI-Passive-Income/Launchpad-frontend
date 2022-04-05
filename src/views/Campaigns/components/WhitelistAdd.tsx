@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Input } from 'reactstrap'
+import { Input } from 'react-bootstrap'
 import { Campaign } from 'state/types'
 import useWhitelisting from 'hooks/useWhitelist'
 
@@ -16,7 +16,14 @@ const WhitelistAdd: React.FC<Props> = ({ campaign }) => {
     setWhitelistEnabled(enabled)
   }
 
-  const addresses = useMemo(() => whitelistAddresses?.split('\n').map((a) => a.trim()).filter(a => a), [whitelistAddresses])
+  const addresses = useMemo(
+    () =>
+      whitelistAddresses
+        ?.split('\n')
+        .map((a) => a.trim())
+        .filter((a) => a),
+    [whitelistAddresses],
+  )
 
   const onSetWhitelist = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, enabled: boolean) => {
     event.preventDefault()
@@ -39,7 +46,8 @@ const WhitelistAdd: React.FC<Props> = ({ campaign }) => {
       {campaign?.whitelistEnabled ? (
         <>
           <p className="mt-3">
-            Add whitelist users by providing an address on every line and click on &apos;Add&apos; or &apos;Remove&apos;<br/>
+            Add whitelist users by providing an address on every line and click on &apos;Add&apos; or &apos;Remove&apos;
+            <br />
             to add/remove the addresses to/from the whitelist
           </p>
           <Input

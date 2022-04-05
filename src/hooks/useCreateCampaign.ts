@@ -7,7 +7,13 @@ import { campaignsAdd, toastError } from 'state/actions'
 import { useLoggedInUser } from 'state/hooks'
 import { Campaign } from 'state/types'
 import { addCampaign, getKYCuserVerifcation } from 'utils/apiHelper'
-import { tokensNeeded, createCampaign, getUserCampaigns, getCampaignAddress, handleTransaction } from 'utils/callHelpers'
+import {
+  tokensNeeded,
+  createCampaign,
+  getUserCampaigns,
+  getCampaignAddress,
+  handleTransaction,
+} from 'utils/callHelpers'
 import useApproval from './useApproval'
 import { useCampaignFactory } from './useContract'
 import { useActiveWeb3React } from './web3'
@@ -42,7 +48,6 @@ export const useCreateCampaign = () => {
   const history = useHistory()
   const [creating, setCreating] = useState(false)
 
-
   const handleCreateCampaign = useCallback(
     async (campaign: Partial<Campaign>) => {
       if (account && campaign && history) {
@@ -54,10 +59,16 @@ export const useCreateCampaign = () => {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
             if (userCampaigns.length > 0) {
               const campaignId = userCampaigns[userCampaigns.length - 1]
-              const campaignAddress = await getCampaignAddress(campaignFactory, campaignId);
-              const kycVerified = await getKYCuserVerifcation(account);
+              const campaignAddress = await getCampaignAddress(campaignFactory, campaignId)
+              const kycVerified = await getKYCuserVerifcation(account)
               if (isNumber(campaignId) && campaignAddress) {
-                const addedCampaign = await addCampaign(accessToken, { ...campaign, id: campaignId, owner: account, campaignAddress, kycVerified })
+                const addedCampaign = await addCampaign(accessToken, {
+                  ...campaign,
+                  id: campaignId,
+                  owner: account,
+                  campaignAddress,
+                  kycVerified,
+                })
                 dispatch(campaignsAdd(addedCampaign))
                 history.push(`/project/${addedCampaign.campaignAddress}`)
               } else {
@@ -70,7 +81,7 @@ export const useCreateCampaign = () => {
             dispatch(toastError('Error adding campaign', 'Transaction failed'))
           }
         } catch (error: any) {
-          console.log("error", error)
+          console.log('error', error)
           dispatch(toastError('Error adding campaign', error?.message))
         } finally {
           setCreating(false)

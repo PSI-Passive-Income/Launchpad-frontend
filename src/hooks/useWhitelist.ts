@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react"
-import { useDispatch } from "react-redux"
-import { getCampaign } from "state/actions"
-import { setWhitelist, handleTransactionCall, setWhitelistEnabled } from "utils/callHelpers"
-import { useCampaign } from "./useContract"
-import { useActiveWeb3React } from "./web3"
+import { useCallback, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { getCampaign } from 'state/actions'
+import { setWhitelist, handleTransactionCall, setWhitelistEnabled } from 'utils/callHelpers'
+import { useCampaign } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 const useWhitelisting = (campaignAddress: string) => {
   const dispatch = useDispatch()
@@ -18,7 +18,9 @@ const useWhitelisting = (campaignAddress: string) => {
           setSettingWhitelist(true)
           const success = await handleTransactionCall(() => setWhitelist(campaign, addresses, whitelist), dispatch)
           if (success) dispatch(getCampaign(campaignAddress, account))
-        } finally { setSettingWhitelist(false) }
+        } finally {
+          setSettingWhitelist(false)
+        }
       }
     },
     [dispatch, account, campaign, campaignAddress],
@@ -31,7 +33,9 @@ const useWhitelisting = (campaignAddress: string) => {
           setSettingWhitelist(true)
           const success = await handleTransactionCall(() => setWhitelistEnabled(campaign, enabled), dispatch)
           if (success) dispatch(getCampaign(campaignAddress, account))
-        } finally { setSettingWhitelist(false) }
+        } finally {
+          setSettingWhitelist(false)
+        }
       }
     },
     [dispatch, account, campaign, campaignAddress],

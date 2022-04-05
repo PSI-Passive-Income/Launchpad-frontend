@@ -2,14 +2,13 @@ import React from 'react'
 // import { Provider, UpdownButton } from '@lyket/react';
 
 interface Props {
-    campaignId: string
+  campaignId: string
 }
 
 const UserReaction: React.FC<Props> = ({ campaignId }) => {
-    return (
-        <div className='text-center'>
-            
-            {/* <Provider
+  return (
+    <div className="text-center">
+      {/* <Provider
                 apiKey="pt_73c45c8c6a5ba0111c8095f51618f8"
                 theme={{
                     colors: {
@@ -27,9 +26,7 @@ const UserReaction: React.FC<Props> = ({ campaignId }) => {
                     namespace="post"
                 />
             </Provider> */}
-        </div>
-    )
-
+    </div>
+  )
 }
-export default UserReaction;
-
+export default UserReaction

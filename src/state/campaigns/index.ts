@@ -18,9 +18,17 @@ export const campaignsSlice = createSlice({
       return { ...state, isLoading: true }
     },
     campaignsLoadSucceeded: (state, action: PayloadAction<Campaign[]>) => {
-      const data = action.payload?.reduce((prev, camp) => ({...prev, [camp.id]: camp }),{})
-      const dataByAddress = action.payload?.reduce((prev, camp) => ({ ...prev, [camp.campaignAddress.toLowerCase()]: camp }), {})
-      return { ...state, isLoading: false, data: { ...state.data, ...data }, dataByAddress: { ...state.dataByAddress, ...dataByAddress } }
+      const data = action.payload?.reduce((prev, camp) => ({ ...prev, [camp.id]: camp }), {})
+      const dataByAddress = action.payload?.reduce(
+        (prev, camp) => ({ ...prev, [camp.campaignAddress.toLowerCase()]: camp }),
+        {},
+      )
+      return {
+        ...state,
+        isLoading: false,
+        data: { ...state.data, ...data },
+        dataByAddress: { ...state.dataByAddress, ...dataByAddress },
+      }
     },
     campaignsLoadFailed: (state, action: PayloadAction<string>) => {
       return { ...state, isLoading: false, loadingError: action.payload }

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { IRoute } from 'routes'
 import PerfectScrollbar from 'perfect-scrollbar'
-import { Nav } from 'reactstrap'
+import { Nav } from 'react-bootstrap'
 
 let perfectScrollBar = null
 
@@ -50,14 +50,26 @@ const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
   if (logo !== undefined) {
     if (logo.outterLink !== undefined) {
       logoImg = (
-        <a href={logo.outterLink} className="simple-text logo-mini" target="_blank" onClick={toggleSidebar} rel="noreferrer">
+        <a
+          href={logo.outterLink}
+          className="simple-text logo-mini"
+          target="_blank"
+          onClick={toggleSidebar}
+          rel="noreferrer"
+        >
           <div className="logo-img">
             <img src={logo.imgSrc} alt="react-logo" />
           </div>
         </a>
       )
       logoText = (
-        <a href={logo.outterLink} className="simple-text logo-normal" target="_blank" onClick={toggleSidebar} rel="noreferrer">
+        <a
+          href={logo.outterLink}
+          className="simple-text logo-normal"
+          target="_blank"
+          onClick={toggleSidebar}
+          rel="noreferrer"
+        >
           {logo.text}
         </a>
       )
@@ -85,12 +97,7 @@ const Sidebar: React.FC<Props> = ({ routes, logo, toggleSidebar }) => {
             if (prop.redirect || !prop.name) return null
             return (
               <li className={activeRoute(prop.path)} key={prop.path}>
-                <NavLink
-                  to={prop.path}
-                  className="nav-link"
-                  activeClassName="active"
-                  onClick={toggleSidebar}
-                >
+                <NavLink to={prop.path} className="nav-link" activeClassName="active" onClick={toggleSidebar}>
                   <i className={prop.icon} />
                   <p>{prop.name}</p>
                 </NavLink>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import moment from 'moment'
-import { FormFeedback, FormGroup, FormText, Input, Label } from 'reactstrap'
+import { FormFeedback, FormGroup, FormText, Input, Label } from 'react-bootstrap'
 import Datetime from 'react-datetime'
 import { useCreateTokenLock, useTokenLockFactoryApproval } from 'hooks/useTokenLock'
 import { TokenLock } from 'state/types'
@@ -26,7 +26,12 @@ const LockToken: React.FC = () => {
 
   const amountRange = useMemo(() => {
     if (!token?.accountBalance || !lock.amount) return 0
-    return round((parseFloat(formatBN(lock.amount, token?.decimals)) / parseFloat(formatBN(token.accountBalance, token?.decimals))) * 100, 1)
+    return round(
+      (parseFloat(formatBN(lock.amount, token?.decimals)) /
+        parseFloat(formatBN(token.accountBalance, token?.decimals))) *
+        100,
+      1,
+    )
   }, [token, lock.amount])
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})

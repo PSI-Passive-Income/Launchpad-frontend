@@ -19,7 +19,7 @@ import {
   Row,
   Col,
   UncontrolledTooltip,
-} from 'reactstrap'
+} from 'react-bootstrap'
 import ApexCharts from 'apexcharts'
 import axios from 'axios'
 import config from 'config'
@@ -106,126 +106,124 @@ const Dashboard: React.FC = () => {
   }, [])
 
   return (
-    <>
-      <div className="content">
-        <Row>
-          <Col xs="12">
-            <Card className="card-chart">
-              <CardHeader>
-                <Row>
-                  <Col className="text-left" sm="6">
-                    <h5 className="card-category">Market Prices</h5>
-                    <CardTitle tag="h2">PSI</CardTitle>
-                  </Col>
-                  <Col sm="6">
-                    <ButtonGroup className="btn-group-toggle float-right" data-toggle="buttons">
-                      <Button
-                        tag="label"
-                        className={classNames('btn-simple', {
-                          active: bigChartData,
-                        })}
-                        color="info"
-                        id="0"
-                        size="sm"
-                        onClick={() => setBgChartData}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Overall</span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-single-02" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="1"
-                        size="sm"
-                        tag="label"
-                        className={classNames('btn-simple', {})}
-                        onClick={() => setBgChartData}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Active</span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-gift-2" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="2"
-                        size="sm"
-                        tag="label"
-                        className={classNames('btn-simple', {})}
-                        onClick={() => setBgChartData}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Ended</span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-tap-02" />
-                        </span>
-                      </Button>
-                    </ButtonGroup>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line data={bigChartData} options={chartExample1.options} />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Total Funded</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-bell-55 text-info" /> 763.28 ETH
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line data={chartExample2.data} options={chartExample2.options} />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Launch Your Project</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-delivery-fast text-primary" /> How it Works
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                  industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of
-                  type and scrambled it to make a type specimen book.
-                </div>
-                <button type="button" className="btn center btn-primary" slot="footer">
-                  Launch
-                </button>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Completed Projects</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 32
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Bar data={chartExample3.data} options={chartExample3.options} />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </>
+    <div className="content">
+      <Row>
+        <Col xs="12">
+          <Card className="card-chart">
+            <CardHeader>
+              <Row>
+                <Col className="text-left" sm="6">
+                  <h5 className="card-category">Market Prices</h5>
+                  <CardTitle tag="h2">PSI</CardTitle>
+                </Col>
+                <Col sm="6">
+                  <ButtonGroup className="btn-group-toggle float-right" data-toggle="buttons">
+                    <Button
+                      tag="label"
+                      className={classNames('btn-simple', {
+                        active: bigChartData,
+                      })}
+                      color="info"
+                      id="0"
+                      size="sm"
+                      onClick={() => setBgChartData}
+                    >
+                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Overall</span>
+                      <span className="d-block d-sm-none">
+                        <i className="tim-icons icon-single-02" />
+                      </span>
+                    </Button>
+                    <Button
+                      color="info"
+                      id="1"
+                      size="sm"
+                      tag="label"
+                      className={classNames('btn-simple', {})}
+                      onClick={() => setBgChartData}
+                    >
+                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Active</span>
+                      <span className="d-block d-sm-none">
+                        <i className="tim-icons icon-gift-2" />
+                      </span>
+                    </Button>
+                    <Button
+                      color="info"
+                      id="2"
+                      size="sm"
+                      tag="label"
+                      className={classNames('btn-simple', {})}
+                      onClick={() => setBgChartData}
+                    >
+                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Ended</span>
+                      <span className="d-block d-sm-none">
+                        <i className="tim-icons icon-tap-02" />
+                      </span>
+                    </Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
+            </CardHeader>
+            <CardBody>
+              <div className="chart-area">
+                <Line data={bigChartData} options={chartExample1.options} />
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg="4">
+          <Card className="card-chart">
+            <CardHeader>
+              <h5 className="card-category">Total Funded</h5>
+              <CardTitle tag="h3">
+                <i className="tim-icons icon-bell-55 text-info" /> 763.28 ETH
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <div className="chart-area">
+                <Line data={chartExample2.data} options={chartExample2.options} />
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col lg="4">
+          <Card className="card-chart">
+            <CardHeader>
+              <h5 className="card-category">Launch Your Project</h5>
+              <CardTitle tag="h3">
+                <i className="tim-icons icon-delivery-fast text-primary" /> How it Works
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <div>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                and scrambled it to make a type specimen book.
+              </div>
+              <button type="button" className="btn center btn-primary" slot="footer">
+                Launch
+              </button>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col lg="4">
+          <Card className="card-chart">
+            <CardHeader>
+              <h5 className="card-category">Completed Projects</h5>
+              <CardTitle tag="h3">
+                <i className="tim-icons icon-send text-success" /> 32
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <div className="chart-area">
+                <Bar data={chartExample3.data} options={chartExample3.options} />
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   )
 }
 

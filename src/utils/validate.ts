@@ -4,13 +4,8 @@ import { isMoment } from 'moment'
 import Web3 from 'web3'
 import { toBool } from './converters'
 
-export const validateSingle = <T>(
-  value: any,
-  type: string,
-  mandatory = true,
-  extra?: any,
-) => {
-  const { newValue, newErrors } = validate<{ value?: T }>({}, {}, value, "value", type, mandatory, extra)
+export const validateSingle = <T>(value: any, type: string, mandatory = true, extra?: any) => {
+  const { newValue, newErrors } = validate<{ value?: T }>({}, {}, value, 'value', type, mandatory, extra)
   return { value: newValue?.value, error: newErrors?.value }
 }
 
@@ -37,7 +32,8 @@ const validate = <T>(
         if (floatValue < 0) {
           newErrors[name] = 'This number should be positive'
         } else {
-          newValue[name] = type === 'BigNumber' ? parseUnits(value, (extra && Number.isInteger(extra) ? extra : 18)) : floatValue
+          newValue[name] =
+            type === 'BigNumber' ? parseUnits(value, extra && Number.isInteger(extra) ? extra : 18) : floatValue
           if (floatValue === 0) newErrors[name] = 'This field is required'
         }
       } else {
@@ -56,7 +52,7 @@ const validate = <T>(
         newErrors[name] = 'Please use a correct format'
       }
     } else {
-      newValue[name] = value 
+      newValue[name] = value
     }
   } else if (mandatory) {
     newErrors[name] = 'This field is required'

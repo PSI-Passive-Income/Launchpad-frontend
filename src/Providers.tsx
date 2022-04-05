@@ -17,7 +17,7 @@ if (window.ethereum) {
 
 const loadingProps: SVGProps<SVGSVGElement> = {
   width: 150,
-  fill: '#2fcbeb'
+  fill: '#2fcbeb',
 }
 
 // const ErrorBoundaryWeb3ProviderNetwork: React.FC = ({ children }) => {
@@ -28,7 +28,6 @@ const loadingProps: SVGProps<SVGSVGElement> = {
 //     return <>{children}</>
 //   }
 // }
- 
 
 const Providers: React.FC = ({ children }) => {
   return (

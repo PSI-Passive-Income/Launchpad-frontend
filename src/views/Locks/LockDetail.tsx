@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Label } from 'reactstrap'
+import { Button, Label } from 'react-bootstrap'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useToken, useTokenLock } from 'state/hooks'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -76,7 +76,9 @@ const LockDetail: React.FC = () => {
                 </div>
                 <div className="form-group">
                   <Label>Locked token amount:</Label>
-                  <p>{formatBN(lock.amount, token?.decimals)} ({formatBN(lock.amountUnlocked, token?.decimals)} unlocked)</p>
+                  <p>
+                    {formatBN(lock.amount, token?.decimals)} ({formatBN(lock.amountUnlocked, token?.decimals)} unlocked)
+                  </p>
                 </div>
                 <div className="form-group">
                   <Label>Available for unlock:</Label>

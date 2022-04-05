@@ -1,1 +1,1 @@
-export  { default } from "./verificationApi";
+export { default } from './verificationApi'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label } from 'reactstrap'
+import { Label } from 'react-bootstrap'
 import { Token } from 'state/types'
 import { formatBN } from 'utils/formatters'
 import tokenPlaceholder from '../../assets/img/tokenplaceholder.png'
@@ -23,11 +23,15 @@ const TokenCard: React.FC<Props> = ({ token }) => {
           </div>
           <div className="form-group">
             <Label>Total Supply:</Label>
-            <p>{formatBN(token.totalSupply, token.decimals)} {token.symbol}</p>
+            <p>
+              {formatBN(token.totalSupply, token.decimals)} {token.symbol}
+            </p>
           </div>
           <div className="form-group">
             <Label>You balance:</Label>
-						<p>{formatBN(token.accountBalance, token.decimals)} {token.symbol}</p>
+            <p>
+              {formatBN(token.accountBalance, token.decimals)} {token.symbol}
+            </p>
           </div>
           <div className="form-group">
             <Label>Token address:</Label>

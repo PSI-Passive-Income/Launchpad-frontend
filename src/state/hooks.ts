@@ -13,14 +13,19 @@ import { toastError, toastInfo, toastSuccess, toastWarning } from './toasts'
 import { getCampaigns, getCampaign } from './campaigns/thunks'
 import { getToken, getTokens, getUserTokens } from './tokens/thunks'
 import { getTokenLock, getUserTokenLocks } from './tokenLocks/thunks'
-import { userSignUpEmail, logInEmail, logOutEmail, getComments, getUpdateComment, removeComment } from './comment/thunks';
-import { addedComment } from './comment/index';
+import {
+  userSignUpEmail,
+  logInEmail,
+  logOutEmail,
+  getComments,
+  getUpdateComment,
+  removeComment,
+} from './comment/thunks'
+import { addedComment } from './comment/index'
 import { createComment } from '../utils/apiHelper'
-
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-
 
 // Toasts
 
@@ -165,7 +170,7 @@ export const useTokens = (addresses: string[]) => {
 
 export const useUserTokens = () => {
   const { library, account } = useActiveWeb3React()
-  const signer = useMemo(() => account ? library?.getSigner(account) : undefined, [library, account])
+  const signer = useMemo(() => (account ? library?.getSigner(account) : undefined), [library, account])
   const dispatch = useAppDispatch()
   const { userTokens, isLoading } = useSelector((state: RootState) => state.tokens)
 
@@ -182,7 +187,7 @@ export const useUserTokens = () => {
 
 export const useUserTokenLocks = () => {
   const { library, account } = useActiveWeb3React()
-  const signer = useMemo(() => account ? library?.getSigner(account) : undefined, [library, account])
+  const signer = useMemo(() => (account ? library?.getSigner(account) : undefined), [library, account])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -241,7 +246,6 @@ export const useGetPriceDataFromCoingecko = (id: string) => {
 // Email
 
 export const useEmailLoginLogout = async () => {
-
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -250,24 +254,25 @@ export const useEmailLoginLogout = async () => {
 }
 
 export const useUserEmail = () => {
-
   const dispatch = useAppDispatch()
 
   const userSignUp = useCallback(
     async (signUp) => {
       dispatch(userSignUpEmail(signUp))
-    }, [dispatch]);
+    },
+    [dispatch],
+  )
 
   const responseUser = useCallback(
     async (login) => {
-
       dispatch(logInEmail(login))
-    }, [dispatch])
+    },
+    [dispatch],
+  )
 
-  const logOut = useCallback(
-    () => {
-      dispatch(logOutEmail())
-    }, [dispatch])
+  const logOut = useCallback(() => {
+    dispatch(logOutEmail())
+  }, [dispatch])
 
   return { signUp: userSignUp, userLogin: responseUser, logOut }
 }
@@ -280,18 +285,19 @@ export const useUserEmailInfo = () => {
 // Comments
 
 export const useUserComments = () => {
-
-  const { user } = useUserEmailInfo();
+  const { user } = useUserEmailInfo()
   const dispatch = useAppDispatch()
 
   const addComment = useCallback(
     async (message, campaignAddress, userId, userName) => {
       if (user) {
-        const data: Partial<commentData> = { message, campaignAddress, userId, userName };
-        const abc = await createComment(data);
-        dispatch(addedComment(abc));
+        const data: Partial<commentData> = { message, campaignAddress, userId, userName }
+        const abc = await createComment(data)
+        dispatch(addedComment(abc))
       }
-    }, [dispatch, user])
+    },
+    [dispatch, user],
+  )
 
   const ShowComment = (campaignId: string) => {
     useEffect(() => {
@@ -304,21 +310,32 @@ export const useUserComments = () => {
   const handleUpdateComment = useCallback(
     async (id, comment, campaignAddress) => {
       dispatch(getUpdateComment({ id, comment }, campaignAddress))
-    }, [dispatch])
+    },
+    [dispatch],
+  )
 
   const deleteComment = useCallback(
     async (campaignAddress: string, id: number) => {
       dispatch(removeComment(campaignAddress, id))
-    }, [dispatch])
+    },
+    [dispatch],
+  )
 
   const handleReply = useCallback(
     async (responseTo, comment, campaignAddress, userId, userName) => {
       const data = { responseTo, comment, campaignAddress, userId, userName }
-      console.log('reply', data);
-      const abc = await createComment(data);
-      dispatch(addedComment(abc));
-    }, [dispatch])
+      console.log('reply', data)
+      const abc = await createComment(data)
+      dispatch(addedComment(abc))
+    },
+    [dispatch],
+  )
 
-  return { createComment: addComment, updateComment: handleUpdateComment, ShowComment, deleteComment, reply: handleReply }
+  return {
+    createComment: addComment,
+    updateComment: handleUpdateComment,
+    ShowComment,
+    deleteComment,
+    reply: handleReply,
+  }
 }
-
