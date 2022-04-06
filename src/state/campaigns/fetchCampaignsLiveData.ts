@@ -24,9 +24,7 @@ export const fetchCampaignsLiveData = async (campaigns: Campaign[], connectedWal
     return campaignCalls
   })
 
-  console.log(calls)
   const liveData = await nestedMulticall(PSIPadCampaignAbi, calls)
-  console.log(liveData)
 
   liveData.forEach((callData, idx) => {
     const campaign = campaigns[idx]

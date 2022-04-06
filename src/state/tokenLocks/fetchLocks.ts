@@ -21,8 +21,8 @@ const convertLockData = (lockId: number, callData: any[]): TokenLock => {
     duration: toFinite(lockData[4]) * 1000,
     releases: toFinite(lockData[5]),
     amountUnlocked: toBigNumber(lockData[6]),
-    amountToUnlock: toBigNumber(callData.flat()[1]),
-    unlockedAmount: toBigNumber(callData.flat()[2]),
+    amountToUnlock: toBigNumber(callData[1][0]),
+    unlockedAmount: toBigNumber(callData[2][0]),
   }
   if (lock.startTime && lock.duration) lock.unlockTime = new Date(lock.startTime.getTime() + lock.duration)
   return lock
