@@ -43,11 +43,11 @@ export const formatDuration = (value: string | number, unix = true) => {
   return moment.duration(numberValue * (unix ? 1000 : 1)).format()
 }
 
-export const formatBN = (value: BigNumberish | BigNumber, decimals = 18, toString = false) => {
-  if (isNil(value)) return ''
+export const formatBN = (value: BigNumberish | BigNumber, decimals = 18, removeTrailingZeros = true) => {
+  if (isUndefined(value) || isNil(value)) return ''
   const bn = !isObject(value) ? BigNumber.from(value.toString()) : (value as BigNumber)
-  if (toString) return decimals > 0 ? bn.div(10 ** decimals).toString() : bn.toString()
-  return utils.formatUnits(bn, decimals ?? 0)
+  const result = utils.formatUnits(bn, decimals ?? 0)
+  return removeTrailingZeros ? parseFloat(result).toString() : result
 }
 
 export const formatBool = (value: boolean) => {

@@ -505,9 +505,6 @@ tspan{
 }
 
 .content {
-    .rdt {
-        margin-bottom: 20px;
-    }
     .rdtPicker {
         background-color: rgba(21, 61, 111, 0.84);
         border-color: #2b3553;
@@ -532,4 +529,9 @@ tspan{
     .was-validated .rdt:invalid ~ .invalid-feedback, .was-validated .rdt:invalid ~ .invalid-tooltip, .rdt.is-invalid ~ .invalid-feedback, .rdt.is-invalid ~ .invalid-tooltip {
         display: block;
     }
+}
+
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    color: $primary-states;
+    text-decoration: none;
 }

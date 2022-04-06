@@ -34,10 +34,8 @@ jobs:
         env:
           CI: false
           REACT_APP_CHAIN_ID: 56
-          REACT_APP_NODE_1: "https://bsc-dataseed1.ninicoin.io"
-          REACT_APP_NODE_2: "https://bsc-dataseed1.defibit.io"
-          REACT_APP_NODE_3: "https://bsc-dataseed.binance.org"
           REACT_APP_PSI_API_URL: "https://psi-api.azurewebsites.net/api"
+          REACT_APP_PASSBASE_API_KEY: "egDVUwfuac5lyM0eTVXgoSIScKWb7ESikDynO3lXNXM4Lo7KHMznWLlc6pjteK1U"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

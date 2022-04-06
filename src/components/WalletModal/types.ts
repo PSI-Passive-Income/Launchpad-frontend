@@ -8,4 +8,5 @@ export interface Config {
   title: string
   icon: FC<SvgProps>
   connectorId: ConnectorNames
+  priority: number
 }

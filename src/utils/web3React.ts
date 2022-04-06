@@ -35,6 +35,19 @@ export const connectorsByName: { [connectorName in ConnectorNames]: any } = {
   [ConnectorNames.Injected]: injected,
   [ConnectorNames.WalletConnect]: walletconnect,
   [ConnectorNames.BSC]: bscConnector,
+  [ConnectorNames.Blocto]: async () => {
+    const { BloctoConnector } = await import('@blocto/blocto-connector')
+    return new BloctoConnector({ chainId, rpc: rpcUrl })
+  },
+  [ConnectorNames.WalletLink]: async () => {
+    const { WalletLinkConnector } = await import('@web3-react/walletlink-connector')
+    return new WalletLinkConnector({
+      url: rpcUrl,
+      appName: 'PSI Pad',
+      appLogoUrl: 'https://pad.passive-income.io/img/onlypsi.png',
+      supportedChainIds: [chainId],
+    })
+  },
 }
 
 export const getLibrary = (provider: any): Web3Provider => {

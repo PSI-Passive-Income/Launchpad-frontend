@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useUserTokens } from 'state/hooks'
 import { isEmpty, values } from 'lodash'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 import TokenCard from './TokenCard'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -10,6 +10,8 @@ const ManageTokens: React.FC = () => {
   const { account } = useActiveWeb3React()
   const { tokens, isLoadingTokens } = useUserTokens()
   const allTokens = useMemo(() => values(tokens), [tokens])
+
+  useGlobalLoader(isLoadingTokens)
 
   if (!account)
     return (
@@ -23,8 +25,6 @@ const ManageTokens: React.FC = () => {
     )
   return (
     <div className="content">
-      <Loader loading={isLoadingTokens} />
-
       <div className="row">
         {!isLoadingTokens && isEmpty(allTokens) ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">

@@ -230,9 +230,12 @@ textarea.form-control{
   z-index: 100;
 }
 
-.form-text{
+.form-text {
     font-size: $font-size-sm;
-    color: rgba($white,0.8);
+    color: rgba($white,0.8); 
+}
+small.form-text, .small.form-text {
+    font-size: 80%;
 }
 
 .form-control-lg{

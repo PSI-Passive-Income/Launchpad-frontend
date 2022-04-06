@@ -12,6 +12,7 @@ interface Window {
   }
   web3?: any
   BinanceChain?: BinanceChain
+  MSStream: any
 }
 
 declare module 'content-hash' {

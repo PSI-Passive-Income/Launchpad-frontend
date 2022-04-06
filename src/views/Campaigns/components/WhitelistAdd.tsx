@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Input } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { Campaign } from 'state/types'
 import useWhitelisting from 'hooks/useWhitelist'
 
@@ -50,7 +50,7 @@ const WhitelistAdd: React.FC<Props> = ({ campaign }) => {
             <br />
             to add/remove the addresses to/from the whitelist
           </p>
-          <Input
+          <Form.Control
             onChange={(e) => setWhitelistAddresses(e.target.value)}
             type="textarea"
             style={{ height: '200px', maxHeight: 'inherit', maxWidth: '700px' }}

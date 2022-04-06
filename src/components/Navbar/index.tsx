@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import { Container, Navbar as BootstrapNavbar, Nav } from 'react-bootstrap'
+import { Container, Navbar as BootstrapNavbar } from 'react-bootstrap'
 import Authenticate from 'components/Authenticate'
 
 interface Props {
@@ -21,7 +21,7 @@ const Navbar: React.FC<Props> = ({ sidebarOpened, toggleSidebar }) => {
 
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
-    if (window.innerWidth < 993 && collapseOpen) {
+    if (window.innerWidth < 993 && sidebarOpened) {
       setcolor('bg-white')
     } else {
       setcolor('navbar-transparent')
@@ -47,16 +47,8 @@ const Navbar: React.FC<Props> = ({ sidebarOpened, toggleSidebar }) => {
           />
         </div>
 
-        <BootstrapNavbar.Collapse className="mobile-collapse-show">
-          <Nav className="ml-auto" navbar>
-            <Authenticate />
-            {/* <FormGroup>
-                <Input type="select" name="select" id="exampleSelect" className="network-class">
-                  <option>Binance Smart Chain</option>
-                  <option>Ethereum Network</option>
-                </Input>
-              </FormGroup> */}
-          </Nav>
+        <BootstrapNavbar.Collapse className="mobile-collapse-show justify-content-end">
+          <Authenticate />
         </BootstrapNavbar.Collapse>
       </Container>
     </BootstrapNavbar>

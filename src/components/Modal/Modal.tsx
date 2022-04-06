@@ -57,7 +57,7 @@ const Modal: React.FC<Props> = ({
             <ArrowBackIcon color="primary" />
           </IconButton>
         )}
-        <Heading>{title}</Heading>
+        <Heading className="mb-0">{title}</Heading>
       </ModalTitle>
       {!hideCloseButton && (
         <IconButton variant="text" onClick={onDismiss} aria-label="Close the dialog">

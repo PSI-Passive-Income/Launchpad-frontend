@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { BigNumberish } from '@ethersproject/bignumber'
 import { getCampaign } from 'state/actions'
-import { buyTokens, withdrawTokens, withdrawFunds } from 'utils/callHelpers'
+import { buyTokens, withdrawTokens, withdrawFunds, handleTransactionCall } from 'utils/callHelpers'
 import { useCampaign } from './useContract'
 import { useActiveWeb3React } from './web3'
 
@@ -14,9 +14,8 @@ export const useBuyTokens = (campaignAddress: string) => {
   return useCallback(
     async (amount: BigNumberish) => {
       if (account && campaign) {
-        const receipt = await buyTokens(campaign, account, amount)
-        dispatch(getCampaign(campaignAddress, account))
-        console.info(receipt)
+        const success = await handleTransactionCall(() => buyTokens(campaign, account, amount), dispatch)
+        if (success) dispatch(getCampaign(campaignAddress, account))
       }
     },
     [dispatch, account, campaign, campaignAddress],
@@ -30,9 +29,8 @@ export const useWithdrawTokens = (campaignAddress: string) => {
 
   return useCallback(async () => {
     if (account && campaign) {
-      const receipt = await withdrawTokens(campaign, account)
-      dispatch(getCampaign(campaignAddress, account))
-      console.info(receipt)
+      const success = await handleTransactionCall(() => withdrawTokens(campaign, account), dispatch)
+      if (success) dispatch(getCampaign(campaignAddress, account))
     }
   }, [dispatch, account, campaign, campaignAddress])
 }
@@ -44,9 +42,8 @@ export const useWithdrawFunds = (campaignAddress: string) => {
 
   return useCallback(async () => {
     if (account && campaign) {
-      const receipt = await withdrawFunds(campaign, account)
-      dispatch(getCampaign(campaignAddress, account))
-      console.info(receipt)
+      const success = await handleTransactionCall(() => withdrawFunds(campaign, account), dispatch)
+      if (success) dispatch(getCampaign(campaignAddress, account))
     }
   }, [dispatch, account, campaign, campaignAddress])
 }

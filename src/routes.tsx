@@ -34,8 +34,14 @@ export const routes: IRoute[] = [
     element: <ExploreCampaigns />,
   },
   {
-    path: '/project/:campaignId',
+    path: '/project/*',
     element: <CampaignDetail />,
+    children: [
+      {
+        path: ':campaignId',
+        element: <CampaignDetail />,
+      },
+    ],
   },
   {
     path: '/launch-Project',
@@ -64,8 +70,14 @@ export const routes: IRoute[] = [
     element: <Locks />,
   },
   {
-    path: '/lock/:lockId',
+    path: '/lock/*',
     element: <LockDetail />,
+    children: [
+      {
+        path: ':lockId',
+        element: <LockDetail />,
+      },
+    ],
   },
   {
     path: '/lock-token',

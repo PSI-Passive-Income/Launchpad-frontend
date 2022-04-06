@@ -22,22 +22,22 @@ const CampaignSmallCard: React.FC<Props> = ({ campaign }) => {
           <div className="card card-user">
             <div className="card-body">
               {campaign.status === CampaignStatus.Live ? (
-                <span className="badge project-status badge-primary ">
+                <span className="badge project-status bg-primary ">
                   <b>Live</b>
                 </span>
               ) : null}
               {campaign.status === CampaignStatus.Ended ? (
-                <span className="badge project-status badge-success ">
+                <span className="badge project-status bg-success ">
                   <b>Ended</b>
                 </span>
               ) : null}
               {campaign.status === CampaignStatus.Failed ? (
-                <span className="badge project-status badge-danger ">
+                <span className="badge project-status bg-danger ">
                   <b>Failed</b>
                 </span>
               ) : null}
               {!campaign.status || campaign.status === CampaignStatus.NotStarted ? (
-                <span className="badge project-status badge-info ">
+                <span className="badge project-status bg-info ">
                   <b>Coming soon</b>
                 </span>
               ) : null}

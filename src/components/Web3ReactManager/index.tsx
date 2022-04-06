@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 
 import { NetworkContextName } from '../../config/constants/misc'
 import { network } from '../../utils/web3React'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
-import Loader from '../LoaderCircle'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -35,23 +34,6 @@ const Web3ReactManager = ({ children }: { children: JSX.Element }) => {
   // when there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
   useInactiveListener(!triedEager)
 
-  // handle delayed loader state
-  const [showLoader, setShowLoader] = useState(false)
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowLoader(true)
-    }, 600)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [])
-
-  // on page load, do nothing until we've tried to connect to the injected connector
-  if (!triedEager) {
-    return null
-  }
-
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
   if (!active && networkError) {
     return (
@@ -59,15 +41,6 @@ const Web3ReactManager = ({ children }: { children: JSX.Element }) => {
         <Message>Unknown error: {networkError.message}</Message>
       </MessageWrapper>
     )
-  }
-
-  // if neither context is active, spin
-  if (!active && !networkActive) {
-    return showLoader ? (
-      <MessageWrapper>
-        <Loader />
-      </MessageWrapper>
-    ) : null
   }
 
   return children

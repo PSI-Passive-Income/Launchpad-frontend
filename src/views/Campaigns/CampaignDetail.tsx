@@ -1,11 +1,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { Label } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { useCampaign, useToken } from 'state/hooks'
 import { formatBN, formatDateTime, formatDuration } from 'utils/formatters'
 import { CampaignStatus } from 'state/types'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 import { useActiveWeb3React } from 'hooks/web3'
 import { parseEther } from '@ethersproject/units'
 import Timer from '../../components/Timer'
@@ -14,6 +14,7 @@ import PresaleEnded from './components/PresaleEnded'
 import WhitelistAdd from './components/WhitelistAdd'
 
 interface Params {
+  [key: string]: string
   campaignId: string
 }
 
@@ -28,32 +29,33 @@ const CampaignDetail: React.FC = () => {
   const isOwner = account && campaign?.owner && campaign.owner.toLowerCase() === account.toLowerCase()
   const loading = !campaign || !token || isLoadingCampaign || isLoadingToken
 
+  useGlobalLoader(loading)
+
   return (
     <div className="content">
-      <Loader loading={loading} />
       {!isEmpty(token) && !isEmpty(campaign) ? (
         <div className="row">
           <div className="col-lg-7">
             <div className="card">
               <div className="card-header">
-                <h5 className="text-center">
+                <h4 className="text-center">
                   {token.name} ({token.symbol})
-                </h5>
+                </h4>
               </div>
-              <div className="card-body">
+              <div className="card-body pt-0">
                 <hr />
                 <div className="text-center">
-                  <Label>Presale Address:</Label>
+                  <Form.Label>Presale Address:</Form.Label>
                   <h5>{campaign.campaignAddress}</h5>
                 </div>
 
                 <div className="text-center">
-                  <Label>Token Address:</Label>
+                  <Form.Label>Token Address:</Form.Label>
                   <h5>{campaign.tokenAddress}</h5>
                 </div>
                 {campaign?.whitelistEnabled ? (
                   <div className="text-center">
-                    <Label>Whitelist status:</Label>
+                    <Form.Label>Whitelist status:</Form.Label>
                     <h5>
                       {campaign.userWhitelisted ? (
                         <span className="text-success">Whitelisted</span>
@@ -64,6 +66,7 @@ const CampaignDetail: React.FC = () => {
                   </div>
                 ) : null}
                 <hr />
+
                 {campaign.status === CampaignStatus.Live || campaign.status === CampaignStatus.Failed ? (
                   <>
                     <div className="text-center">
@@ -76,33 +79,31 @@ const CampaignDetail: React.FC = () => {
                       <br />
                       <span>Max BNB: {formatBN(campaign.maxAllowed)}</span>
                     </div>
+                    <hr />
                   </>
                 ) : null}
-                <div className="col-lg-6 offset-lg-3 text-center">
+
+                <div className="text-center">
                   {campaign.status === CampaignStatus.NotStarted ? (
                     <div className="presale-end-timer mt-2">
-                      <Label>Presale starts in:</Label>
+                      <Form.Label>Presale starts in:</Form.Label>
                       {/* <p>06:13:22:34</p> */}
                       <Timer date={campaign.startDate} />
                     </div>
                   ) : null}
-
                   {campaign.status === CampaignStatus.Live ? (
                     <>
                       {!campaign?.whitelistEnabled || campaign.userWhitelisted ? (
                         <Contribute campaign={campaign} token={token} />
                       ) : null}
                       <div className="presale-end-timer mt-2">
-                        <Label>Presale ends in:</Label>
+                        <Form.Label>Presale ends in:</Form.Label>
                         <Timer date={campaign.endDate} />
                       </div>
                     </>
                   ) : null}
                   {campaign.status === CampaignStatus.Ended || campaign.status === CampaignStatus.Failed ? (
-                    <>
-                      <hr />
-                      <PresaleEnded campaign={campaign} token={token} />
-                    </>
+                    <PresaleEnded campaign={campaign} token={token} />
                   ) : null}
                   {campaign.status === CampaignStatus.Live ||
                   campaign.status === CampaignStatus.Ended ||
@@ -110,13 +111,13 @@ const CampaignDetail: React.FC = () => {
                     <>
                       <hr />
                       <div>
-                        <div className="contribution-box">
-                          <Label>Your contributed amount</Label>
+                        <div className="col-lg-6 offset-lg-3 text-center contribution-box">
+                          <Form.Label>Your contributed amount</Form.Label>
                           <h5>{formatBN(campaign?.userContributed)} BNB</h5>
                         </div>
                         {campaign.status !== CampaignStatus.Failed ? (
-                          <div className="contribution-box">
-                            <Label>Your tokens:</Label>
+                          <div className="col-lg-6 offset-lg-3 text-center contribution-box">
+                            <Form.Label>Your tokens:</Form.Label>
                             <h5>
                               {formatBN(campaign?.userContributed?.mul(campaign.rate).div(parseEther('1')))}{' '}
                               {token.symbol}
@@ -150,104 +151,104 @@ const CampaignDetail: React.FC = () => {
               <div className="card-body">
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Presale Address:
                       <p>{campaign.campaignAddress}</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Total Supply:
                       <p>
                         {formatBN(token.totalSupply, token.decimals)} {token.symbol}
                       </p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Soft Cap:
                       <p>{formatBN(campaign.softCap)} BNB</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Hard Cap:
                       <p>{formatBN(campaign.hardCap)} BNB</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Liquidity lock duration:
                       <p>{formatDuration(campaign.lockDuration, true)}</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Minimum Contribution:
                       <p>{formatBN(campaign.minAllowed)} BNB</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Maximum Contribution:
                       <p>{formatBN(campaign.maxAllowed)} BNB</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Tokens rate:
                       <p>
                         {formatBN(campaign.rate, token.decimals)} {token.symbol} per BNB
                       </p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Campaign Start Time:
                       <p>{formatDateTime(campaign.startDate)}</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       Campaign End Time:
                       <p>{formatDateTime(campaign.endDate)}</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       PSI Dex Liquidity %:
                       <p>{campaign.liquidityRate / 100} %</p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="information-bars">
-                    <Label>
+                    <Form.Label>
                       PSI Dex Listing Rate:
                       <p>
                         {formatBN(campaign.poolRate, token.decimals)} {token.symbol} per BNB
                       </p>
-                    </Label>
+                    </Form.Label>
                   </div>
                 </div>
               </div>

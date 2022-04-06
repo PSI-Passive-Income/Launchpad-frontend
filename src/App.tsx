@@ -11,7 +11,7 @@ import PageLoader from './components/PageLoader'
 import Layout from './views/Layout'
 
 const App: React.FC = () => {
-  useEagerConnect()
+  // useEagerConnect()
   useCheckLoginLogout()
 
   return (

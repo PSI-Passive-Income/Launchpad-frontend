@@ -62,19 +62,18 @@ export function useEagerConnect() {
           _binanceChainListener().then(() => inject())
           return
         }
-      }
 
-      // connect(connectorId)
-      inject()
+        inject()
+      }
     }
   }, [activate, active])
 
   // wait until we get confirmation of a connection to flip the flag
   useEffect(() => {
-    if (active) {
+    if (!tried && active) {
       setTried(true)
     }
-  }, [active])
+  }, [tried, active])
 
   return tried
 }

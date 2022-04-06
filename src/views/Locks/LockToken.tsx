@@ -108,16 +108,17 @@ const LockToken: React.FC = () => {
         <div className="col-md-12">
           <div className="card">
             <div className="card-header">
-              <h5 className="title">Lock or Manage Tokens</h5>
+              <h4 className="title">Lock Tokens</h4>
+              <hr />
             </div>
-            <div className="card-body">
-              <p className="text-center">
+            <div className="card-body pt-0">
+              <p className="text-center mt-3">
                 Use the PsiLock Token Locker to lock your tokens and earn greater trust within your community!
               </p>
 
               <div className="row">
                 <div className="col-lg-6 offset-lg-3">
-                  <div className="card mt-5">
+                  <div className="card mt-4">
                     <div className="card-body">
                       <Form.Group>
                         <Form.Label htmlFor="tokenaddress">Token address:</Form.Label>
@@ -129,7 +130,7 @@ const LockToken: React.FC = () => {
                           isInvalid={!!errors.tokenAddress}
                         />
                         {errors.tokenAddress ? (
-                          <Form.Control.Feedback>{errors.tokenAddress}</Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">{errors.tokenAddress}</Form.Control.Feedback>
                         ) : null}
                         {!isEmpty(token) ? (
                           <Form.Text>
@@ -170,7 +171,7 @@ const LockToken: React.FC = () => {
 
                   <div className="row">
                     <div className="col-lg-6 offset-lg-3">
-                      <Form.Group>
+                      <Form.Group className="mb-3">
                         <Form.Label>Start time</Form.Label>
                         <Datetime
                           className={errors.startTime ? 'is-invalid' : ''}
@@ -178,10 +179,12 @@ const LockToken: React.FC = () => {
                           onChange={(v) => changeValue(v, 'startTime', 'date')}
                           inputProps={{ placeholder: 'Start time' }}
                         />
-                        {errors.startTime ? <Form.Control.Feedback>{errors.startTime}</Form.Control.Feedback> : null}
+                        {errors.startTime ? (
+                          <Form.Control.Feedback type="invalid">{errors.startTime}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
 
-                      <Form.Group>
+                      <Form.Group className="mb-3">
                         <Form.Label>Unlock time</Form.Label>
                         <Datetime
                           className={errors.unlockTime ? 'is-invalid' : ''}
@@ -189,10 +192,12 @@ const LockToken: React.FC = () => {
                           onChange={(v) => changeValue(v, 'unlockTime', 'date')}
                           inputProps={{ placeholder: 'Unlock time' }}
                         />
-                        {errors.unlockTime ? <Form.Control.Feedback>{errors.unlockTime}</Form.Control.Feedback> : null}
+                        {errors.unlockTime ? (
+                          <Form.Control.Feedback type="invalid">{errors.unlockTime}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
 
-                      <Form.Group>
+                      <Form.Group className="mb-3">
                         <Form.Label for="releases">Number of releases (default 1)</Form.Label>
                         <Form.Control
                           type="number"
@@ -203,23 +208,22 @@ const LockToken: React.FC = () => {
                           placeholder="1"
                           isInvalid={!!errors.releases}
                         />
-                        {errors.releases ? <Form.Control.Feedback>{errors.releases}</Form.Control.Feedback> : null}
+                        {errors.releases ? (
+                          <Form.Control.Feedback type="invalid">{errors.releases}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
 
-                      <Form.Group>
+                      <Form.Group className="mb-3">
                         <Form.Label for="amount">Amount of tokens</Form.Label>
-                        <Form.Control
-                          type="range"
+                        <Form.Range
                           name="amount"
                           id="amount"
                           value={amountRange > 100 ? 100 : amountRange ?? 0}
                           onChange={(e) => changeRange(e.target.value, 'amount', 'BigNumber', true, token.decimals)}
-                          isInvalid={!!errors.amount}
                           min={0}
                           max={100}
                           step={0.1}
                         />
-                        <br />
                         <Form.Control
                           type="number"
                           name="amount"
@@ -229,7 +233,9 @@ const LockToken: React.FC = () => {
                           placeholder="0"
                           isInvalid={!!errors.amount}
                         />
-                        {errors.amount ? <Form.Control.Feedback>{errors.amount}</Form.Control.Feedback> : null}
+                        {errors.amount ? (
+                          <Form.Control.Feedback type="invalid">{errors.amount}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
 
                       {valid ? <Releases lock={lock} token={token} /> : null}

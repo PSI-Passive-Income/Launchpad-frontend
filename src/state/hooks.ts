@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
+import { createStructuredSelector } from 'reselect'
+import { createCachedSelector } from 're-reselect'
 import { isFinite, isNil, isObject, isString } from 'lodash'
 import Web3 from 'web3'
 import { Contract } from 'ethers'
@@ -63,6 +65,8 @@ export const useCheckLoginLogout = () => {
 
     if (!isLoggedIn && active && account && library) {
       dispatch(loginWallet(library, account, true))
+    } else if (isLoggedIn && !active && !account) {
+      dispatch(userUnload())
     }
   }, [account, data, isLoggedIn, active, library, dispatch])
 }
@@ -77,8 +81,12 @@ export const useLogin = () => {
     }
   }, [account, library, dispatch])
 
+  const logout = useCallback(() => {
+    dispatch(userUnload())
+  }, [dispatch])
+
   const { data, isLoggedIn, isLoading, accessToken } = useAppSelector((state) => state.user)
-  return { isLoggedIn, isLoggingIn: isLoading, accessToken, user: data, account, login }
+  return { isLoggedIn, isLoggingIn: isLoading, accessToken, user: data, account, login, logout }
 }
 
 export const useLoggedInUser = () => {
@@ -149,15 +157,22 @@ export const useCampaigns = () => {
   return { campaigns: data, campaignsLoading: isLoading }
 }
 
+const campaignSelector = createCachedSelector(
+  (state: RootState) => state.campaigns,
+  (_: RootState, campaignId: string | number) => campaignId,
+  (campaigns, campaignId: string | number) =>
+    isFinite(campaignId) ? campaigns.data[campaignId] : campaigns.dataByAddress[campaignId],
+)((_: RootState, campaignId: string | number) => campaignId.toString())
+const campaignStructuredSelector = createStructuredSelector({
+  campaign: campaignSelector,
+  isLoadingCampaign: (state: RootState) => state.campaigns.isLoading || state.campaigns.isLoadingCampaign,
+})
 export const useCampaign = (campaignId: string | number) => {
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   const finalId = isString(campaignId) ? campaignId.toLowerCase() : campaignId
-  const { campaign, isLoadingCampaign } = useSelector((state: RootState) => ({
-    campaign: isFinite(finalId) ? state.campaigns.data[finalId] : state.campaigns.dataByAddress[finalId],
-    isLoadingCampaign: state.campaigns.isLoadingCampaign,
-  }))
+  const { campaign, isLoadingCampaign } = useAppSelector((state) => campaignStructuredSelector(state, finalId))
 
   useEffect(() => {
     if ((isFinite(finalId) && finalId >= 0) || (isString(finalId) && Web3.utils.isAddress(finalId))) {
@@ -170,13 +185,21 @@ export const useCampaign = (campaignId: string | number) => {
 
 // Tokens
 
+const tokenSelector = createCachedSelector(
+  (state: RootState) => state.tokens.data,
+  (_: RootState, address: string) => address,
+  (data, address: string) => data[address],
+)((_: RootState, address: string) => address)
+const tokenStructuredSelector = createStructuredSelector({
+  token: tokenSelector,
+  isLoadingToken: (state: RootState) => state.tokens.isLoading,
+})
 export const useToken = (address: string) => {
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-  const { token, isLoadingToken } = useSelector((state: RootState) => ({
-    token: state.tokens.data[address?.toLowerCase()],
-    isLoadingToken: state.tokens.isLoading,
-  }))
+  const { token, isLoadingToken } = useSelector((state: RootState) =>
+    tokenStructuredSelector(state, address?.toLowerCase()),
+  )
 
   useEffect(() => {
     if (address && Web3.utils.isAddress(address)) {
@@ -187,20 +210,19 @@ export const useToken = (address: string) => {
   return { token, isLoadingToken }
 }
 
-export const useTokenWithApproval = (address: string, spender: string | Contract) => {
+export const useTokenWithApproval = (address: string, spender: string | Contract, refresh = false) => {
   const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-  const { token, isLoadingToken } = useSelector((state: RootState) => ({
-    token: state.tokens.data[address?.toLowerCase()],
-    isLoadingToken: state.tokens.isLoading,
-  }))
+  const { token, isLoadingToken } = useSelector((state: RootState) =>
+    tokenStructuredSelector(state, address?.toLowerCase()),
+  )
   const spenderAddress = isObject(spender) ? spender.address : spender
 
   useEffect(() => {
     if (account && address && Web3.utils.isAddress(address) && spenderAddress && Web3.utils.isAddress(spenderAddress)) {
-      dispatch(getToken(address, account, spenderAddress))
+      dispatch(getToken(address, account, spenderAddress, refresh))
     }
-  }, [dispatch, address, account, spenderAddress])
+  }, [dispatch, address, account, spenderAddress, refresh])
   return { token, isLoadingToken }
 }
 
@@ -250,12 +272,18 @@ export const useUserTokenLocks = () => {
   return { tokenLocks: userLocks[account], isLoadingLocks: isLoading }
 }
 
+const tokenLockSelector = createCachedSelector(
+  (state: RootState) => state.tokenLocks.data,
+  (_: RootState, lockId: number) => lockId,
+  (data, lockId: number) => data[lockId],
+)((_: RootState, lockId: number) => lockId)
+const tokenLockStructuredSelector = createStructuredSelector({
+  lock: tokenLockSelector,
+  isLoadingLock: (state: RootState) => state.tokenLocks.isLoading,
+})
 export const useTokenLock = (lockId: number) => {
   const dispatch = useAppDispatch()
-  const { lock, isLoadingLock } = useSelector((state: RootState) => ({
-    lock: state.tokenLocks.data[lockId],
-    isLoadingLock: state.tokenLocks.isLoading,
-  }))
+  const { lock, isLoadingLock } = useSelector((state: RootState) => tokenLockStructuredSelector(state, lockId))
 
   useEffect(() => {
     if (!isNil(lockId)) {
@@ -264,6 +292,13 @@ export const useTokenLock = (lockId: number) => {
   }, [dispatch, lockId])
 
   return { lock, isLoadingLock }
+}
+
+export const useTokenAndLock = (lockId: number) => {
+  const { lock, isLoadingLock } = useTokenLock(lockId)
+  const tokenAddress = useMemo(() => lock?.token, [lock?.token])
+  const { token, isLoadingToken } = useToken(tokenAddress)
+  return { lock, token, isLoading: isLoadingLock || isLoadingToken }
 }
 
 // Prices

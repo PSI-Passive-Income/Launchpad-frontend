@@ -44,7 +44,7 @@ const ExploreCampaigns: React.FC = () => {
         <div className="col-sm-12 mb-20 text-center tabsbtns">
           <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
             <Button
-              className={classNames('btn btn-xs btn-primary btn-simple', {
+              className={classNames('btn btn-xs btn-secondary btn-simple', {
                 active: filter === CampaignStatus.All,
               })}
               id="0"
@@ -59,7 +59,7 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="1"
               size="sm"
-              className={classNames('btn btn-xs btn-primary btn-simple', {
+              className={classNames('btn btn-xs btn-secondary btn-simple', {
                 active: filter === CampaignStatus.Live,
               })}
               onClick={() => setFilter(CampaignStatus.Live)}
@@ -72,7 +72,7 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              className={classNames('btn btn-xs btn-primary btn-simple', {
+              className={classNames('btn btn-xs btn-secondary btn-simple', {
                 active: filter === CampaignStatus.NotStarted,
               })}
               onClick={() => setFilter(CampaignStatus.NotStarted)}
@@ -85,7 +85,7 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              className={classNames('btn btn-xs btn-primary btn-simple', {
+              className={classNames('btn btn-xs btn-secondary btn-simple', {
                 active: filter === CampaignStatus.Ended,
               })}
               onClick={() => setFilter(CampaignStatus.Ended)}
@@ -98,7 +98,7 @@ const ExploreCampaigns: React.FC = () => {
             <Button
               id="2"
               size="sm"
-              className={classNames('btn btn-xs btn-primary btn-simple', {
+              className={classNames('btn btn-xs btn-secondary btn-simple', {
                 active: filter === CampaignStatus.Failed,
               })}
               onClick={() => setFilter(CampaignStatus.Failed)}

@@ -63,13 +63,14 @@ const CreateToken: React.FC = () => {
         <div className="col-md-12">
           <div className="card">
             <div className="card-header">
-              <h5 className="title">Create Token</h5>
+              <h4 className="title">Create Token</h4>
+              <hr />
             </div>
-            <div className="card-body">
+            <div className="card-body pt-0">
               <div className="row">
                 <div className="col-md-8 pr-md-1">
                   <h5 className="title">Token details</h5>
-                  <div className="row">
+                  <div className="row mb-3">
                     <div className="col-lg-6">
                       <Form.Group>
                         <Form.Label for="name">Token name</Form.Label>
@@ -77,12 +78,14 @@ const CreateToken: React.FC = () => {
                           type="text"
                           name="name"
                           id="name"
-                          value={token.name}
+                          defaultValue={token.name}
                           onChange={(e) => changeValue(e.target.value, 'name', 'text')}
                           placeholder="Token name"
                           isInvalid={!!errors.name}
                         />
-                        {errors.name ? <Form.Control.Feedback>{errors.name}</Form.Control.Feedback> : null}
+                        {errors.name ? (
+                          <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
                     </div>
                     <div className="col-lg-6">
@@ -92,14 +95,18 @@ const CreateToken: React.FC = () => {
                           type="text"
                           name="symbol"
                           id="symbol"
-                          value={token.symbol}
+                          defaultValue={token.symbol}
                           onChange={(e) => changeValue(e.target.value, 'symbol', 'text')}
                           placeholder="Token symbol"
                           isInvalid={!!errors.symbol}
                         />
-                        {errors.symbol ? <Form.Control.Feedback>{errors.symbol}</Form.Control.Feedback> : null}
+                        {errors.symbol ? (
+                          <Form.Control.Feedback type="invalid">{errors.symbol}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
                     </div>
+                  </div>
+                  <div className="row mb-3">
                     <div className="col-lg-6">
                       <Form.Group>
                         <Form.Label for="initialSupply">Initial supply</Form.Label>
@@ -107,115 +114,103 @@ const CreateToken: React.FC = () => {
                           type="number"
                           name="initialSupply"
                           id="initialSupply"
-                          value={formatBN(token.initialSupply, 18)}
+                          defaultValue={formatBN(token.initialSupply, 18)}
                           onChange={(e) => changeValue(e.target.value, 'initialSupply', 'BigNumber')}
                           placeholder="Initial supply"
                           isInvalid={!!errors.initialSupply}
                         />
                         {errors.initialSupply ? (
-                          <Form.Control.Feedback>{errors.initialSupply}</Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">{errors.initialSupply}</Form.Control.Feedback>
                         ) : null}
                       </Form.Group>
                     </div>
                   </div>
 
-                  <hr />
+                  <hr className="mt-4" />
 
                   <h5 className="title">Token features</h5>
 
-                  <div className="row">
+                  <div className="row mb-3">
                     <div className="col-lg-6">
                       <Form.Group>
-                        <div className="mb-10 psi-switch custom-control custom-switch">
-                          <Form.Check
-                            type="checkbox"
-                            name="burnable"
-                            id="burnable"
-                            className="custom-control-input"
-                            checked={token.burnable}
-                            onChange={(e) => changeValue(e.target.checked, 'burnable', 'boolean')}
-                            isInvalid={!!errors.burnable}
-                            label="Burnable"
-                          />
-                          {/* <Form.Label className="custom-control-label" htmlFor="burnable">
-                            {' '}
-                            Burnable{' '}
-                          </Form.Label> */}
-                        </div>
-                        {errors.burnable ? <Form.Control.Feedback>{errors.burnable}</Form.Control.Feedback> : null}
+                        <Form.Switch
+                          name="burnable"
+                          id="burnable"
+                          defaultChecked={token.burnable}
+                          onChange={(e) => changeValue(e.target.checked, 'burnable', 'boolean')}
+                          isInvalid={!!errors.burnable}
+                          label="Burnable"
+                        />
+                        {errors.burnable ? (
+                          <Form.Control.Feedback type="invalid">{errors.burnable}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
                     </div>
                     <div className="col-lg-6">
                       <Form.Group>
-                        <div className="mb-10 psi-switch custom-control custom-switch">
-                          <Form.Check
-                            type="checkbox"
-                            name="mintable"
-                            id="mintable"
-                            className="custom-control-input"
-                            checked={token.mintable}
-                            onChange={(e) => changeValue(e.target.checked, 'mintable', 'boolean')}
-                            isInvalid={!!errors.mintable}
-                            label="Mintable"
-                          />
-                          {/* <Form.Label className="custom-control-label" htmlFor="mintable">
-                            {' '}
-                            Mintable{' '}
-                          </Form.Label> */}
-                        </div>
-                        {errors.mintable ? <Form.Control.Feedback>{errors.mintable}</Form.Control.Feedback> : null}
+                        <Form.Switch
+                          name="mintable"
+                          id="mintable"
+                          defaultChecked={token.mintable}
+                          onChange={(e) => changeValue(e.target.checked, 'mintable', 'boolean')}
+                          isInvalid={!!errors.mintable}
+                          label="Mintable"
+                        />
+                        {errors.mintable ? (
+                          <Form.Control.Feedback type="invalid">{errors.mintable}</Form.Control.Feedback>
+                        ) : null}
                       </Form.Group>
                     </div>
-
-                    {token.mintable ? (
-                      <>
-                        <div className="col-lg-6">
-                          <Form.Group>
-                            <Form.Label for="maximumSupply">Maximum supply</Form.Label>
-                            <Form.Control
-                              type="number"
-                              name="maximumSupply"
-                              id="maximumSupply"
-                              value={formatBN(token.maximumSupply, 18)}
-                              onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
-                              placeholder="Maximum supply"
-                              isInvalid={!!errors.maximumSupply}
-                            />
-                            {errors.maximumSupply ? (
-                              <Form.Control.Feedback>{errors.maximumSupply}</Form.Control.Feedback>
-                            ) : null}
-                            <Form.Text>
-                              When the token is mintable, a maximum supply could be set to ensure that it&apos;s
-                              impossible to mint more tokens than configureds
-                            </Form.Text>
-                          </Form.Group>
-                        </div>
-                        <div className="col-lg-6">
-                          <Form.Group>
-                            <Form.Label for="minterDelay">Add minter delay</Form.Label>
-                            <Form.Control
-                              type="number"
-                              name="minterDelay"
-                              id="minterDelay"
-                              value={token.minterDelay}
-                              onChange={(e) => changeValue(e.target.value, 'minterDelay', 'number')}
-                              placeholder="Minter delay"
-                              isInvalid={!!errors.minterDelay}
-                            />
-                            {errors.minterDelay ? (
-                              <Form.Control.Feedback>{errors.minterDelay}</Form.Control.Feedback>
-                            ) : null}
-                            <Form.Text>
-                              Delay in hours when a new minter is added. After the delay has ended, the owner also needs
-                              to approve the new minter. This delay is not changeable.
-                            </Form.Text>
-                          </Form.Group>
-                        </div>
-                      </>
-                    ) : null}
                   </div>
 
-                  <div className="mt-5">
+                  {token.mintable ? (
+                    <div className="row mb-3">
+                      <div className="col-lg-6">
+                        <Form.Group>
+                          <Form.Label for="maximumSupply">Maximum supply</Form.Label>
+                          <Form.Control
+                            type="number"
+                            name="maximumSupply"
+                            id="maximumSupply"
+                            defaultValue={formatBN(token.maximumSupply, 18)}
+                            onChange={(e) => changeValue(e.target.value, 'maximumSupply', 'BigNumber')}
+                            placeholder="Maximum supply"
+                            isInvalid={!!errors.maximumSupply}
+                          />
+                          {errors.maximumSupply ? (
+                            <Form.Control.Feedback type="invalid">{errors.maximumSupply}</Form.Control.Feedback>
+                          ) : null}
+                          <Form.Text muted>
+                            When the token is mintable, a maximum supply could be set to ensure that it&apos;s
+                            impossible to mint more tokens than configureds
+                          </Form.Text>
+                        </Form.Group>
+                      </div>
+                      <div className="col-lg-6">
+                        <Form.Group>
+                          <Form.Label for="minterDelay">Add minter delay</Form.Label>
+                          <Form.Control
+                            type="number"
+                            name="minterDelay"
+                            id="minterDelay"
+                            defaultValue={token.minterDelay}
+                            onChange={(e) => changeValue(e.target.value, 'minterDelay', 'number')}
+                            placeholder="Minter delay"
+                            isInvalid={!!errors.minterDelay}
+                          />
+                          {errors.minterDelay ? (
+                            <Form.Control.Feedback type="invalid">{errors.minterDelay}</Form.Control.Feedback>
+                          ) : null}
+                          <Form.Text muted>
+                            Delay in hours when a new minter is added. After the delay has ended, the owner also needs
+                            to approve the new minter. This delay is not changeable.
+                          </Form.Text>
+                        </Form.Group>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4">
                     <h5 className="title red">Important points:</h5>
                     <ul>
                       <li>Choose a unique token name</li>
@@ -227,31 +222,24 @@ const CreateToken: React.FC = () => {
                   <h5 className="title">Network and Transaction: Binance Smart Chain (BSC)</h5>
 
                   <Form.Group>
-                    <div className="mb-10 psi-switch custom-control custom-switch">
-                      <Form.Check
-                        type="checkbox"
-                        name="termsAccepted"
-                        id="termsAccepted"
-                        className="custom-control-input"
-                        checked={termsAccepted}
-                        onChange={changeTerms}
-                        isInvalid={!!errors.termsAccepted}
-                        label="I have read, understood and agreed to PSI Terms of Use. Use at your own risk."
-                      />
-                      {/* <Form.Label className="custom-control-label" htmlFor="termsAccepted">
-                        {' '}
-                        I have read, understood and agreed to PSI Terms of Use. Use at your own risk.{' '}
-                      </Form.Label> */}
-                    </div>
+                    <Form.Check
+                      name="termsAccepted"
+                      id="termsAccepted"
+                      className="custom-control-input"
+                      defaultChecked={termsAccepted}
+                      onChange={changeTerms}
+                      isInvalid={!!errors.termsAccepted}
+                      label="I have read, understood and agreed to PSI Terms of Use. Use at your own risk."
+                    />
                     {errors.termsAccepted ? (
-                      <Form.Control.Feedback>{errors.termsAccepted}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.termsAccepted}</Form.Control.Feedback>
                     ) : null}
                   </Form.Group>
 
-                  <p> Commission Fee: Free (Promotion active) </p>
-                  <p> Gas Fee: Variable </p>
+                  <p className="mt-3">Commission Fee: Free (Promotion active)</p>
+                  <p className="mt-3">Gas Fee: Variable</p>
 
-                  <button type="button" className="btn btn-primary" slot="footer" disabled={!valid} onClick={onCreate}>
+                  <button type="button" className="btn btn-primary mt-3" disabled={!valid} onClick={onCreate}>
                     Create
                   </button>
                 </div>

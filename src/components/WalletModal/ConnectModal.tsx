@@ -1,44 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Link } from '../Link'
-import { HelpIcon } from '../Svg'
 import { Modal } from '../Modal'
-import WalletCard from './WalletCard'
-import config from './config'
-import { Login } from './types'
+import WalletCard, { MoreWalletCard } from './WalletCard'
+import { Box, Grid } from '../Box'
+import { Text } from '../Text'
+import { Button } from '../Button'
+import getExternalLinkProps from '../../utils/getExternalLinkProps'
+import config, { walletLocalStorageKey } from './config'
+import { Config, Login } from './types'
 
 interface Props {
   login: Login
   onDismiss?: () => void
+  displayCount?: number
 }
 
-const HelpLink = styled(Link)`
-  display: flex;
-  color: #fff;
-  align-self: center;
-  align-items: center;
-  margin-top: 24px;
+const WalletWrapper = styled(Box)`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
 `
 
-const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null }) => (
-  <Modal title="Connect to a wallet" onDismiss={onDismiss}>
-    {config.map((entry, index) => (
-      <WalletCard
-        key={entry.title}
-        login={login}
-        walletConfig={entry}
-        onDismiss={onDismiss}
-        mb={index < config.length - 1 ? '8px' : '0'}
-      />
-    ))}
-    <HelpLink
-      href="https://docs.pancakeswap.finance/guides/faq#how-do-i-set-up-my-wallet-on-binance-smart-chain"
-      external
-    >
-      <HelpIcon color="white" mr="6px" />
-      Learn how to connect
-    </HelpLink>
-  </Modal>
-)
+/**
+ * Checks local storage if we have saved the last wallet the user connected with
+ * If we find something we put it at the top of the list
+ *
+ * @returns sorted config
+ */
+const getPreferredConfig = (walletConfig: Config[]) => {
+  const preferredWalletName = localStorage.getItem(walletLocalStorageKey)
+  const sortedConfig = walletConfig.sort((a: Config, b: Config) => a.priority - b.priority)
+
+  if (!preferredWalletName) {
+    return sortedConfig
+  }
+
+  const preferredWallet = sortedConfig.find((sortedWalletConfig) => sortedWalletConfig.title === preferredWalletName)
+
+  if (!preferredWallet) {
+    return sortedConfig
+  }
+
+  return [
+    preferredWallet,
+    ...sortedConfig.filter((sortedWalletConfig) => sortedWalletConfig.title !== preferredWalletName),
+  ]
+}
+
+const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null, displayCount = 3 }) => {
+  const [showMore, setShowMore] = useState(false)
+  // const theme = useTheme()
+  const sortedConfig = getPreferredConfig(config)
+  const displayListConfig = showMore ? sortedConfig : sortedConfig.slice(0, displayCount)
+
+  return (
+    <Modal title="Connect to a wallet" onDismiss={onDismiss}>
+      <WalletWrapper py="24px" maxHeight="453px" overflowY="auto">
+        <Grid gridTemplateColumns="1fr 1fr">
+          {displayListConfig.map((wallet) => (
+            <Box key={wallet.title}>
+              <WalletCard walletConfig={wallet} login={login} onDismiss={onDismiss} />
+            </Box>
+          ))}
+          {!showMore && <MoreWalletCard onClick={() => setShowMore(true)} />}
+        </Grid>
+      </WalletWrapper>
+      <Box p="24px">
+        <Text textAlign="center" color="textSubtle" as="p" mb="16px">
+          Haven&nbsp;t got a crypto wallet yet?
+        </Text>
+        <Button
+          as="a"
+          href="https://docs.pancakeswap.finance/get-started/connection-guide"
+          variant="subtle"
+          width="100%"
+          {...getExternalLinkProps()}
+        >
+          Learn How to Connect
+        </Button>
+      </Box>
+    </Modal>
+  )
+}
 
 export default ConnectModal

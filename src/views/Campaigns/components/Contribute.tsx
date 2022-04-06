@@ -71,7 +71,9 @@ const Contribute: React.FC<Props> = ({ campaign, token }) => {
             isInvalid={!isNil(contributionError)}
             disabled={isNil(campaign)}
           />
-          {!isNil(contributionError) ? <Form.Control.Feedback>{contributionError}</Form.Control.Feedback> : null}
+          {!isNil(contributionError) ? (
+            <Form.Control.Feedback type="invalid">{contributionError}</Form.Control.Feedback>
+          ) : null}
           <p className="text-center">you will get {contributionTokens} tokens</p>
         </Form.Group>
       </Row>

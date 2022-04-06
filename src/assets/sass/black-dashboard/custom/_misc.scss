@@ -51,14 +51,6 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 // card user profile page
 
 .card {
-  form {
-    label + .form-control {
-      margin-bottom: 20px;
-    }
-  }
-}
-
-.card {
   .map-title {
     color: $white;
   }

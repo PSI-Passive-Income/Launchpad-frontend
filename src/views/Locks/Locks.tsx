@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Label } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { values } from 'lodash'
 import { formatBN, formatDateTime } from 'utils/formatters'
 import { useTokens, useUserTokenLocks } from 'state/hooks'
-import Loader from 'components/Loader'
+import { useGlobalLoader } from 'components/Loader'
 import lockImage from '../../assets/img/lock.png'
 import emptyBox from '../../assets/img/empty-white-box.png'
 
@@ -15,11 +15,10 @@ const Locks: React.FC = () => {
   const { tokens, isLoadingTokens } = useTokens(tokenAddresses)
 
   const loading = isLoadingLocks || isLoadingTokens
+  useGlobalLoader(loading)
 
   return (
     <div className="content">
-      <Loader loading={loading} />
-
       <div className="row">
         {!isLoadingLocks && !tokenLocks ? (
           <div className="col-sm-12 col-md-6 offset-md-2 notoken-column">
@@ -40,30 +39,30 @@ const Locks: React.FC = () => {
                   </div>
                   <div className="card-body">
                     <div className="form-group">
-                      <Label>Start time:</Label>
+                      <Form.Label>Start time:</Form.Label>
                       <p>{formatDateTime(lock.startTime)}</p>
                     </div>
                     <div className="form-group">
-                      <Label>Last unlock time:</Label>
+                      <Form.Label>Last unlock time:</Form.Label>
                       <p>{formatDateTime(lock.unlockTime)}</p>
                     </div>
                     <div>
                       <img width="30" src={lockImage} alt="lock" />
                     </div>
                     <div className="form-group">
-                      <Label>Token address:</Label>
+                      <Form.Label>Token address:</Form.Label>
                       <p>{lock.token}</p>
                     </div>
                     <div className="form-group">
-                      <Label>Owner:</Label>
+                      <Form.Label>Owner:</Form.Label>
                       <p>{lock.owner}</p>
                     </div>
                     <div className="form-group">
-                      <Label>Total locked tokens:</Label>
+                      <Form.Label>Total locked tokens:</Form.Label>
                       <p>{formatBN(lock.amount, tokens[lock.token?.toLowerCase()]?.decimals)}</p>
                     </div>
                     <div className="form-group">
-                      <Label>Unlocked tokens:</Label>
+                      <Form.Label>Unlocked tokens:</Form.Label>
                       <p>{formatBN(lock.amountUnlocked, tokens[lock.token?.toLowerCase()]?.decimals)}</p>
                     </div>
                     <Link to={`/lock/${lock.id}`}>Details</Link>

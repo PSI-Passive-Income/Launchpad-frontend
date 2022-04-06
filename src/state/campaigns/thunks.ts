@@ -20,6 +20,7 @@ export const getCampaigns = (account?: string) => async (dispatch: AppDispatch) 
     await fetchCampaignsLiveData(campaigns, account)
     dispatch(campaignsLoadSucceeded(campaigns))
   } catch (error: any) {
+    console.error(error)
     dispatch(toastError('Error retrieving campaigns', error?.message))
     dispatch(campaignsLoadFailed(error?.message))
   }

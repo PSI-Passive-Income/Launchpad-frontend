@@ -1,11 +1,11 @@
 import React from 'react'
-import { Card, CardBody } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import logo from '../../assets/img/icons/project-default1.jpeg'
 
 const CampaignCard: React.FC = () => (
   <div className="content">
-    <Card type="user" className="card-user">
-      <CardBody>
+    <Card className="card-user">
+      <Card.Body>
         <p className="card-text" />
         <div className="author">
           <div className="block block-one" />
@@ -18,7 +18,7 @@ const CampaignCard: React.FC = () => (
           </div>
           <p className="card-description">{/* {{ project.description }} */}</p>
         </div>
-      </CardBody>
+      </Card.Body>
     </Card>
   </div>
 )

@@ -1,28 +1,34 @@
 import React from 'react'
 import VerifyButton from '@passbase/button/react'
 import { PASSBASE_API_KEY } from 'config/constants/misc'
-import useUserVerification from 'hooks/useUserKYC'
+import { useUserKYC } from 'state/hooks'
+import { isUndefined } from 'lodash'
 
 const Verification: React.FC = () => {
-  const { submit, start, error, account, accessToken, verified } = useUserVerification()
+  const { onStart, onSubmit, onError, account, kyced, kycStatus } = useUserKYC()
 
   return (
     <div className="content KYC-box">
       <div className="row">
         <div className="col-md-12">
           <div>
-            {account && accessToken ? (
-              verified ? (
-                <h3 className="text-center">User Verified</h3>
+            {account ? (
+              kyced ? (
+                <h5 id="wallet_number">
+                  Kyc Verified
+                  <i className="fa fa-check ps-1 kyc-check" aria-hidden="true" />
+                </h5>
+              ) : !isUndefined(kycStatus) && kycStatus?.toLowerCase() !== 'declined' ? (
+                <h5 id="wallet_number">Kyc status: {kycStatus}</h5>
               ) : (
                 <div>
                   <VerifyButton
                     apiKey={PASSBASE_API_KEY}
-                    onSubmitted={submit}
-                    onError={error}
-                    onStart={start}
+                    onStart={onStart}
+                    onSubmitted={onSubmit}
+                    onError={onError}
                     prefillAttributes={{
-                      email: 'bergmediagroup@gmail.com',
+                      email: '',
                     }}
                     theme={{
                       darkMode: false,
@@ -31,7 +37,7 @@ const Verification: React.FC = () => {
                 </div>
               )
             ) : (
-              <h3 className=" text-center">Please connect wallet</h3>
+              <h3>Please connect your wallet</h3>
             )}
           </div>
         </div>

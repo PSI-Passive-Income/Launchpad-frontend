@@ -5,6 +5,8 @@ import { isMobile } from 'react-device-detect'
 import App from './App'
 import Providers from './Providers'
 
+// scss added in back-dashboard.scss
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import 'assets/sass/black-dashboard.scss'
 import 'assets/demo/demo.css'
 import 'assets/css/nucleo-icons.css'

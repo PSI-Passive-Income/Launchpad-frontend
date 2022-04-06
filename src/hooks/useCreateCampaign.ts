@@ -12,7 +12,7 @@ import {
   createCampaign,
   getUserCampaigns,
   getCampaignAddress,
-  handleTransaction,
+  handleTransactionCall,
 } from 'utils/callHelpers'
 import useApproval from './useApproval'
 import { useCampaignFactory } from './useContract'
@@ -53,8 +53,10 @@ export const useCreateCampaign = () => {
       if (account && campaign && navigate) {
         try {
           setCreating(true)
-          const transaction = await createCampaign(campaignFactory, account, campaign)
-          const success = await handleTransaction(transaction)
+          const success = await handleTransactionCall(
+            () => createCampaign(campaignFactory, account, campaign),
+            dispatch,
+          )
           if (success) {
             const userCampaigns = await getUserCampaigns(campaignFactory, account)
             if (userCampaigns.length > 0) {
